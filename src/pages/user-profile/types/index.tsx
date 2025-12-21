@@ -7,6 +7,10 @@ export interface UserProfile {
 	profilePictureAlt: string;
 	dateJoined: Date;
 	lastLogin: Date;
+	kycStatus?: string;
+	kycDocumentType?: string;
+	kycCountry?: string;
+	kycUpdatedAt?: Date;
 }
   
   export interface ContactPreferences {

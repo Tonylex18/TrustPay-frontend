@@ -47,17 +47,25 @@ const UserProfilePage = () => {
       setIsLoading(true);
       setLoadError(null);
       try {
-        const response = await fetch(`${API_BASE_URL}/profile`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-          signal: controller.signal
-        });
+        const [profileRes, kycRes] = await Promise.all([
+          fetch(`${API_BASE_URL}/profile`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+            signal: controller.signal
+          }),
+          fetch(`${API_BASE_URL}/kyc/me`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+            signal: controller.signal
+          })
+        ]);
 
-        const payload = await response.json().catch(() => null);
-        if (!response.ok) {
+        const payload = await profileRes.json().catch(() => null);
+        if (!profileRes.ok) {
           const message = payload?.errors || payload?.message || 'Unable to load your profile.';
-          if (response.status === 401) {
+          if (profileRes.status === 401) {
             clearStoredToken();
             navigate('/login');
             return;
@@ -67,7 +75,11 @@ const UserProfilePage = () => {
           return;
         }
 
+        const kycPayload = await kycRes.json().catch(() => null);
+
         const data = payload?.user || payload?.data || payload;
+        const kyc = kycPayload?.kyc;
+
         if (!data) {
           const message = 'Profile data was missing.';
           setLoadError(message);
@@ -77,13 +89,17 @@ const UserProfilePage = () => {
 
         setUserProfile({
           id: data.id,
-          fullName: data.fullName || data.email,
+          fullName: kyc?.firstName ? `${kyc.firstName} ${kyc.lastName || ''}`.trim() : (data.fullName || data.email),
           email: data.email,
           phone: data.phone || '',
           profilePicture: data.avatarUrl || '',
           profilePictureAlt: `Profile photo of ${data.fullName || data.email}`,
           dateJoined: data.createdAt ? new Date(data.createdAt) : new Date(),
-          lastLogin: data.lastLoginAt ? new Date(data.lastLoginAt) : new Date()
+          lastLogin: data.lastLoginAt ? new Date(data.lastLoginAt) : new Date(),
+          kycStatus: kyc?.status || data.kycStatus || 'UNKNOWN',
+          kycDocumentType: kyc?.documentType,
+          kycCountry: kyc?.country,
+          kycUpdatedAt: kyc?.updatedAt ? new Date(kyc.updatedAt) : undefined,
         });
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {

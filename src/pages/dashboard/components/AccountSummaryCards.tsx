@@ -4,9 +4,10 @@ import { Account } from '../types';
 
 interface AccountSummaryCardsProps {
   accounts: Account[];
+  onSelect?: (account: Account) => void;
 }
 
-const AccountSummaryCards: React.FC<AccountSummaryCardsProps> = ({ accounts }) => {
+const AccountSummaryCards: React.FC<AccountSummaryCardsProps> = ({ accounts, onSelect }) => {
   const formatCurrency = (amount: number, currency: string): string => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -43,9 +44,11 @@ const AccountSummaryCards: React.FC<AccountSummaryCardsProps> = ({ accounts }) =
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {accounts.map((account) => (
-        <div
+        <button
+          type="button"
           key={account.id}
-          className="bg-card border border-border rounded-lg p-5 hover:shadow-md transition-shadow duration-200"
+          onClick={() => onSelect?.(account)}
+          className="bg-card border border-border rounded-lg p-5 hover:shadow-md transition-shadow duration-200 w-full text-left"
         >
           <div className="flex items-start justify-between mb-4">
             <div className={`w-10 h-10 bg-gradient-to-br ${getAccountColor(account.type)} rounded-lg flex items-center justify-center`}>
@@ -64,7 +67,7 @@ const AccountSummaryCards: React.FC<AccountSummaryCardsProps> = ({ accounts }) =
               ****{account.accountNumber.slice(-4)}
             </p>
           </div>
-        </div>
+        </button>
       ))}
     </div>
   );

@@ -77,7 +77,7 @@ const MoneyTransfer = () => {
     const fetchDashboard = async () => {
       setIsLoadingAccount(true);
       try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/dashboard`, {
+        const response = await fetch(`${API_BASE_URL}/accounts`, {
           headers: {
             Authorization: `Bearer ${token}`
           },
@@ -89,21 +89,19 @@ const MoneyTransfer = () => {
           return;
         }
 
-        const data = payload?.data;
-        if (!data) return;
-
-        setCurrentUser(data.user);
-        if (data.primaryAccount) {
+        const accounts = Array.isArray(payload) ? payload : [];
+        if (accounts.length > 0) {
+          const primary = accounts[0];
           setUserAccount({
-            id: data.primaryAccount.id,
-            accountNumber: data.primaryAccount.accountNumber,
-            balance: data.primaryAccount.balance,
-            accountType: data.primaryAccount.type
+            id: primary.id,
+            accountNumber: primary.account_number || primary.accountNumber,
+            balance: primary.available_balance ?? primary.posted_balance ?? primary.balance ?? 0,
+            accountType: primary.type
           });
           setTransferLimits((prev) => ({
             ...prev,
-            availableBalance: data.primaryAccount.balance,
-            currency: data.primaryAccount.currency || prev.currency
+            availableBalance: primary.available_balance ?? primary.posted_balance ?? primary.balance ?? 0,
+            currency: primary.currency || prev.currency
           }));
         }
       } finally {
@@ -111,36 +109,7 @@ const MoneyTransfer = () => {
       }
     };
 
-    const fetchLimits = async () => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/transfer-limits`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-          signal: controller.signal
-        });
-        const payload = await response.json().catch(() => null);
-        if (!response.ok) {
-          return;
-        }
-        const data = payload?.data;
-        if (data) {
-          setTransferLimits({
-            dailyLimit: data.dailyLimit,
-            perTransactionLimit: data.perTransactionLimit,
-            remainingToday: data.remainingToday,
-            spentToday: data.spentToday,
-            availableBalance: data.availableBalance,
-            currency: data.currency || 'USD'
-          });
-        }
-      } catch (error) {
-        // ignore
-      }
-    };
-
     fetchDashboard();
-    fetchLimits();
 
     return () => controller.abort();
   }, [navigate]);
@@ -217,20 +186,18 @@ const MoneyTransfer = () => {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/payments/transfer`, {
+      const response = await fetch(`${API_BASE_URL}/transfers`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          amount: transferSummary.total,
-          currency: transferLimits.currency,
-          beneficiaryName: verifiedAccount?.fullName,
-          beneficiaryEmail: verifiedAccount?.email,
-          accountNumber: verifiedAccount?.accountNumber,
-          transferType: formData.transferType,
-          memo: formData.memo
+          from_account_id: userAccount?.id,
+          to_account_number: verifiedAccount?.accountNumber,
+          to_routing_number: bankCode,
+          amount: transferSummary.amount,
+          description: formData.memo || `Transfer to ${verifiedAccount?.fullName || 'beneficiary'}`
         })
       });
 
@@ -242,11 +209,11 @@ const MoneyTransfer = () => {
         return;
       }
 
-      toast.success('Transfer completed successfully.');
+      toast.success('Transfer submitted. It will complete shortly.');
       setIsConfirmationOpen(false);
       navigate('/dashboard', {
         state: {
-          message: 'Transfer completed successfully',
+          message: 'Transfer submitted successfully',
           type: 'success'
         }
       });
@@ -262,47 +229,20 @@ const MoneyTransfer = () => {
   );
 
   const handleVerifyAccount = async (accountNumber: string, bankName: string) => {
-    const token = getStoredToken();
-    if (!token || accountNumber.trim().length < 6 || !bankName.trim()) {
+    // sandbox: accept input as-is
+    if (accountNumber.trim().length < 6 || !bankName.trim()) {
       setVerifiedAccount(null);
-      setVerifyError(null);
+      setVerifyError('Enter account number and bank name.');
       return;
     }
-
-    setIsVerifyingAccount(true);
+    setVerifiedAccount({
+      bankName,
+      accountNumber,
+      fullName: formData.accountHolderName || '',
+      email: '',
+      currency: transferLimits.currency
+    });
     setVerifyError(null);
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/verify-account`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          accountNumber: accountNumber.trim(),
-          bankName: bankName.trim(),
-          bankCode: bankCode.trim() || undefined,
-          routingNumber: bankCode.trim() || undefined
-        })
-      });
-
-      const payload = await response.json().catch(() => null);
-      if (!response.ok) {
-        const message = payload?.errors || payload?.message || 'Unable to verify account.';
-        setVerifiedAccount(null);
-        setVerifyError(message);
-        return;
-      }
-
-      const data = payload?.data as VerifiedAccount;
-      setVerifiedAccount(data);
-      setVerifyError(null);
-    } catch (error) {
-      setVerifiedAccount(null);
-      setVerifyError('Unable to verify account right now.');
-    } finally {
-      setIsVerifyingAccount(false);
-    }
   };
 
   const handleLookupBank = async () => {
@@ -316,35 +256,11 @@ const MoneyTransfer = () => {
       return;
     }
     setIsBankLookupLoading(true);
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/routing-lookup`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          routingNumber: bankCode.trim(),
-          accountHolderName: formData.accountHolderName?.trim()
-        })
-      });
-      const payload = await response.json().catch(() => null);
-      if (!response.ok) {
-        const message = payload?.errors || payload?.message || 'Unable to lookup bank.';
-        toast.error(message);
-        return;
-      }
-      const bankName = payload?.data?.bankName as string | undefined;
-      if (bankName) {
-        setFormData((prev) => ({ ...prev, bankName }));
-        toast.success(`Bank identified: ${bankName}`);
-        setBankLookupSuccess(true);
-      } else {
-        setBankLookupSuccess(false);
-      }
-    } finally {
-      setIsBankLookupLoading(false);
-    }
+    // Sandbox: no external lookup, accept user input
+    setIsBankLookupLoading(false);
+    setBankLookupSuccess(true);
+    setFormData((prev) => ({ ...prev, bankName: prev.bankName || 'Sandbox Bank' }));
+    toast.success('Bank identified (sandbox)');
   };
 
   useEffect(() => {

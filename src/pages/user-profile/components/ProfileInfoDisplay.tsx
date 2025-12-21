@@ -28,11 +28,15 @@ const ProfileInfoDisplay = ({ profile, onEdit }: ProfileInfoDisplayProps) => {
       label: 'Email Address',
       value: profile.email
     },
-    {
-      icon: 'Phone',
-      label: 'Phone Number',
-      value: profile.phone
-    },
+    ...(profile.phone
+      ? [
+          {
+            icon: 'Phone',
+            label: 'Phone Number',
+            value: profile.phone
+          }
+        ]
+      : []),
     {
       icon: 'Calendar',
       label: 'Member Since',
@@ -42,7 +46,43 @@ const ProfileInfoDisplay = ({ profile, onEdit }: ProfileInfoDisplayProps) => {
       icon: 'Clock',
       label: 'Last Login',
       value: formatDate(profile.lastLogin)
-    }
+    },
+    ...(profile.kycStatus
+      ? [
+          {
+            icon: 'ShieldCheck',
+            label: 'KYC Status',
+            value: profile.kycStatus
+          }
+        ]
+      : []),
+    ...(profile.kycDocumentType
+      ? [
+          {
+            icon: 'FileCheck',
+            label: 'Document Type',
+            value: profile.kycDocumentType
+          }
+        ]
+      : []),
+    ...(profile.kycCountry
+      ? [
+          {
+            icon: 'Globe2',
+            label: 'Country',
+            value: profile.kycCountry
+          }
+        ]
+      : []),
+    ...(profile.kycUpdatedAt
+      ? [
+          {
+            icon: 'CalendarClock',
+            label: 'Verified At',
+            value: formatDate(profile.kycUpdatedAt)
+          }
+        ]
+      : []),
   ];
 
   return (

@@ -42,8 +42,11 @@ const TransactionsPage = () => {
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingAccounts, setIsLoadingAccounts] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [currentUser, setCurrentUser] = useState<{ name: string; email: string; avatar?: string } | null>(null);
+  const [accounts, setAccounts] = useState<Array<{ id: string; label: string }>>([]);
+  const [selectedAccountId, setSelectedAccountId] = useState<string | null>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -64,24 +67,101 @@ const TransactionsPage = () => {
       return;
     }
 
-    const fetchTransactions = async () => {
-      setIsLoading(true);
+    const loadAccountsAndProfile = async () => {
+      setIsLoadingAccounts(true);
       setLoadError(null);
       try {
-        const [transactionResponse, profileResponse] = await Promise.all([
-          fetch(`${API_BASE_URL}/api/auth/transactions`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },
+        const [accountsRes, profileRes] = await Promise.all([
+          fetch(`${API_BASE_URL}/accounts`, {
+            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
-          fetch(`${API_BASE_URL}/api/auth/me`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },
+          fetch(`${API_BASE_URL}/me`, {
+            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           })
         ]);
+
+        if (profileRes.ok) {
+          const profilePayload = await profileRes.json().catch(() => null);
+          if (profilePayload) {
+            setCurrentUser({
+              name: profilePayload.fullName || profilePayload.email || profilePayload.id,
+              email: profilePayload.email,
+              avatar: profilePayload.avatarUrl
+            });
+          }
+        }
+
+        if (!accountsRes.ok) {
+          if (accountsRes.status === 401) {
+            clearStoredToken();
+            navigate('/login');
+            return;
+          }
+          const payload = await accountsRes.json().catch(() => null);
+          const message = payload?.errors || payload?.message || 'Unable to load accounts.';
+          setLoadError(message);
+          setIsLoading(false);
+          return;
+        }
+
+        const payload = await accountsRes.json().catch(() => []);
+        const acctList: Array<{ id: string; label: string }> = Array.isArray(payload)
+          ? payload.map((acct: any) => {
+              const acctNum = acct.account_number || acct.accountNumber || '';
+              const last4 = acctNum ? acctNum.slice(-4) : '';
+              return {
+                id: acct.id,
+                label: `${acct.type || 'account'} ••••${last4}`
+              };
+            })
+          : [];
+        setAccounts(acctList);
+        if (acctList[0]?.id) {
+          setSelectedAccountId(acctList[0].id);
+        } else {
+          setTransactions([]);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          const message = 'Unable to load accounts.';
+          setLoadError(message);
+          toast.error(message);
+        }
+        setIsLoading(false);
+      } finally {
+        setIsLoadingAccounts(false);
+      }
+    };
+
+    loadAccountsAndProfile();
+
+    return () => controller.abort();
+  }, [navigate]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const token = getStoredToken();
+
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
+    const fetchTransactions = async () => {
+      if (!selectedAccountId) return;
+      setIsLoading(true);
+      setLoadError(null);
+      try {
+        const transactionResponse = await fetch(
+          `${API_BASE_URL}/accounts/${selectedAccountId}/transactions?limit=200`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            signal: controller.signal
+          }
+        );
 
         const transactionPayload = await transactionResponse.json().catch(() => null);
         if (!transactionResponse.ok) {
@@ -96,42 +176,25 @@ const TransactionsPage = () => {
           return;
         }
 
-        const profilePayload = await profileResponse.json().catch(() => null);
-        if (profileResponse.ok && profilePayload?.data) {
-          setCurrentUser({
-            name: profilePayload.data.fullName,
-            email: profilePayload.data.email,
-            avatar: profilePayload.data.avatarUrl
-          });
-        }
+        const normalized = (transactionPayload || []).map((entry: any) => {
+          const statusRaw = (entry.status || entry.transaction?.status || '').toString().toLowerCase();
+          const status: Transaction['status'] =
+            statusRaw === 'pending' ? 'pending' : 'completed';
 
-        const data = transactionPayload?.data as Array<{
-          id: string;
-          date: string;
-          description: string;
-          amount: number;
-          type: 'credit' | 'debit';
-          status: 'completed' | 'pending' | 'failed';
-          category: string;
-          reference?: string;
-          currency?: string;
-          counterparty?: string;
-          note?: string;
-        }>;
-
-        const normalized = (data || []).map((transaction) => ({
-          id: transaction.id,
-          date: new Date(transaction.date),
-          description: transaction.description,
-          amount: transaction.amount,
-          type: transaction.type,
-          status: transaction.status,
-          category: transaction.category,
-          referenceNumber: transaction.reference || transaction.id,
-          currency: transaction.currency,
-          counterparty: transaction.counterparty,
-          note: transaction.note
-        }));
+          return {
+            id: entry.id,
+            date: new Date(entry.created_at || entry.createdAt || entry.transaction?.createdAt || Date.now()),
+            description: entry.description || entry.transaction?.description || 'Transaction',
+            amount: entry.amount,
+            type: ((entry.entry_type || entry.entryType || 'debit') as string).toLowerCase() as Transaction['type'],
+            status,
+            category: entry.transaction?.type || 'ledger',
+            referenceNumber: entry.transaction?.id || entry.id,
+            currency: entry.transaction?.currency || 'USD',
+            counterparty: entry.transaction?.counterparty,
+            note: entry.transaction?.description
+          } as Transaction;
+        });
 
         setTransactions(normalized);
       } catch (error) {
@@ -146,9 +209,8 @@ const TransactionsPage = () => {
     };
 
     fetchTransactions();
-
     return () => controller.abort();
-  }, [navigate]);
+  }, [navigate, selectedAccountId]);
 
   const filteredAndSortedTransactions = useMemo(() => {
     let filtered = [...transactions];
@@ -313,6 +375,44 @@ const TransactionsPage = () => {
             <p className="text-muted-foreground">
               View and manage all your banking transactions
             </p>
+          </div>
+
+          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="text-sm text-muted-foreground">
+              {isLoadingAccounts
+                ? 'Loading accounts...'
+                : accounts.length === 0
+                  ? 'No accounts yet. Create an account to see transactions.'
+                  : 'Select an account to view its ledger activity.'}
+            </div>
+            {accounts.length > 0 && (
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-foreground" htmlFor="account-select">
+                  Account
+                </label>
+                <select
+                  id="account-select"
+                  className="rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  value={selectedAccountId ?? ''}
+                  onChange={(e) => setSelectedAccountId(e.target.value)}
+                >
+                  {accounts.map((acct) => (
+                    <option key={acct.id} value={acct.id}>
+                      {acct.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+            {accounts.length === 0 && !isLoadingAccounts && (
+              <button
+                className="text-sm text-primary underline"
+                onClick={() => navigate('/dashboard')}
+                type="button"
+              >
+                Create an account
+              </button>
+            )}
           </div>
 
           <QuickActionPanel

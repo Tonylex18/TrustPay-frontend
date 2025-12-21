@@ -24,6 +24,38 @@ const Dashboard: React.FC = () => {
   const [kycStatus, setKycStatus] = useState<string | null>(null);
   const [showKycModal, setShowKycModal] = useState(false);
   const [showAccountPrompt, setShowAccountPrompt] = useState(false);
+  const [kycRecord, setKycRecord] = useState<any>(null);
+  const [isLoadingTransactions, setIsLoadingTransactions] = useState(false);
+
+  // Poll KYC status if pending
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (kycStatus === 'PENDING') {
+      interval = setInterval(async () => {
+        const token = getStoredToken();
+        if (!token) return;
+        try {
+          const res = await fetch(`${API_BASE_URL}/kyc/me`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const payload = await res.json().catch(() => null);
+          if (res.ok && payload?.kyc) {
+            const k = payload.kyc;
+            setKycStatus(k.status);
+            setKycRecord(k);
+            if (k.status === 'APPROVED' && (!dashboardData?.accounts || dashboardData.accounts.length === 0)) {
+              setShowAccountPrompt(true);
+            }
+          }
+        } catch (_err) {
+          // ignore polling errors
+        }
+      }, 15000); // poll every 15s
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [kycStatus, dashboardData?.accounts]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -78,6 +110,7 @@ const Dashboard: React.FC = () => {
           return;
         }
         const kyc = kycPayload?.kyc;
+        setKycRecord(kyc);
         setKycStatus(kyc?.status || meData?.kycStatus || null);
         const accountsPayload = await accountsRes.json().catch(() => null);
         if (!accountsRes.ok) {
@@ -104,16 +137,16 @@ const Dashboard: React.FC = () => {
         setDashboardData({
           user: {
             email: meData?.email,
-            name: meData?.fullName || meData?.email,
+            name: (kyc?.firstName || meData?.fullName || meData?.email || "").trim(),
           },
           accounts: normalizedAccounts,
           primaryAccount: normalizedAccounts[0] || null,
           recentTransactions: []
         });
 
-        if (!kyc || kyc.status !== 'APPROVED') {
+        if (!kyc) {
           setShowKycModal(true);
-        } else if (normalizedAccounts.length === 0) {
+        } else if (normalizedAccounts.length === 0 && kyc.status === 'APPROVED') {
           setShowAccountPrompt(true);
         }
       } catch (error) {
@@ -131,6 +164,89 @@ const Dashboard: React.FC = () => {
 
     return () => controller.abort();
   }, [navigate]);
+
+  // Load recent transactions for the selected primary account and merge pending->completed states
+  useEffect(() => {
+    const primaryId = dashboardData?.primaryAccount?.id;
+    if (!primaryId) return;
+    const controller = new AbortController();
+    const token = getStoredToken();
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
+    const fetchRecentTx = async () => {
+      setIsLoadingTransactions(true);
+      try {
+        const res = await fetch(`${API_BASE_URL}/accounts/${primaryId}/transactions?limit=25`, {
+          headers: { Authorization: `Bearer ${token}` },
+          signal: controller.signal
+        });
+        const payload = await res.json().catch(() => []);
+        if (!res.ok) {
+          if (res.status === 401) {
+            clearStoredToken();
+            navigate('/login');
+            return;
+          }
+          const message = payload?.errors || payload?.message || 'Unable to load recent transactions.';
+          toast.error(message);
+          return;
+        }
+
+        const normalized = (Array.isArray(payload) ? payload : []).map((entry: any) => {
+          const statusRaw = (entry.status || entry.transaction?.status || '').toString().toLowerCase();
+          const status: "pending" | "completed" | "failed" =
+            statusRaw === 'pending' ? 'pending' : 'completed';
+
+          const txId = entry.transaction?.id || entry.transactionId || entry.id;
+
+          return {
+            id: txId,
+            date: new Date(entry.created_at || entry.createdAt || entry.transaction?.createdAt || Date.now()),
+            description: entry.description || entry.transaction?.description || 'Transaction',
+            amount: entry.amount,
+            type: ((entry.entry_type || entry.entryType || 'debit') as string).toLowerCase() as 'credit' | 'debit',
+            category: entry.transaction?.type || 'Ledger',
+            status
+          };
+        });
+
+        // Merge by transaction id: if a pending and a completed exist, keep one row with completed status
+        const mergedMap = new Map<string, typeof normalized[number]>();
+        normalized.forEach((tx) => {
+          const existing = mergedMap.get(tx.id);
+          if (!existing) {
+            mergedMap.set(tx.id, tx);
+            return;
+          }
+          const preferCompleted = existing.status === 'completed' || tx.status === 'completed';
+          mergedMap.set(tx.id, {
+            ...existing,
+            ...tx,
+            status: preferCompleted ? 'completed' : tx.status,
+            date: tx.date > existing.date ? tx.date : existing.date
+          });
+        });
+
+        const merged = Array.from(mergedMap.values())
+          .sort((a, b) => b.date.getTime() - a.date.getTime())
+          .slice(0, 6);
+
+        setDashboardData((prev) => prev ? { ...prev, recentTransactions: merged } : prev);
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          toast.error('Unable to load recent transactions.');
+        }
+      } finally {
+        setIsLoadingTransactions(false);
+      }
+    };
+
+    fetchRecentTx();
+    return () => controller.abort();
+  }, [dashboardData?.primaryAccount?.id, navigate]);
 
   const primaryAccount = useMemo(() => {
     if (!dashboardData?.primaryAccount) {
@@ -235,6 +351,13 @@ const Dashboard: React.FC = () => {
 
   const dashboardCurrency = dashboardData?.primaryAccount?.currency || 'USD';
 
+  const handleAccountSelect = (account: any) => {
+    setDashboardData((prev) => {
+      if (!prev) return prev;
+      return { ...prev, primaryAccount: account };
+    });
+  };
+
   return (
     <>
       <Helmet>
@@ -312,7 +435,7 @@ const Dashboard: React.FC = () => {
                     {dashboardData.accounts.length === 0 ? (
                       <p className="text-sm text-muted-foreground">No accounts available yet.</p>
                     ) : (
-                      <AccountSummaryCards accounts={dashboardData.accounts} />
+                      <AccountSummaryCards accounts={dashboardData.accounts} onSelect={handleAccountSelect} />
                     )}
                   </div>
 

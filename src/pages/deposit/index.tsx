@@ -1,33 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
-import { Elements, CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import { toast } from 'react-toastify';
 import NavigationBar from '../../components/ui/NavigationBar';
 import BreadcrumbTrail from '../../components/ui/BreadcrumbTrail';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
 import { API_BASE_URL, getStoredToken } from '../../utils/api';
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '');
+import AccountSelector from '../../components/ui/AccountSelector';
 
 const DepositForm = () => {
   const navigate = useNavigate();
-  const stripe = useStripe();
-  const elements = useElements();
   const [amount, setAmount] = useState('');
   const [note, setNote] = useState('');
+  const [accountId, setAccountId] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!stripe || !elements) return;
 
     const numericAmount = Number(amount);
     if (!numericAmount || numericAmount <= 0) {
       setErrorMessage('Enter a valid deposit amount.');
+      return;
+    }
+    if (!accountId) {
+      setErrorMessage('Select an account to fund.');
       return;
     }
 
@@ -41,7 +40,7 @@ const DepositForm = () => {
     setErrorMessage(null);
 
     try {
-      const intentResponse = await fetch(`${API_BASE_URL}/api/payments/deposit-intent`, {
+      const response = await fetch(`${API_BASE_URL}/deposits`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -49,68 +48,20 @@ const DepositForm = () => {
         },
         body: JSON.stringify({
           amount: numericAmount,
-          currency: 'usd',
-          description: note
+          description: note,
+          account_id: accountId
         })
       });
 
-      const intentPayload = await intentResponse.json().catch(() => null);
-      if (!intentResponse.ok) {
-        const message = intentPayload?.errors || intentPayload?.message || 'Unable to start deposit.';
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        const message = payload?.errors || payload?.message || 'Unable to start deposit.';
         setErrorMessage(message);
         toast.error(message);
         return;
       }
 
-      const clientSecret = intentPayload?.data?.clientSecret as string | undefined;
-      const paymentIntentId = intentPayload?.data?.paymentIntentId as string | undefined;
-      if (!clientSecret || !paymentIntentId) {
-        const message = 'Unable to initialize payment.';
-        setErrorMessage(message);
-        toast.error(message);
-        return;
-      }
-
-      const cardElement = elements.getElement(CardElement);
-      if (!cardElement) {
-        const message = 'Card element not ready.';
-        setErrorMessage(message);
-        toast.error(message);
-        return;
-      }
-
-      const confirmation = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: cardElement
-        }
-      });
-
-      if (confirmation.error) {
-        const message = confirmation.error.message || 'Payment failed.';
-        setErrorMessage(message);
-        toast.error(message);
-        return;
-      }
-
-      if (confirmation.paymentIntent?.status !== 'succeeded') {
-        const message = 'Payment did not complete. Please try again.';
-        setErrorMessage(message);
-        toast.error(message);
-        return;
-      }
-
-      await fetch(`${API_BASE_URL}/api/payments/confirm-intent`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          paymentIntentId
-        })
-      });
-
-      toast.success('Deposit completed.');
+      toast.success('Deposit initiated. It will complete shortly.');
       navigate('/dashboard');
     } catch (error) {
       const message = 'Unable to process deposit right now.';
@@ -141,12 +92,7 @@ const DepositForm = () => {
         onChange={(event) => setNote(event.target.value)}
       />
 
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Card Details</label>
-        <div className="rounded-md border border-input bg-background px-3 py-3">
-          <CardElement options={{ hidePostalCode: true }} />
-        </div>
-      </div>
+      <AccountSelector onSelect={(id) => setAccountId(id)} />
 
       {errorMessage && (
         <div className="rounded-lg border border-error/20 bg-error/5 px-4 py-3 text-sm text-error">
@@ -195,9 +141,7 @@ const DepositPage: React.FC = () => {
                 </p>
               </div>
 
-              <Elements stripe={stripePromise}>
-                <DepositForm />
-              </Elements>
+              <DepositForm />
             </div>
           </div>
         </main>
