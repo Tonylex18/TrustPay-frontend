@@ -94,7 +94,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
                       Category
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Status
+                      Type
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Amount
@@ -116,7 +116,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
                               color="var(--color-foreground)"
                             />
                           </div>
-                          <span className="text-sm font-medium text-foreground">
+                          <span className="text-sm font-medium text-foreground text-nowrap">
                             {transaction.description}
                           </span>
                         </div>
@@ -125,12 +125,12 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
                         {transaction.category}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${getStatusColor(transaction.status)}`}>
-                          {transaction.status}
+                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${transaction.type === 'credit' ? 'text-success' : 'text-red-600'} ${getStatusColor(transaction.status)}`}>
+                          {transaction.type}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <span className={`text-sm font-semibold ${transaction.type === 'credit' ? 'text-success' : 'text-foreground'}`}>
+                        <span className={`text-sm font-semibold ${transaction.type === 'credit' ? 'text-success' : 'text-red-600'}`}>
                           {transaction.type === 'credit' ? '+' : '-'}{formatCurrency(transaction.amount)}
                         </span>
                       </td>
@@ -144,8 +144,8 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
             <div className="md:hidden">
               {transactions.map((transaction) => (
                 <div key={transaction.id} className="p-4 hover:bg-muted/30 transition-colors duration-150">
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center gap-3 flex-1">
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
                       <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center flex-shrink-0">
                         <Icon
                           name={getTransactionIcon(transaction.category)}
@@ -157,12 +157,12 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
                         <p className="text-sm font-medium text-foreground truncate">
                           {transaction.description}
                         </p>
-                        <p className="text-xs text-muted-foreground mt-0.5">
+                        <p className="text-[11px] text-muted-foreground mt-0.5 uppercase truncate">
                           {transaction.category}
                         </p>
                       </div>
                     </div>
-                    <span className={`text-sm font-semibold ${transaction.type === 'credit' ? 'text-success' : 'text-foreground'}`}>
+                    <span className={`text-sm font-semibold whitespace-nowrap ${transaction.type === 'credit' ? 'text-success' : 'text-red-600'}`}>
                       {transaction.type === 'credit' ? '+' : '-'}{formatCurrency(transaction.amount)}
                     </span>
                   </div>

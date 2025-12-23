@@ -4,6 +4,7 @@ export interface Account {
 	balance: number;
 	accountNumber: string;
 	currency: string;
+	routingNumber?: string;
 }
 
 export interface Transaction {

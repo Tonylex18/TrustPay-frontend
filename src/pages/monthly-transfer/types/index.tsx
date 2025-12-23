@@ -4,6 +4,7 @@ export interface VerifiedAccount {
   accountNumber: string;
   bankName: string;
   currency: string;
+  routingNumber?: string;
 }
 
 export interface TransferFormData {
@@ -43,4 +44,5 @@ export interface Account {
   accountNumber: string;
   balance: number;
   accountType: string;
+  routingNumber?: string;
 }

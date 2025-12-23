@@ -36,6 +36,19 @@ type PendingTransaction = {
   };
 };
 
+type KycRecord = {
+  id: string;
+  userId: string;
+  email: string;
+  fullName: string;
+  documentType: string;
+  documentNumber: string;
+  country: string;
+  submittedAt: string;
+  status: 'PENDING' | 'APPROVED' | 'REJECTED';
+  rejectionReason?: string | null;
+};
+
 const testFundOptions: SelectOption[] = [
   { value: 'deposit', label: 'Deposit' },
   { value: 'withdrawal', label: 'Withdrawal' },
@@ -53,7 +66,10 @@ const AdminApprovalsPage: React.FC = () => {
   });
 
   const [pendingTransactions, setPendingTransactions] = useState<PendingTransaction[]>([]);
+  const [kycRecords, setKycRecords] = useState<KycRecord[]>([]);
+  const [kycStatusFilter, setKycStatusFilter] = useState<'PENDING' | 'APPROVED' | 'REJECTED'>('PENDING');
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingKyc, setIsLoadingKyc] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [activeActionId, setActiveActionId] = useState<string | null>(null);
 
@@ -88,7 +104,7 @@ const AdminApprovalsPage: React.FC = () => {
     setIsLoading(true);
     setLoadError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/admin/transactions/pending`, {
+      const response = await fetch(`${API_BASE_URL}/admin/transactions?status=PENDING`, {
         headers: {
           Authorization: `Bearer ${authToken}`
         },
@@ -106,8 +122,29 @@ const AdminApprovalsPage: React.FC = () => {
         return;
       }
 
-      const data = (payload?.data || []) as PendingTransaction[];
-      setPendingTransactions(data);
+      const txns = Array.isArray(payload) ? payload : payload?.data || [];
+      // Normalize to PendingTransaction shape
+      const normalized: PendingTransaction[] = txns.map((t: any) => ({
+        userId: t.userId || '',
+        userName: t.userName || t.user?.fullName || t.user?.email || 'User',
+        userEmail: t.user?.email || '—',
+        transaction: {
+          id: t.id,
+          date: t.createdAt || t.date,
+          description: t.description || t.reference || 'Pending transaction',
+          amount: (t.amountCents || 0) / 100,
+          type: t.type?.toLowerCase()?.includes('deposit') ? 'credit' : 'debit',
+          status: 'pending',
+          category: t.type,
+          reference: t.reference,
+          currency: t.currency || 'USD',
+          counterparty: t.externalReference,
+          note: t.description,
+          destinationAccountId: t.destinationAccountId,
+          beneficiaryEmail: t.beneficiaryEmail
+        }
+      }));
+      setPendingTransactions(normalized);
     } catch (error) {
       if ((error as Error).name !== 'AbortError') {
         const message = 'Unable to load pending transactions.';
@@ -119,10 +156,38 @@ const AdminApprovalsPage: React.FC = () => {
     }
   };
 
+  const fetchKyc = async (authToken: string, signal?: AbortSignal) => {
+    setIsLoadingKyc(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/kyc`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+        signal
+      });
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        const message = payload?.errors || payload?.message || 'Unable to load KYC submissions.';
+        if (response.status === 401 || response.status === 403) {
+          setToken(null);
+        }
+        toast.error(message);
+        return;
+      }
+      const list = Array.isArray(payload) ? payload : [];
+      setKycRecords(list);
+    } catch (error) {
+      if ((error as Error).name !== 'AbortError') {
+        toast.error('Unable to load KYC submissions.');
+      }
+    } finally {
+      setIsLoadingKyc(false);
+    }
+  };
+
   useEffect(() => {
     if (!token) return;
     const controller = new AbortController();
     fetchPending(token, controller.signal);
+    fetchKyc(token, controller.signal);
     return () => controller.abort();
   }, [token]);
 
@@ -135,7 +200,7 @@ const AdminApprovalsPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/admin/login`, {
+      const response = await fetch(`${API_BASE_URL}/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -151,7 +216,7 @@ const AdminApprovalsPage: React.FC = () => {
         return;
       }
 
-      const adminToken = payload?.data?.token as string | undefined;
+      const adminToken = payload?.token || payload?.data?.token as string | undefined;
       if (!adminToken) {
         toast.error('Admin login response was incomplete.');
         return;
@@ -179,12 +244,13 @@ const AdminApprovalsPage: React.FC = () => {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/admin/transactions/${item.userId}/${item.transaction.id}/${action}`,
+        `${API_BASE_URL}/admin/transactions/${item.transaction.id}/${action === 'approve' ? 'approve' : 'reject'}`,
         {
-          method: 'POST',
+          method: 'PATCH',
           headers: {
             Authorization: `Bearer ${token}`
-          }
+          },
+          body: action === 'reject' ? JSON.stringify({ reason: 'Rejected by admin' }) : undefined
         }
       );
 
@@ -203,6 +269,45 @@ const AdminApprovalsPage: React.FC = () => {
       toast.error(`Unable to ${action} transaction.`);
     } finally {
       setActiveActionId(null);
+    }
+  };
+
+  const handleKycAction = async (record: KycRecord, status: 'APPROVED' | 'REJECTED') => {
+    if (!token) {
+      toast.error('Please sign in as an admin.');
+      return;
+    }
+    let rejectionReason: string | undefined;
+    if (status === 'REJECTED') {
+      rejectionReason = window.prompt('Enter rejection reason') || undefined;
+      if (!rejectionReason) {
+        toast.error('Rejection reason is required.');
+        return;
+      }
+    }
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/kyc/${record.id}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status, rejectionReason })
+      });
+      if (!response.ok) {
+        const payload = await response.json().catch(() => null);
+        const message = payload?.errors || payload?.message || 'Unable to update KYC.';
+        toast.error(message);
+        return;
+      }
+      toast.success(`KYC ${status.toLowerCase()}.`);
+      setKycRecords((prev) =>
+        prev.map((k) =>
+          k.id === record.id ? { ...k, status, rejectionReason: rejectionReason ?? k.rejectionReason } : k
+        )
+      );
+    } catch {
+      toast.error('Unable to update KYC.');
     }
   };
 
@@ -343,16 +448,16 @@ const AdminApprovalsPage: React.FC = () => {
               <div className="mt-6 p-4 rounded-lg border border-dashed border-border bg-muted/30 text-sm text-muted-foreground">
                 <p className="font-semibold text-foreground mb-1">Need an admin account?</p>
                 <p className="mb-3">
-                  In development you can create one via <code>POST /api/admin/register</code> with
-                  <code>fullName</code>, <code>email</code>, and <code>password</code>, then sign in here.
+                  In development you can create one via <code>POST /admin/bootstrap</code> (first admin) or with an existing admin using <code>POST /admin/users</code>, then sign in here.
                 </p>
               </div>
             </div>
           ) : (
-            <div className="grid gap-8 lg:grid-cols-[minmax(0,2.2fr)_minmax(0,1fr)]">
-              <section className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
+            <>
+              <div className="grid gap-8 lg:grid-cols-[minmax(0,2.2fr)_minmax(0,1fr)]">
+                <section className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
                     <h2 className="text-2xl font-bold text-foreground">Pending approvals</h2>
                     <p className="text-sm text-muted-foreground">
                       Review deposits, bills, and transfers before they post to customer balances.
@@ -543,7 +648,99 @@ const AdminApprovalsPage: React.FC = () => {
                   </ul>
                 </div>
               </aside>
-            </div>
+              </div>
+
+              <section className="mt-10 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold text-foreground">KYC submissions</h2>
+                    <p className="text-sm text-muted-foreground">Approve or reject identity verification submissions.</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Select
+                      value={kycStatusFilter}
+                      onChange={(v) => setKycStatusFilter(v as any)}
+                      options={[
+                        { label: 'Pending', value: 'PENDING' },
+                        { label: 'Approved', value: 'APPROVED' },
+                        { label: 'Rejected', value: 'REJECTED' }
+                      ]}
+                    />
+                    <Button variant="outline" onClick={() => token && fetchKyc(token)} loading={isLoadingKyc}>
+                      Refresh
+                    </Button>
+                  </div>
+                </div>
+
+                {isLoadingKyc ? (
+                  <div className="rounded-lg border border-border bg-muted/30 p-6 text-sm text-muted-foreground">
+                    Loading KYC submissions...
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-border bg-card shadow-card overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                      <thead className="text-left text-muted-foreground">
+                        <tr>
+                          <th className="py-2 px-4">User</th>
+                          <th className="py-2 px-4">Document</th>
+                          <th className="py-2 px-4">Country</th>
+                          <th className="py-2 px-4">Submitted</th>
+                          <th className="py-2 px-4">Status</th>
+                          <th className="py-2 px-4 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border/60">
+                        {kycRecords
+                          .filter((k) => k.status === kycStatusFilter)
+                          .map((k) => (
+                            <tr key={k.id}>
+                              <td className="py-3 px-4">
+                                <div className="font-semibold text-foreground">{k.fullName || '—'}</div>
+                                <div className="text-xs text-muted-foreground">{k.email}</div>
+                              </td>
+                              <td className="py-3 px-4">
+                                <div className="font-medium text-foreground">{k.documentType.toUpperCase()}</div>
+                                <div className="text-xs text-muted-foreground">{k.documentNumber}</div>
+                              </td>
+                              <td className="py-3 px-4">{k.country}</td>
+                              <td className="py-3 px-4">{new Date(k.submittedAt).toLocaleString()}</td>
+                              <td className="py-3 px-4">
+                                <span className="px-2 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">
+                                  {k.status}
+                                </span>
+                                {k.rejectionReason && (
+                                  <div className="text-[11px] text-muted-foreground mt-1">Reason: {k.rejectionReason}</div>
+                                )}
+                              </td>
+                              <td className="py-3 px-4 text-right space-x-2">
+                                <Button
+                                  size="sm"
+                                  variant="secondary"
+                                  disabled={k.status !== 'PENDING'}
+                                  onClick={() => handleKycAction(k, 'APPROVED')}
+                                >
+                                  Approve
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  disabled={k.status !== 'PENDING'}
+                                  onClick={() => handleKycAction(k, 'REJECTED')}
+                                >
+                                  Reject
+                                </Button>
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                    {kycRecords.filter((k) => k.status === kycStatusFilter).length === 0 && (
+                      <p className="text-sm text-muted-foreground p-4">No KYC submissions for this filter.</p>
+                    )}
+                  </div>
+                )}
+              </section>
+            </>
           )}
         </main>
       </div>

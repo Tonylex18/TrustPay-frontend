@@ -8,6 +8,7 @@ import Button from '../../components/ui/Button';
 import AccountBalanceCard from './components/AccountBalanceCard';
 import AccountSummaryCards from './components/AccountSummaryCards';
 import RecentTransactions from './components/RecentTransactions';
+import AccountDetailsCard from './components/AccountDetailsCard';
 import type { DashboardData, QuickActionConfig } from './types';
 import { API_BASE_URL, clearStoredToken, getStoredToken } from '../../utils/api';
 import { toast } from 'react-toastify';
@@ -132,6 +133,7 @@ const Dashboard: React.FC = () => {
           balance: acct.available_balance ?? acct.posted_balance ?? acct.balance ?? 0,
           accountNumber: acct.account_number || acct.accountNumber || '',
           currency: acct.currency || 'USD',
+          routingNumber: acct.routing_number || acct.routingNumber,
         }));
 
         setDashboardData({
@@ -438,6 +440,11 @@ const Dashboard: React.FC = () => {
                       <AccountSummaryCards accounts={dashboardData.accounts} onSelect={handleAccountSelect} />
                     )}
                   </div>
+
+                  <AccountDetailsCard
+                    account={dashboardData.primaryAccount || null}
+                    accountName={dashboardData.user?.name || dashboardData.user?.email}
+                  />
 
                   <div className="bg-card border border-border rounded-lg p-6 shadow-card">
                     <h3 className="text-lg font-semibold text-foreground mb-4">

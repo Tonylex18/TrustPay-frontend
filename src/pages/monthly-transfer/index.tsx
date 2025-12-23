@@ -20,6 +20,9 @@ const MoneyTransfer = () => {
 
   const [currentUser, setCurrentUser] = useState<{ name: string; email: string; avatar?: string } | null>(null);
   const [userAccount, setUserAccount] = useState<Account | null>(null);
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [fromAccountId, setFromAccountId] = useState<string | null>(null);
+  const [toInternalAccountId, setToInternalAccountId] = useState<string | null>(null);
   const [isLoadingAccount, setIsLoadingAccount] = useState(true);
   const [transferError, setTransferError] = useState<string | null>(null);
 
@@ -77,31 +80,55 @@ const MoneyTransfer = () => {
     const fetchDashboard = async () => {
       setIsLoadingAccount(true);
       try {
-        const response = await fetch(`${API_BASE_URL}/accounts`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-          signal: controller.signal
-        });
+        const [accountsRes, meRes] = await Promise.all([
+          fetch(`${API_BASE_URL}/accounts`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+            signal: controller.signal
+          }),
+          fetch(`${API_BASE_URL}/me`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+            signal: controller.signal
+          })
+        ]);
 
-        const payload = await response.json().catch(() => null);
-        if (!response.ok) {
+        const payload = await accountsRes.json().catch(() => null);
+        const mePayload = await meRes.json().catch(() => null);
+        if (meRes.ok && mePayload) {
+          setCurrentUser({
+            name: mePayload.fullName || mePayload.email,
+            email: mePayload.email,
+            avatar: mePayload.avatarUrl
+          });
+        }
+
+        if (!accountsRes.ok) {
           return;
         }
 
-        const accounts = Array.isArray(payload) ? payload : [];
-        if (accounts.length > 0) {
-          const primary = accounts[0];
-          setUserAccount({
-            id: primary.id,
-            accountNumber: primary.account_number || primary.accountNumber,
-            balance: primary.available_balance ?? primary.posted_balance ?? primary.balance ?? 0,
-            accountType: primary.type
-          });
+        const list = Array.isArray(payload) ? payload : [];
+        const normalized = list.map((acct: any) => ({
+          id: acct.id,
+          accountNumber: acct.account_number || acct.accountNumber,
+          balance: acct.available_balance ?? acct.posted_balance ?? acct.balance ?? 0,
+          accountType: acct.type || 'checking',
+          routingNumber: acct.routing_number || acct.routingNumber
+        }));
+        setAccounts(normalized);
+        if (normalized.length > 0) {
+          const primary = normalized[0];
+          setUserAccount(primary);
+          setFromAccountId(primary.id);
+          // pick opposite account as default destination if exists
+          const alt = normalized.find((a) => a.id !== primary.id);
+          if (alt) setToInternalAccountId(alt.id);
           setTransferLimits((prev) => ({
             ...prev,
-            availableBalance: primary.available_balance ?? primary.posted_balance ?? primary.balance ?? 0,
-            currency: primary.currency || prev.currency
+            availableBalance: primary.balance ?? 0,
+            currency: 'USD'
           }));
         }
       } finally {
@@ -131,22 +158,33 @@ const MoneyTransfer = () => {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!bankLookupSuccess) {
-      newErrors.accountNumber = 'Lookup bank first with holder name and routing number';
-    }
-    if (!formData.accountHolderName.trim()) {
-      newErrors.accountNumber = 'Account holder name is required';
-    }
-    if (!formData.accountNumber) {
-      newErrors.accountNumber = 'Enter a destination account number';
-    } else if (!verifiedAccount || verifiedAccount.accountNumber !== formData.accountNumber.trim()) {
-      newErrors.accountNumber = 'Please verify the account number before proceeding';
-    }
-    if (!formData.accountType) {
-      newErrors.accountNumber = 'Select account type';
-    }
-    if (!formData.bankName.trim()) {
-      newErrors.accountNumber = 'Bank name is required';
+    if (formData.transferType === 'external') {
+      if (!bankLookupSuccess) {
+        newErrors.accountNumber = 'Lookup bank first with holder name and routing number';
+      }
+      if (!formData.accountHolderName.trim()) {
+        newErrors.accountNumber = 'Account holder name is required';
+      }
+      if (!formData.accountNumber) {
+        newErrors.accountNumber = 'Enter a destination account number';
+      } else if (!verifiedAccount || verifiedAccount.accountNumber !== formData.accountNumber.trim()) {
+        newErrors.accountNumber = 'Please verify the account number before proceeding';
+      }
+      if (!formData.accountType) {
+        newErrors.accountNumber = 'Select account type';
+      }
+      if (!formData.bankName.trim()) {
+        newErrors.accountNumber = 'Bank name is required';
+      }
+    } else {
+      if (!fromAccountId) {
+        newErrors.accountNumber = 'Select a source account.';
+      }
+      if (!toInternalAccountId) {
+        newErrors.accountNumber = 'Select a destination account.';
+      } else if (toInternalAccountId === fromAccountId) {
+        newErrors.accountNumber = 'Choose a different destination account.';
+      }
     }
 
     if (!formData.amount) {
@@ -171,6 +209,19 @@ const MoneyTransfer = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
+      if (formData.transferType === 'internal') {
+        const dest = accounts.find((a) => a.id === toInternalAccountId);
+        if (dest) {
+          setVerifiedAccount({
+            bankName: 'TrustPay (internal)',
+            accountNumber: dest.accountNumber,
+            fullName: currentUser?.name || 'Your account',
+            email: currentUser?.email || '',
+            currency: transferLimits.currency,
+            routingNumber: dest.routingNumber || userAccount?.routingNumber || '103219840'
+          });
+        }
+      }
       setIsConfirmationOpen(true);
     }
   };
@@ -186,6 +237,25 @@ const MoneyTransfer = () => {
     }
 
     try {
+      const destinationAccount =
+        formData.transferType === 'internal'
+          ? accounts.find((a) => a.id === toInternalAccountId)
+          : verifiedAccount;
+      if (!destinationAccount) {
+        setTransferError('Select a destination account.');
+        setIsProcessing(false);
+        return;
+      }
+      const routing =
+        formData.transferType === 'internal'
+          ? destinationAccount?.routingNumber || userAccount?.routingNumber || '103219840'
+          : bankCode;
+      if (!routing) {
+        setTransferError('Missing routing number for destination account.');
+        setIsProcessing(false);
+        return;
+      }
+
       const response = await fetch(`${API_BASE_URL}/transfers`, {
         method: 'POST',
         headers: {
@@ -193,11 +263,14 @@ const MoneyTransfer = () => {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          from_account_id: userAccount?.id,
-          to_account_number: verifiedAccount?.accountNumber,
-          to_routing_number: bankCode,
+          from_account_id: fromAccountId ?? userAccount?.id,
+          to_account_number:
+            formData.transferType === 'internal'
+              ? destinationAccount?.accountNumber
+              : verifiedAccount?.accountNumber,
+          to_routing_number: routing,
           amount: transferSummary.amount,
-          description: formData.memo || `Transfer to ${verifiedAccount?.fullName || 'beneficiary'}`
+          description: formData.memo || `Transfer to ${destinationAccount ? 'your account' : 'beneficiary'}`
         })
       });
 
@@ -240,7 +313,8 @@ const MoneyTransfer = () => {
       accountNumber,
       fullName: formData.accountHolderName || '',
       email: '',
-      currency: transferLimits.currency
+      currency: transferLimits.currency,
+      routingNumber: bankCode
     });
     setVerifyError(null);
   };
@@ -267,14 +341,16 @@ const MoneyTransfer = () => {
     if (verifyTimeout.current) {
       clearTimeout(verifyTimeout.current);
     }
-    verifyTimeout.current = setTimeout(() => {
-      if (bankLookupSuccess && formData.accountNumber.trim().length >= 6) {
-        handleVerifyAccount(formData.accountNumber, formData.bankName);
-      } else {
-        setVerifiedAccount(null);
-        setVerifyError(null);
-      }
-    }, 400);
+    if (formData.transferType === 'external') {
+      verifyTimeout.current = setTimeout(() => {
+        if (bankLookupSuccess && formData.accountNumber.trim().length >= 6) {
+          handleVerifyAccount(formData.accountNumber, formData.bankName);
+        } else {
+          setVerifiedAccount(null);
+          setVerifyError(null);
+        }
+      }, 400);
+    }
 
     return () => {
       if (verifyTimeout.current) clearTimeout(verifyTimeout.current);
@@ -287,12 +363,29 @@ const MoneyTransfer = () => {
     { label: 'Money Transfer' }
   ];
 
+  useEffect(() => {
+    if (formData.transferType === 'internal') {
+      setBankLookupSuccess(false);
+      setVerifyError(null);
+      setVerifiedAccount(null);
+      setFormData((prev) => ({
+        ...prev,
+        accountNumber: '',
+        accountHolderName: '',
+        bankName: '',
+        accountType: undefined
+      }));
+    } else {
+      setToInternalAccountId(null);
+    }
+  }, [formData.transferType]);
+
   return (
     <div className="min-h-screen bg-background">
       <NavigationBar user={currentUser || undefined} onNavigate={(path) => navigate(path)} />
 
       <main className="pt-nav-height">
-        <div className="px-nav-margin py-8">
+        <div className="px-nav-margin py-8 max-w-6xl mx-auto">
           <BreadcrumbTrail items={breadcrumbItems} className="mb-6" />
 
           <div className="mb-8">
@@ -309,177 +402,241 @@ const MoneyTransfer = () => {
           )}
 
           {!isLoadingAccount && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <form onSubmit={handleSubmit} className="bg-card border border-border rounded-lg p-6 shadow-card">
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-foreground mb-2">
-                      Destination Account <span className="text-error">*</span>
-                    </label>
-                    <div className="grid gap-3 sm:grid-cols-[2fr_1fr]">
-                      <Input
-                        label="Account Holder Name"
-                        placeholder="e.g., Jane Doe"
-                        value={formData.accountHolderName}
-                        onChange={(e) => setFormData({ ...formData, accountHolderName: e.target.value })}
-                        required
-                      />
-                      <div className="relative">
-                        <Input
-                          label="Routing number"
-                          placeholder="Routing number"
-                          value={bankCode}
-                          onChange={(e) => setBankCode(e.target.value)}
-                          description="Used to auto-identify bank"
-                        />
-                        
-                      </div>
-                    </div>
-                    <div className="mt-3 grid gap-3 sm:grid-cols-[2fr_1fr]">
-                      <Input
-                        placeholder="Enter 10-digit account number"
-                        value={formData.accountNumber}
-                        onChange={(e) => {
-                          setFormData({ ...formData, accountNumber: e.target.value });
-                          setErrors({ ...errors, accountNumber: '' });
-                          setVerifiedAccount(null);
-                          setVerifyError(null);
-                        }}
-                        error={errors.accountNumber}
-                        disabled={!bankLookupSuccess}
-                      />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <form onSubmit={handleSubmit} className="bg-card border border-border rounded-2xl p-6 shadow-card">
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-1 gap-4">
                       <div className="space-y-2">
-                        <label className="text-sm font-medium text-foreground">Account Type</label>
+                        <label className="block text-sm font-medium text-foreground">
+                          From Account <span className="text-error">*</span>
+                        </label>
                         <select
-                          className="w-full h-10 rounded-md border border-input bg-background px-3 text-sm"
-                          value={formData.accountType || ''}
-                          onChange={(e) => setFormData({ ...formData, accountType: e.target.value as 'checking' | 'savings' })}
-                          disabled={!bankLookupSuccess}
+                          className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm"
+                          value={fromAccountId ?? ''}
+                          onChange={(e) => {
+                            const id = e.target.value;
+                            setFromAccountId(id);
+                            const src = accounts.find((a) => a.id === id);
+                            if (src) {
+                              setUserAccount(src);
+                              setTransferLimits((prev) => ({
+                                ...prev,
+                                availableBalance: src.balance ?? 0
+                              }));
+                              const alt = accounts.find((a) => a.id !== id);
+                              if (alt) setToInternalAccountId((prevVal) => prevVal === id ? alt.id : prevVal ?? alt.id);
+                            }
+                          }}
                         >
-                          <option value="">Select account type</option>
-                          <option value="checking">Checking</option>
-                          <option value="savings">Savings</option>
+                          {accounts.map((acct) => (
+                            <option key={acct.id} value={acct.id}>
+                              {acct.accountType} ••••{(acct.accountNumber || '').slice(-4)} — ${acct.balance?.toLocaleString()}
+                            </option>
+                          ))}
                         </select>
-                        <p className="text-xs text-muted-foreground">Requires bank lookup first</p>
                       </div>
+
+                      {formData.transferType === 'internal' ? (
+                        <div className="space-y-2">
+                          <label className="block text-sm font-medium text-foreground">
+                            Destination (your account) <span className="text-error">*</span>
+                          </label>
+                          <select
+                            className="w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm"
+                            value={toInternalAccountId ?? ''}
+                            onChange={(e) => {
+                              setToInternalAccountId(e.target.value);
+                              setErrors({ ...errors, accountNumber: '' });
+                            }}
+                          >
+                            <option value="">Select destination</option>
+                            {accounts
+                              .filter((acct) => acct.id !== fromAccountId)
+                              .map((acct) => (
+                                <option key={acct.id} value={acct.id}>
+                                  {acct.accountType} ••••{(acct.accountNumber || '').slice(-4)}
+                                </option>
+                              ))}
+                          </select>
+                          {accounts.filter((a) => a.id !== fromAccountId).length === 0 && (
+                            <p className="text-xs text-warning">You need another account to transfer internally.</p>
+                          )}
+                          {errors.accountNumber && (
+                            <p className="text-xs text-error">{errors.accountNumber}</p>
+                          )}
+                        </div>
+                      ) : (
+                        <>
+                          <div className="grid gap-4 md:grid-cols-2">
+                            <Input
+                              label="Account Holder Name"
+                              placeholder="Jane Doe"
+                              value={formData.accountHolderName}
+                              onChange={(e) => setFormData({ ...formData, accountHolderName: e.target.value })}
+                              required
+                            />
+                            <div className="relative">
+                              <Input
+                                label="Routing number"
+                                placeholder="Routing number"
+                                value={bankCode}
+                                onChange={(e) => setBankCode(e.target.value)}
+                                // description="Used to auto-identify bank"
+                                required
+                              />
+
+                            </div>
+                          </div>
+
+                          <div className="relative">
+                            <Input
+                              placeholder="Bank"
+                              value={formData.bankName}
+                              readOnly
+                              // description="Auto-filled from routing lookup"
+                              required
+                            />
+                            <button
+                              type="button"
+                              onClick={handleLookupBank}
+                              className="absolute right-3 top-1/3 transform -translate-y-1/2 p-1 text-primary hover:text-primary/80 disabled:opacity-50"
+                              disabled={isBankLookupLoading}
+                            >
+                              <Icon name={isBankLookupLoading ? 'Loader2' : 'Search'} className={isBankLookupLoading ? 'animate-spin' : ''} size={16} />
+                            </button>
+                          </div>
+                          <div className="mt-2 flex items-center gap-2 text-sm">
+                            {isVerifyingAccount && (
+                              <>
+                                <Icon name="Loader2" className="animate-spin" size={16} />
+                                <span className="text-muted-foreground">Verifying account...</span>
+                              </>
+                            )}
+                            {!isVerifyingAccount && verifiedAccount && (
+                              <>
+                                <Icon name="CheckCircle" size={16} color="var(--color-success)" />
+                                <span className="text-success">Verified: {verifiedAccount.fullName}</span>
+                              </>
+                            )}
+                            {!isVerifyingAccount && verifyError && (
+                              <>
+                                <Icon name="AlertCircle" size={16} color="var(--color-error)" />
+                                <span className="text-error">{verifyError}</span>
+                              </>
+                            )}
+                          </div>
+                          <div className="grid gap-4 md:grid-cols-2">
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium text-foreground">Account Number</label>
+                              <Input
+                                placeholder="Enter 10-digit account number"
+                                value={formData.accountNumber}
+                                onChange={(e) => {
+                                  setFormData({ ...formData, accountNumber: e.target.value });
+                                  setErrors({ ...errors, accountNumber: '' });
+                                  setVerifiedAccount(null);
+                                  setVerifyError(null);
+                                }}
+                                error={errors.accountNumber}
+                                disabled={!bankLookupSuccess}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium text-foreground">Account Type</label>
+                              <select
+                                className="w-full h-10 rounded-lg border border-input bg-background px-3 text-sm"
+                                value={formData.accountType || ''}
+                                onChange={(e) => setFormData({ ...formData, accountType: e.target.value as 'checking' | 'savings' })}
+                                disabled={!bankLookupSuccess}
+                              >
+                                <option value="">Select account type</option>
+                                <option value="checking">Checking</option>
+                                <option value="savings">Savings</option>
+                              </select>
+                            </div>
+                          </div>
+                        </>
+                      )}
                     </div>
-                    <div className="relative">
-                      <Input
-                        placeholder="Bank"
-                        value={formData.bankName}
-                        readOnly
-                        description="Auto-filled from routing lookup"
-                        required
-                      />
-                      <button
-                          type="button"
-                          onClick={handleLookupBank}
-                          className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 text-primary hover:text-primary/80 disabled:opacity-50"
-                          disabled={isBankLookupLoading}
-                        >
-                          <Icon name={isBankLookupLoading ? 'Loader2' : 'Search'} className={isBankLookupLoading ? 'animate-spin' : ''} size={16} />
-                        </button>
-                    </div>
-                    <div className="mt-2 flex items-center gap-2 text-sm">
-                      {isVerifyingAccount && (
-                        <>
-                          <Icon name="Loader2" className="animate-spin" size={16} />
-                          <span className="text-muted-foreground">Verifying account...</span>
-                        </>
-                      )}
-                      {!isVerifyingAccount && verifiedAccount && (
-                        <>
-                          <Icon name="CheckCircle" size={16} color="var(--color-success)" />
-                          <span className="text-success">Verified: {verifiedAccount.fullName}</span>
-                        </>
-                      )}
-                      {!isVerifyingAccount && verifyError && (
-                        <>
-                          <Icon name="AlertCircle" size={16} color="var(--color-error)" />
-                          <span className="text-error">{verifyError}</span>
-                        </>
-                      )}
+
+                    <AmountInput
+                      value={formData.amount}
+                      onChange={(value) => {
+                        setFormData({ ...formData, amount: value });
+                        setErrors({ ...errors, amount: '' });
+                      }}
+                      balance={userAccount?.balance ?? transferLimits.availableBalance}
+                      error={errors.amount}
+                      maxAmount={maxTransferable}
+                      remainingDaily={transferLimits.remainingToday}
+                      currency={transferLimits.currency}
+                    />
+
+                    <TransferTypeSelector
+                      value={formData.transferType}
+                      onChange={(value) => setFormData({ ...formData, transferType: value })}
+                    />
+
+                    <Input
+                      label="Memo (Optional)"
+                      type="text"
+                      placeholder="Add a note for this transfer"
+                      value={formData.memo}
+                      onChange={(e) => setFormData({ ...formData, memo: e.target.value })}
+                      description="Maximum 100 characters"
+                    />
+
+                    <div className="pt-4 border-t border-border">
+                      <Button
+                        type="submit"
+                        variant="default"
+                        size="lg"
+                        iconName="Send"
+                        iconPosition="left"
+                        fullWidth
+                        disabled={!userAccount}
+                      >
+                        Review Transfer
+                      </Button>
                     </div>
                   </div>
+                </form>
 
-                  <AmountInput
-                    value={formData.amount}
-                    onChange={(value) => {
-                      setFormData({ ...formData, amount: value });
-                      setErrors({ ...errors, amount: '' });
-                    }}
-                    balance={userAccount?.balance ?? transferLimits.availableBalance}
-                    error={errors.amount}
-                    maxAmount={maxTransferable}
-                    remainingDaily={transferLimits.remainingToday}
-                    currency={transferLimits.currency}
-                  />
-
-                  <TransferTypeSelector
-                    value={formData.transferType}
-                    onChange={(value) => setFormData({ ...formData, transferType: value })}
-                  />
-
-                  <Input
-                    label="Memo (Optional)"
-                    type="text"
-                    placeholder="Add a note for this transfer"
-                    value={formData.memo}
-                    onChange={(e) => setFormData({ ...formData, memo: e.target.value })}
-                    description="Maximum 100 characters"
-                  />
-
-                  <div className="pt-4 border-t border-border">
-                    <Button
-                      type="submit"
-                      variant="default"
-                      size="lg"
-                      iconName="Send"
-                      iconPosition="left"
-                      fullWidth
-                      disabled={!userAccount}
-                    >
-                      Review Transfer
-                    </Button>
+                {transferError && (
+                  <div className="mt-4 rounded-lg border border-error/20 bg-error/5 px-4 py-3 text-sm text-error">
+                    {transferError}
                   </div>
-                </div>
-              </form>
+                )}
 
-              {transferError && (
-                <div className="mt-4 rounded-lg border border-error/20 bg-error/5 px-4 py-3 text-sm text-error">
-                  {transferError}
-                </div>
-              )}
-
-              <div className="mt-6 p-4 bg-muted/50 border border-border rounded-lg">
-                <div className="flex items-start gap-3">
-                  <Icon name="Info" size={20} color="var(--color-primary)" className="mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="text-sm font-medium text-foreground mb-1">Important Information</p>
-                    <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
-                      <li>Internal transfers are processed instantly</li>
-                      <li>External transfers may take 1-2 business days</li>
-                      <li>Verify beneficiary details before confirming</li>
-                      <li>Transaction cannot be reversed once confirmed</li>
-                    </ul>
+                <div className="mt-6 p-4 bg-muted/50 border border-border rounded-lg">
+                  <div className="flex items-start gap-3">
+                    <Icon name="Info" size={20} color="var(--color-primary)" className="mt-0.5 flex-shrink-0" />
+                    <div>
+                      <p className="text-sm font-medium text-foreground mb-1">Important Information</p>
+                      <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+                        <li>Internal transfers are processed instantly</li>
+                        <li>External transfers may take 1-2 business days</li>
+                        <li>Verify beneficiary details before confirming</li>
+                        <li>Transaction cannot be reversed once confirmed</li>
+                      </ul>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="space-y-6">
-              {formData.amount && !errors.amount && (
-                <TransferSummaryCard
-                  summary={transferSummary}
-                  transferType={formData.transferType}
-                  currency={transferLimits.currency}
-                />
-              )}
+              <div className="space-y-6">
+                {formData.amount && !errors.amount && (
+                  <TransferSummaryCard
+                    summary={transferSummary}
+                    transferType={formData.transferType}
+                    currency={transferLimits.currency}
+                  />
+                )}
 
-              <SecurityInfo limits={transferLimits} />
+                <SecurityInfo limits={transferLimits} />
+              </div>
             </div>
-          </div>
           )}
         </div>
       </main>

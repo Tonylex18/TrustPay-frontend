@@ -14,6 +14,8 @@ import InvestWealthManagementPage from "./pages/investWealthManagement";
 import AboutTrustPayPage from "./pages/about-trustpay";
 import LoginPage from "./pages/login";
 import AdminApprovalsPage from "./pages/admin-approvals";
+import AdminKycReview from "./pages/admin-kyc";
+import AdminUsersPage from "./pages/admin-users";
 import NotFound from "./pages/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ScrollToTop from "./components/ScrollToTop";
@@ -40,6 +42,8 @@ const Routes: React.FC = () => {
         <Route path="/about-trustpay" element={<AboutTrustPayPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/admin" element={<AdminApprovalsPage />} />
+        <Route path="/admin/kyc-review" element={<AdminKycReview />} />
+        <Route path="/admin/users" element={<AdminUsersPage />} />
         <Route path="/user-profile" element={<UserProfilePage />} />
         <Route path="/kyc" element={<KycPage />} />
         <Route path="*" element={<NotFound />} />

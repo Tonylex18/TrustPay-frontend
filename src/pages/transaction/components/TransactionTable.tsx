@@ -121,7 +121,7 @@ const TransactionTable = ({
                 </td>
                 <td className="p-4">
                   <div className="flex flex-col gap-1">
-                    <span className="text-sm font-medium text-foreground">
+                    <span className="text-sm font-medium text-foreground text-wrap">
                       {transaction.description}
                     </span>
                     <span className="text-xs text-muted-foreground">

@@ -42,29 +42,29 @@ const AccountSummaryCards: React.FC<AccountSummaryCardsProps> = ({ accounts, onS
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4">
       {accounts.map((account) => (
         <button
           type="button"
           key={account.id}
           onClick={() => onSelect?.(account)}
-          className="bg-card border border-border rounded-lg p-5 hover:shadow-md transition-shadow duration-200 w-full text-left"
+          className="bg-card border border-border rounded-xl p-5 hover:shadow-lg transition-all duration-200 w-full text-left flex flex-col gap-3"
         >
-          <div className="flex items-start justify-between mb-4">
+          <div className="flex items-start justify-between">
             <div className={`w-10 h-10 bg-gradient-to-br ${getAccountColor(account.type)} rounded-lg flex items-center justify-center`}>
               <Icon name={getAccountIcon(account.type)} size={20} color="white" />
             </div>
-            <span className="text-xs font-medium text-muted-foreground capitalize px-2 py-1 bg-muted rounded">
+            <span className="text-xs font-semibold text-primary bg-primary/10 border border-primary/20 capitalize px-2 py-1 rounded-full">
               {account.type}
             </span>
           </div>
 
           <div className="space-y-2">
-            <p className="text-2xl font-bold text-foreground">
+            <p className="text-md md:text-2xl font-bold text-foreground">
               {formatCurrency(account.balance, account.currency)}
             </p>
-            <p className="text-sm text-muted-foreground font-data">
-              ****{account.accountNumber.slice(-4)}
+            <p className="text-xs text-muted-foreground font-data uppercase tracking-wide">
+              {account.currency} ••••{account.accountNumber.slice(-4)}
             </p>
           </div>
         </button>

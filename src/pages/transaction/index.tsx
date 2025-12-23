@@ -180,23 +180,50 @@ const TransactionsPage = () => {
           const statusRaw = (entry.status || entry.transaction?.status || '').toString().toLowerCase();
           const status: Transaction['status'] =
             statusRaw === 'pending' ? 'pending' : 'completed';
+          const txId = entry.transaction?.id || entry.transactionId || entry.id;
+          const isExternal =
+            entry.transaction?.type === 'INTERNAL_TRANSFER' && !entry.transaction?.destinationAccountId;
 
           return {
-            id: entry.id,
+            id: txId,
             date: new Date(entry.created_at || entry.createdAt || entry.transaction?.createdAt || Date.now()),
-            description: entry.description || entry.transaction?.description || 'Transaction',
+            description:
+              entry.description ||
+              entry.transaction?.description ||
+              (isExternal ? 'External transfer' : 'Transaction'),
             amount: entry.amount,
             type: ((entry.entry_type || entry.entryType || 'debit') as string).toLowerCase() as Transaction['type'],
             status,
-            category: entry.transaction?.type || 'ledger',
-            referenceNumber: entry.transaction?.id || entry.id,
+            category: isExternal ? 'EXTERNAL_TRANSFER' : entry.transaction?.type || 'ledger',
+            referenceNumber: txId,
             currency: entry.transaction?.currency || 'USD',
             counterparty: entry.transaction?.counterparty,
             note: entry.transaction?.description
           } as Transaction;
         });
 
-        setTransactions(normalized);
+        // merge duplicates (pending + completed for same transaction id)
+        const mergedMap = new Map<string, Transaction>();
+        normalized.forEach((tx: any) => {
+          const existing = mergedMap.get(tx.id);
+          if (!existing) {
+            mergedMap.set(tx.id, tx);
+            return;
+          }
+          const preferCompleted = existing.status === 'completed' || tx.status === 'completed';
+          mergedMap.set(tx.id, {
+            ...existing,
+            ...tx,
+            status: preferCompleted ? 'completed' : tx.status,
+            date: tx.date > existing.date ? tx.date : existing.date
+          });
+        });
+
+        const merged = Array.from(mergedMap.values()).sort(
+          (a, b) => b.date.getTime() - a.date.getTime()
+        );
+
+        setTransactions(merged);
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {
           const message = 'Unable to load transactions.';
