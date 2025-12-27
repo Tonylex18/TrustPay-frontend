@@ -19,7 +19,14 @@ import {
 
 const normalizeStatus = (value: string | null | undefined): Transaction['status'] => {
   const status = (value || '').toLowerCase();
-  if (status.includes('reject') || status.includes('decline') || status.includes('fail') || status === 'error') {
+  if (
+    status.includes('reject') ||
+    status.includes('decline') ||
+    status.includes('fail') ||
+    status.includes('cancel') ||
+    status.includes('reverse') ||
+    status === 'error'
+  ) {
     return 'failed';
   }
   if (status.includes('pending') || status.includes('process') || status.includes('review')) {
@@ -188,7 +195,8 @@ const TransactionsPage = () => {
         }
 
         const normalized = (transactionPayload || []).map((entry: any) => {
-          const status = normalizeStatus((entry.status || entry.transaction?.status || '').toString());
+          const rawStatus = entry.transaction?.status ?? entry.status ?? '';
+          const status = normalizeStatus(String(rawStatus));
           const txId = entry.transaction?.id || entry.transactionId || entry.id;
           const isExternal =
             entry.transaction?.type === 'INTERNAL_TRANSFER' && !entry.transaction?.destinationAccountId;

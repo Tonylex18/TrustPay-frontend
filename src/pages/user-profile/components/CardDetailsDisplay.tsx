@@ -43,8 +43,8 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4 }
       normalized === 'active'
         ? 'bg-success/10 text-success border-success/30'
         : normalized === 'frozen'
-        ? 'bg-amber-50 text-amber-700 border-amber-200'
-        : 'bg-muted text-muted-foreground border-border';
+          ? 'bg-amber-50 text-amber-700 border-amber-200'
+          : 'bg-muted text-muted-foreground border-border';
     return (
       <span className={`text-[11px] font-semibold uppercase px-2 py-1 rounded-full border ${pillColor}`}>
         {card.status}
@@ -204,54 +204,96 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4 }
         </div>
       )}
 
-      {showDetails && (
-        <div className="space-y-3">
-          <div className="rounded-xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 text-white p-4 shadow-inner border border-white/10">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <p className="text-[11px] uppercase tracking-wide text-white/60">Cardholder</p>
-                <p className="text-base font-semibold">Secured by Stripe Issuing</p>
+      <div className="space-y-3">
+        <div
+          className="relative h-64"
+          style={{ perspective: '1400px' }}
+        >
+          <div
+            className="absolute inset-0 transition-transform duration-700 ease-out"
+            style={{
+              transformStyle: 'preserve-3d',
+              transform: showDetails ? 'rotateY(180deg)' : 'rotateY(0deg)'
+            }}
+          >
+            <div
+              className="absolute inset-0 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-700 text-white p-5 shadow-xl border border-white/10"
+              style={{ backfaceVisibility: 'hidden' }}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <div className="space-y-1">
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-white/60">Virtual Card</p>
+                  <p className="text-xl font-semibold">{card.brand || 'Visa'}</p>
+                </div>
+                <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] uppercase tracking-wide border border-white/20">
+                  {card.status}
+                </span>
               </div>
-              <p className="text-[11px] uppercase tracking-wide text-white/60">Sensitive • Do not share</p>
+              <div className="flex items-center gap-3 mb-10">
+                <span className="h-10 w-14 rounded-md bg-amber-300/90 shadow-inner" />
+                <div className="text-white/70 text-sm">
+                  <p>Digital Access</p>
+                  <p className="text-xs">Secured by Stripe Issuing</p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <p className="text-2xl font-semibold tracking-[0.25em]">•••• •••• •••• {card.last4}</p>
+                <div className="flex items-center justify-between text-xs text-white/70">
+                  <span>Valid Thru — — / — —</span>
+                  <span>CVV — — —</span>
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div className="bg-white/10 rounded-lg px-3 py-2">
-                <p className="text-[11px] uppercase tracking-wide text-white/60 mb-1">Number</p>
-                <div
-                  ref={numberRef}
-                  className="min-h-[32px] text-lg font-semibold tracking-[0.18em]"
-                  aria-label="Card number"
-                />
+
+            <div
+              className="absolute inset-0 rounded-2xl bg-gradient-to-br from-slate-950 via-slate-800 to-slate-700 text-white p-5 shadow-2xl border border-white/10"
+              style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
+            >
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-[11px] uppercase tracking-wide text-white/60">Sensitive details</p>
+                <p className="text-[11px] uppercase tracking-wide text-white/60">Do not share</p>
               </div>
-              <div className="bg-white/10 rounded-lg px-3 py-2">
-                <p className="text-[11px] uppercase tracking-wide text-white/60 mb-1">Expiry</p>
-                <div
-                  ref={expiryRef}
-                  className="min-h-[32px] text-lg font-semibold tracking-[0.12em]"
-                  aria-label="Expiry date"
-                />
+              <div className="flex flex-col gap-3">
+                <div className="bg-white/10 rounded-lg px-3 py-2">
+                  <p className="text-[11px] uppercase tracking-wide text-white/60 mb-1">Number</p>
+                  <div
+                    ref={numberRef}
+                    className="min-h-[32px] text-lg font-semibold tracking-[0.18em]"
+                    aria-label="Card number"
+                  />
+                </div>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-3'>
+                  <div className="bg-white/10 rounded-lg px-3 py-2">
+                    <p className="text-[11px] uppercase tracking-wide text-white/60 mb-1">Expiry</p>
+                    <div
+                      ref={expiryRef}
+                      className="min-h-[32px] text-lg font-semibold tracking-[0.12em]"
+                      aria-label="Expiry date"
+                    />
+                  </div>
+
+                  <div className="bg-white/10 rounded-lg px-3 py-2">
+                    <p className="text-[11px] uppercase tracking-wide text-white/60 mb-1">CVC</p>
+                    <div
+                      ref={cvcRef}
+                      className="min-h-[32px] text-lg font-semibold tracking-[0.12em]"
+                      aria-label="CVC"
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="bg-white/10 rounded-lg px-3 py-2">
-                <p className="text-[11px] uppercase tracking-wide text-white/60 mb-1">CVC</p>
-                <div
-                  ref={cvcRef}
-                  className="min-h-[32px] text-lg font-semibold tracking-[0.12em]"
-                  aria-label="CVC"
-                />
-              </div>
+              {loading && (
+                <p className="text-xs text-white/70 mt-3">Loading secure details…</p>
+              )}
+              {!loading && (
+                <p className="text-xs text-white/70 mt-3">
+                  Card numbers and CVC are rendered by Stripe and never touch TrustPay servers or local state.
+                </p>
+              )}
             </div>
           </div>
-
-          {loading && (
-            <p className="text-xs text-muted-foreground">Loading secure details…</p>
-          )}
-          {!loading && (
-            <p className="text-xs text-muted-foreground">
-              Card numbers and CVC are rendered by Stripe and never touch TrustPay servers or local state.
-            </p>
-          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
