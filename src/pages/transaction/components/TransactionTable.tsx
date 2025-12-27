@@ -77,13 +77,22 @@ const TransactionTable = ({
                 {renderSortIcon('description')}
               </button>
             </th>
-            <th className="text-left p-4">
+            {/* <th className="text-left p-4">
               <button
                 onClick={() => onSort('type')}
                 className="flex items-center gap-2 font-semibold text-sm text-foreground hover:text-primary transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring rounded-md"
               >
                 Type
                 {renderSortIcon('type')}
+              </button>
+            </th> */}
+            <th className="text-left p-4">
+              <button
+                onClick={() => onSort('status')}
+                className="flex items-center gap-2 font-semibold text-sm text-foreground hover:text-primary transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring rounded-md"
+              >
+                Status
+                {renderSortIcon('status')}
               </button>
             </th>
             <th className="text-right p-4">
@@ -95,16 +104,6 @@ const TransactionTable = ({
                 {renderSortIcon('amount')}
               </button>
             </th>
-            <th className="text-left p-4">
-              <button
-                onClick={() => onSort('status')}
-                className="flex items-center gap-2 font-semibold text-sm text-foreground hover:text-primary transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring rounded-md"
-              >
-                Status
-                {renderSortIcon('status')}
-              </button>
-            </th>
-            <th className="w-12 p-4"></th>
           </tr>
         </thead>
         <tbody>
@@ -130,17 +129,6 @@ const TransactionTable = ({
                   </div>
                 </td>
                 <td className="p-4">
-                  <span className={`text-sm font-medium capitalize ${getTypeColor(transaction.type)}`}>
-                    {transaction.type}
-                  </span>
-                </td>
-                <td className="p-4 text-right">
-                  <span className={`text-sm font-semibold ${getTypeColor(transaction.type)}`}>
-                    {transaction.type === 'credit' ? '+' : '-'}
-                    {formatCurrency(transaction.amount)}
-                  </span>
-                </td>
-                <td className="p-4">
                   <span
                     className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium capitalize ${getStatusColor(
                       transaction.status
@@ -149,12 +137,11 @@ const TransactionTable = ({
                     {transaction.status}
                   </span>
                 </td>
-                <td className="p-4">
-                  <Icon
-                    name={expandedRow === transaction.id ? 'ChevronUp' : 'ChevronDown'}
-                    size={20}
-                    color="var(--color-muted-foreground)"
-                  />
+                <td className="p-4 text-right">
+                  <span className={`text-sm font-semibold ${getTypeColor(transaction.type)}`}>
+                    {transaction.type === 'credit' ? '+' : '-'}
+                    {formatCurrency(transaction.amount)}
+                  </span>
                 </td>
               </tr>
               {expandedRow === transaction.id && (

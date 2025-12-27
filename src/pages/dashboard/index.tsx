@@ -8,16 +8,40 @@ import Button from '../../components/ui/Button';
 import AccountBalanceCard from './components/AccountBalanceCard';
 import AccountSummaryCards from './components/AccountSummaryCards';
 import RecentTransactions from './components/RecentTransactions';
-import AccountDetailsCard from './components/AccountDetailsCard';
+import CardDetailsDisplay from '../user-profile/components/CardDetailsDisplay';
 import type { DashboardData, QuickActionConfig } from './types';
 import { API_BASE_URL, clearStoredToken, getStoredToken } from '../../utils/api';
 import { toast } from 'react-toastify';
+
+type DashboardStatus = 'pending' | 'completed' | 'failed';
+
+type CardSummary = {
+  id: string;
+  brand: string;
+  last4: string;
+  status: string;
+  bankAccountId: string;
+  stripeCardId?: string;
+};
+
+const normalizeStatus = (value: string | null | undefined): DashboardStatus => {
+  const status = (value || '').toLowerCase();
+  if (status.includes('reject') || status.includes('decline') || status.includes('fail') || status === 'error') {
+    return 'failed';
+  }
+  if (status.includes('pending') || status.includes('process') || status.includes('review')) {
+    return 'pending';
+  }
+  return 'completed';
+};
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [cards, setCards] = useState<CardSummary[]>([]);
+  const [cardLoadError, setCardLoadError] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newAccountType, setNewAccountType] = useState<'checking' | 'savings'>('checking');
   const [createAccountLoading, setCreateAccountLoading] = useState(false);
@@ -74,8 +98,10 @@ const Dashboard: React.FC = () => {
     const fetchDashboard = async () => {
       setIsLoading(true);
       setLoadError(null);
+      setCardLoadError(null);
+      setCards([]);
       try {
-        const [meRes, accountsRes, kycRes] = await Promise.all([
+        const [meRes, accountsRes, kycRes, cardsRes] = await Promise.all([
           fetch(`${API_BASE_URL}/me`, {
             headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
@@ -85,6 +111,10 @@ const Dashboard: React.FC = () => {
             signal: controller.signal
           }),
           fetch(`${API_BASE_URL}/kyc/me`, {
+            headers: { Authorization: `Bearer ${token}` },
+            signal: controller.signal
+          }),
+          fetch(`${API_BASE_URL}/cards`, {
             headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
@@ -126,6 +156,28 @@ const Dashboard: React.FC = () => {
           return;
         }
 
+        const cardsPayload = await cardsRes.json().catch(() => null);
+        if (!cardsRes.ok) {
+          if (cardsRes.status === 401) {
+            clearStoredToken();
+            navigate('/login');
+            return;
+          }
+          const message = cardsPayload?.errors || cardsPayload?.message || 'Unable to load cards.';
+          setCardLoadError(message);
+        } else if (Array.isArray(cardsPayload)) {
+          setCards(
+            cardsPayload.map((c: any) => ({
+              id: c.id,
+              brand: c.brand,
+              last4: c.last4,
+              status: c.status,
+              bankAccountId: c.bankAccountId,
+              stripeCardId: c.stripeCardId
+            }))
+          );
+        }
+
         const accountsData = Array.isArray(accountsPayload) ? accountsPayload : [];
         const normalizedAccounts = accountsData.map((acct: any) => ({
           id: acct.id,
@@ -139,7 +191,7 @@ const Dashboard: React.FC = () => {
         setDashboardData({
           user: {
             email: meData?.email,
-            name: (kyc?.firstName || meData?.fullName || meData?.email || "").trim(),
+            name: (kyc?.firstName ? `${kyc.firstName} ${kyc.lastName || ""}` : (meData?.fullName || meData?.email || "")).trim(),
           },
           accounts: normalizedAccounts,
           primaryAccount: normalizedAccounts[0] || null,
@@ -198,9 +250,7 @@ const Dashboard: React.FC = () => {
         }
 
         const normalized = (Array.isArray(payload) ? payload : []).map((entry: any) => {
-          const statusRaw = (entry.status || entry.transaction?.status || '').toString().toLowerCase();
-          const status: "pending" | "completed" | "failed" =
-            statusRaw === 'pending' ? 'pending' : 'completed';
+          const status = normalizeStatus((entry.status || entry.transaction?.status || '').toString());
 
           const txId = entry.transaction?.id || entry.transactionId || entry.id;
 
@@ -216,6 +266,7 @@ const Dashboard: React.FC = () => {
         });
 
         // Merge by transaction id: if a pending and a completed exist, keep one row with completed status
+        const statusPriority = { completed: 2, failed: 1, pending: 0 } as const;
         const mergedMap = new Map<string, typeof normalized[number]>();
         normalized.forEach((tx) => {
           const existing = mergedMap.get(tx.id);
@@ -223,11 +274,14 @@ const Dashboard: React.FC = () => {
             mergedMap.set(tx.id, tx);
             return;
           }
-          const preferCompleted = existing.status === 'completed' || tx.status === 'completed';
+          const nextStatus =
+            statusPriority[tx.status] >= statusPriority[existing.status]
+              ? tx.status
+              : existing.status;
           mergedMap.set(tx.id, {
             ...existing,
             ...tx,
-            status: preferCompleted ? 'completed' : tx.status,
+            status: nextStatus,
             date: tx.date > existing.date ? tx.date : existing.date
           });
         });
@@ -250,12 +304,29 @@ const Dashboard: React.FC = () => {
     return () => controller.abort();
   }, [dashboardData?.primaryAccount?.id, navigate]);
 
+  const token = getStoredToken();
+
   const primaryAccount = useMemo(() => {
     if (!dashboardData?.primaryAccount) {
       return null;
     }
     return dashboardData.primaryAccount;
   }, [dashboardData]);
+
+  const activeCard = useMemo(() => {
+    if (!cards.length) return null;
+    if (primaryAccount?.id) {
+      const match = cards.find((c) => c.bankAccountId === primaryAccount.id);
+      if (match) return match;
+    }
+    return cards[0] || null;
+  }, [cards, primaryAccount?.id]);
+
+  const linkedAccount = useMemo(
+    () => (activeCard ? (dashboardData?.accounts || []).find((a) => a.id === activeCard.bankAccountId) || null : null),
+    [activeCard, dashboardData?.accounts]
+  );
+  const linkedAccountLast4 = linkedAccount?.accountNumber ? linkedAccount.accountNumber.slice(-4) : undefined;
 
   const quickActions: QuickActionConfig[] = [
     {
@@ -375,7 +446,7 @@ const Dashboard: React.FC = () => {
 
         <main className="pt-nav-height">
           <div className="px-nav-margin py-8">
-            <div className="max-w-7xl mx-auto space-y-6">
+            <div className="max-w-[90%] mx-auto space-y-6">
               <BreadcrumbTrail items={breadcrumbItems} />
 
               <div className="flex items-center justify-between">
@@ -441,10 +512,26 @@ const Dashboard: React.FC = () => {
                     )}
                   </div>
 
-                  <AccountDetailsCard
-                    account={dashboardData.primaryAccount || null}
-                    accountName={dashboardData.user?.name || dashboardData.user?.email}
-                  />
+                  <div className="space-y-3">
+                    {cardLoadError && (
+                      <div className="border border-error/30 bg-error/5 text-error text-sm rounded-lg px-3 py-2">
+                        {cardLoadError}
+                      </div>
+                    )}
+                    {token ? (
+                      activeCard ? (
+                        <CardDetailsDisplay
+                          card={activeCard}
+                          token={token!}
+                          linkedAccountLast4={linkedAccountLast4}
+                        />
+                      ) : (
+                        <div className="bg-card border border-border rounded-lg p-4 text-sm text-muted-foreground">
+                          Issue a virtual card from your profile to view secure card numbers.
+                        </div>
+                      )
+                    ) : null}
+                  </div>
 
                   <div className="bg-card border border-border rounded-lg p-6 shadow-card">
                     <h3 className="text-lg font-semibold text-foreground mb-4">
@@ -470,50 +557,6 @@ const Dashboard: React.FC = () => {
                         Pay a Bill
                       </Button>
                     </div>
-                  </div>
-
-                  <div className="bg-card border border-border rounded-lg p-6 shadow-card">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-foreground">Transfers Ledger</h3>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => navigate('/transactions')}
-                        iconName="ArrowRight"
-                        iconPosition="right"
-                        iconSize={16}
-                      >
-                        View All
-                      </Button>
-                    </div>
-                    {transferLedger.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">No transfer activity yet.</p>
-                    ) : (
-                      <div className="space-y-3">
-                        {transferLedger.slice(0, 4).map((transaction) => (
-                          <div
-                            key={transaction.id}
-                            className="flex items-center justify-between rounded-lg border border-border/50 px-3 py-2"
-                          >
-                            <div>
-                              <p className="text-sm font-medium text-foreground">{transaction.description}</p>
-                              <p className="text-xs text-muted-foreground">
-                                {new Intl.DateTimeFormat('en-US', {
-                                  month: 'short',
-                                  day: 'numeric'
-                                }).format(transaction.date)}
-                              </p>
-                            </div>
-                            <span className="text-sm font-semibold text-foreground">
-                              -{transaction.amount.toLocaleString('en-US', {
-                                style: 'currency',
-                                currency: dashboardCurrency
-                              })}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    )}
                   </div>
 
                   <div className="bg-gradient-to-br from-accent/10 to-accent/5 border border-accent/20 rounded-lg p-6">

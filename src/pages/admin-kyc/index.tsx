@@ -16,6 +16,11 @@ type KycRecord = {
 	documentType: string;
 	documentNumber: string;
 	country: string;
+	addressLine1?: string;
+	addressLine2?: string | null;
+	city?: string;
+	state?: string;
+	postalCode?: string;
 	submittedAt: string;
 	status: "PENDING" | "APPROVED" | "REJECTED";
 	rejectionReason?: string | null;
@@ -165,6 +170,7 @@ const AdminKycReview: React.FC = () => {
 										<th className="py-2 pr-4">User</th>
 										<th className="py-2 pr-4">Document</th>
 										<th className="py-2 pr-4">Country</th>
+										<th className="py-2 pr-4">Address</th>
 										<th className="py-2 pr-4">Submitted</th>
 										<th className="py-2 pr-4">Status</th>
 										<th className="py-2 pr-4 text-right">Actions</th>
@@ -184,6 +190,11 @@ const AdminKycReview: React.FC = () => {
 												<div className="text-xs text-muted-foreground">{k.documentNumber}</div>
 											</td>
 											<td className="py-3 pr-4">{k.country}</td>
+											<td className="py-3 pr-4 text-xs text-muted-foreground">
+												<div className="text-foreground text-sm">{k.addressLine1}</div>
+												{(k.addressLine2 || "").trim() ? <div>{k.addressLine2}</div> : null}
+												<div>{[k.city, k.state, k.postalCode].filter(Boolean).join(", ")}</div>
+											</td>
 											<td className="py-3 pr-4">
 												{new Date(k.submittedAt).toLocaleString()}
 											</td>

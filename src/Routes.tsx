@@ -16,10 +16,12 @@ import LoginPage from "./pages/login";
 import AdminApprovalsPage from "./pages/admin-approvals";
 import AdminKycReview from "./pages/admin-kyc";
 import AdminUsersPage from "./pages/admin-users";
+import AdminMobileDepositsPage from "./pages/admin-mobile-deposits";
 import NotFound from "./pages/NotFound";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ScrollToTop from "./components/ScrollToTop";
 import KycPage from "./pages/kyc";
+import DepositConfirmationPage from "./pages/deposit/confirmation";
 
 const Routes: React.FC = () => {
   return (
@@ -35,6 +37,7 @@ const Routes: React.FC = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/money-transfer" element={<MoneyTransfer />} />
         <Route path="/deposit" element={<DepositPage />} />
+        <Route path="/deposit/confirmation" element={<DepositConfirmationPage />} />
         <Route path="/bills" element={<BillsPage />} />
         <Route path="/business" element={<BusinessPage />} />
         <Route path="/commercial-banking" element={<CommercialBankingPage />} />
@@ -44,6 +47,7 @@ const Routes: React.FC = () => {
         <Route path="/admin" element={<AdminApprovalsPage />} />
         <Route path="/admin/kyc-review" element={<AdminKycReview />} />
         <Route path="/admin/users" element={<AdminUsersPage />} />
+        <Route path="/admin/mobile-deposits" element={<AdminMobileDepositsPage />} />
         <Route path="/user-profile" element={<UserProfilePage />} />
         <Route path="/kyc" element={<KycPage />} />
         <Route path="*" element={<NotFound />} />

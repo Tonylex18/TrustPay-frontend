@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
+import { City, Country, State, type ICity, type ICountry, type IState } from "country-state-city";
 import NavigationBar from "../../components/ui/NavigationBar";
 import BreadcrumbTrail from "../../components/ui/BreadcrumbTrail";
 import Input from "../../components/ui/Input";
@@ -13,20 +14,69 @@ const KycPage: React.FC = () => {
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
-    dateOfBirth: "",
+    dobDay: "",
+    dobMonth: "",
+    dobYear: "",
     country: "",
-    address: "",
+    addressLine1: "",
+    addressLine2: "",
+    city: "",
+    state: "",
+    postalCode: "",
     documentType: "passport",
     documentNumber: "",
     documentImage: null as File | null,
+    documentBackImage: null as File | null,
     selfieImage: null as File | null,
   });
+  const [countries, setCountries] = useState<ICountry[]>([]);
+  const [states, setStates] = useState<IState[]>([]);
+  const [cities, setCities] = useState<ICity[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (field: string, value: any) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     if (error) setError(null);
+  };
+
+  useEffect(() => {
+    setCountries(Country.getAllCountries());
+  }, []);
+
+  useEffect(() => {
+    if (!form.country) {
+      setStates([]);
+      setCities([]);
+      setForm((prev) => ({ ...prev, state: "", city: "" }));
+      return;
+    }
+    const nextStates = State.getStatesOfCountry(form.country) || [];
+    setStates(nextStates);
+    setCities([]);
+    setForm((prev) => ({ ...prev, state: "", city: "" }));
+  }, [form.country]);
+
+  useEffect(() => {
+    if (!form.country || !form.state) {
+      setCities([]);
+      return;
+    }
+    const nextCities = City.getCitiesOfState(form.country, form.state) || [];
+    setCities(nextCities);
+    setForm((prev) => ({ ...prev, city: "" }));
+  }, [form.country, form.state]);
+
+  const handleCountrySelect = (value: string) => {
+    handleChange("country", value);
+  };
+
+  const handleStateSelect = (value: string) => {
+    handleChange("state", value);
+  };
+
+  const handleCitySelect = (value: string) => {
+    handleChange("city", value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,17 +91,32 @@ const KycPage: React.FC = () => {
       setError("Document image is required.");
       return;
     }
+    if (!form.dobDay || !form.dobMonth || !form.dobYear) {
+      setError("Complete date of birth.");
+      return;
+    }
+    if (!form.country || !form.state || !form.city) {
+      setError("Country, state, and city are required.");
+      return;
+    }
     setSubmitting(true);
     try {
       const fd = new FormData();
       fd.append("firstName", form.firstName);
       fd.append("lastName", form.lastName);
-      fd.append("dateOfBirth", form.dateOfBirth);
+      fd.append("dateOfBirth[day]", form.dobDay);
+      fd.append("dateOfBirth[month]", form.dobMonth);
+      fd.append("dateOfBirth[year]", form.dobYear);
       fd.append("country", form.country);
-      fd.append("address", form.address);
+      fd.append("addressLine1", form.addressLine1);
+      if (form.addressLine2) fd.append("addressLine2", form.addressLine2);
+      fd.append("city", form.city);
+      fd.append("state", form.state);
+      fd.append("postalCode", form.postalCode);
       fd.append("documentType", form.documentType);
       fd.append("documentNumber", form.documentNumber);
       if (form.documentImage) fd.append("documentImage", form.documentImage);
+      if (form.documentBackImage) fd.append("documentBackImage", form.documentBackImage);
       if (form.selfieImage) fd.append("selfieImage", form.selfieImage);
 
       const res = await fetch(`${API_BASE_URL}/kyc`, {
@@ -91,7 +156,7 @@ const KycPage: React.FC = () => {
         <NavigationBar onNavigate={(path) => navigate(path)} />
         <main className="pt-nav-height">
           <div className="px-nav-margin py-8">
-            <div className="max-w-3xl mx-auto space-y-6">
+            <div className="max-w-7xl mx-auto space-y-6">
               <BreadcrumbTrail items={breadcrumbItems} />
               <div>
                 <h1 className="text-2xl font-bold text-foreground">Verify your identity</h1>
@@ -104,16 +169,69 @@ const KycPage: React.FC = () => {
                   <Input label="First Name" value={form.firstName} onChange={(e) => handleChange("firstName", e.target.value)} required />
                   <Input label="Last Name" value={form.lastName} onChange={(e) => handleChange("lastName", e.target.value)} required />
                 </div>
-                <Input label="Date of Birth" type="date" value={form.dateOfBirth} onChange={(e) => handleChange("dateOfBirth", e.target.value)} required />
-                <Input
-                  label="Country (ISO code)"
-                  value={form.country}
-                  maxLength={3}
-                  onChange={(e) => handleChange("country", e.target.value.toUpperCase())}
-                  required
-                  description="Use 2-letter ISO code (e.g., US, UK)"
-                />
-                <Input label="Address" value={form.address} onChange={(e) => handleChange("address", e.target.value)} required />
+                <div className="grid grid-cols-3 gap-3">
+                  <Input label="Day" type="number" min={1} max={31} value={form.dobDay} onChange={(e) => handleChange("dobDay", e.target.value)} required />
+                  <Input label="Month" type="number" min={1} max={12} value={form.dobMonth} onChange={(e) => handleChange("dobMonth", e.target.value)} required />
+                  <Input label="Year" type="number" min={1900} max={9999} value={form.dobYear} onChange={(e) => handleChange("dobYear", e.target.value)} required />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Country</label>
+                  <select
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    value={form.country}
+                    onChange={(e) => handleCountrySelect(e.target.value)}
+                    required
+                  >
+                    <option value="">Select a country</option>
+                    {countries.map((c) => (
+                      <option key={c.isoCode} value={c.isoCode}>
+                        {c.name} ({c.isoCode})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <Input label="Address Line 1" value={form.addressLine1} onChange={(e) => handleChange("addressLine1", e.target.value)} required />
+                <Input label="Address Line 2 (optional)" value={form.addressLine2} onChange={(e) => handleChange("addressLine2", e.target.value)} />
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">State / Province</label>
+                    <select
+                      className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                      value={form.state}
+                      onChange={(e) => handleStateSelect(e.target.value)}
+                      disabled={!form.country}
+                      required
+                    >
+                      <option value="">{form.country ? "Select a state" : "Select country first"}</option>
+                      {states.map((s) => (
+                        <option key={`${s.isoCode}-${s.name}`} value={s.isoCode}>
+                          {s.name} ({s.isoCode})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground">City</label>
+                    <select
+                      className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                      value={form.city}
+                      onChange={(e) => handleCitySelect(e.target.value)}
+                      disabled={!form.state}
+                      required
+                    >
+                      <option value="">{form.state ? "Select a city" : "Select state first"}</option>
+                      {cities.map((c) => {
+                        const key = `${c.countryCode}-${c.stateCode}-${c.name}`;
+                        return (
+                          <option key={key} value={c.name}>
+                            {c.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                  <Input label="Postal Code" value={form.postalCode} onChange={(e) => handleChange("postalCode", e.target.value)} required />
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">Document Type</label>
@@ -135,12 +253,20 @@ const KycPage: React.FC = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Document Image</label>
+                  <label className="text-sm font-medium text-foreground">Document Image (front)</label>
                   <input
                     type="file"
                     accept="image/*"
                     onChange={(e) => handleChange("documentImage", e.target.files?.[0] || null)}
                     required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-foreground">Document Image (back, optional)</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleChange("documentBackImage", e.target.files?.[0] || null)}
                   />
                 </div>
                 <div className="space-y-2">

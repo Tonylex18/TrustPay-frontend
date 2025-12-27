@@ -81,63 +81,76 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
           <>
             {/* Desktop View */}
             <div className="hidden md:block">
-              <table className="w-full">
-                <thead className="bg-muted/50">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Date
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Description
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Category
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Type
-                    </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Amount
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {transactions.map((transaction) => (
-                    <tr key={transaction.id} className="hover:bg-muted/30 transition-colors duration-150">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
-                        {formatDate(transaction.date)}
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center flex-shrink-0">
-                            <Icon
-                              name={getTransactionIcon(transaction.category)}
-                              size={16}
-                              color="var(--color-foreground)"
-                            />
-                          </div>
-                          <span className="text-sm font-medium text-foreground text-nowrap">
-                            {transaction.description}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
-                        {transaction.category}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${transaction.type === 'credit' ? 'text-success' : 'text-red-600'} ${getStatusColor(transaction.status)}`}>
-                          {transaction.type}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <span className={`text-sm font-semibold ${transaction.type === 'credit' ? 'text-success' : 'text-red-600'}`}>
-                          {transaction.type === 'credit' ? '+' : '-'}{formatCurrency(transaction.amount)}
-                        </span>
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full table-fixed min-w-[720px]">
+                  <thead className="bg-muted/50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-[130px]">
+                        Date
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-[320px]">
+                        Description
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-[180px]">
+                        Category
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-[120px]">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                        Amount
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {transactions.map((transaction) => (
+                      <tr key={transaction.id} className="hover:bg-muted/30 transition-colors duration-150">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground align-top">
+                          {formatDate(transaction.date)}
+                        </td>
+                        <td className="px-6 py-4 align-top max-w-[360px]">
+                          <div className="flex items-start gap-3 min-w-0 max-w-full">
+                            <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center flex-shrink-0 mt-[2px]">
+                              <Icon
+                                name={getTransactionIcon(transaction.category)}
+                                size={16}
+                                color="var(--color-foreground)"
+                              />
+                            </div>
+                            <div className="min-w-0 max-w-full">
+                              <p
+                                className="text-sm font-medium text-foreground overflow-hidden"
+                                style={{
+                                  display: '-webkit-box',
+                                  WebkitLineClamp: 2,
+                                  WebkitBoxOrient: 'vertical',
+                                  wordBreak: 'break-word',
+                                  overflowWrap: 'anywhere'
+                                }}
+                              >
+                                {transaction.description}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground align-top">
+                          {transaction.category}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap align-top">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${getStatusColor(transaction.status)}`}>
+                            {transaction.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right align-top">
+                          <span className={`text-sm font-semibold ${transaction.type === 'credit' ? 'text-success' : 'text-red-600'}`}>
+                            {transaction.type === 'credit' ? '+' : '-'}{formatCurrency(transaction.amount)}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             {/* Mobile View */}

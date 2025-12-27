@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
-import Input from "./Input";
-import { API_BASE_URL, getStoredToken, clearStoredToken } from "../../utils/api";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL, getStoredToken } from "../../utils/api";
 
-type Account = {
+export type Account = {
   id: string;
   account_number?: string;
   accountNumber?: string;
@@ -15,7 +14,7 @@ type Account = {
 };
 
 interface AccountSelectorProps {
-  onSelect: (id: string) => void;
+  onSelect: (id: string, account?: Account) => void;
 }
 
 const AccountSelector: React.FC<AccountSelectorProps> = ({ onSelect }) => {
@@ -24,6 +23,11 @@ const AccountSelector: React.FC<AccountSelectorProps> = ({ onSelect }) => {
   const [selected, setSelected] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const onSelectRef = useRef(onSelect);
+
+  useEffect(() => {
+    onSelectRef.current = onSelect;
+  }, [onSelect]);
 
   useEffect(() => {
     const load = async () => {
@@ -42,17 +46,13 @@ const AccountSelector: React.FC<AccountSelectorProps> = ({ onSelect }) => {
         if (!res.ok) {
           const msg = payload?.errors || payload?.message || "Unable to load accounts.";
           setError(msg);
-          if (res.status === 401) {
-            clearStoredToken();
-            navigate("/login");
-          }
           return;
         }
         const data: Account[] = Array.isArray(payload) ? payload : [];
         setAccounts(data);
         if (data[0]?.id) {
           setSelected(data[0].id);
-          onSelect(data[0].id);
+          onSelectRef.current(data[0].id, data[0]);
         }
       } catch (_err) {
         setError("Unable to load accounts.");
@@ -61,7 +61,7 @@ const AccountSelector: React.FC<AccountSelectorProps> = ({ onSelect }) => {
       }
     };
     load();
-  }, [navigate, onSelect]);
+  }, [navigate]);
 
   if (loading) {
     return <div className="text-sm text-muted-foreground">Loading accounts...</div>;
@@ -78,8 +78,10 @@ const AccountSelector: React.FC<AccountSelectorProps> = ({ onSelect }) => {
         className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
         value={selected}
         onChange={(e) => {
-          setSelected(e.target.value);
-          onSelect(e.target.value);
+          const next = e.target.value;
+          setSelected(next);
+          const acct = accounts.find((a) => a.id === next);
+          onSelect(next, acct);
         }}
       >
         {accounts.map((acct) => {

@@ -17,6 +17,17 @@ import {
   SortableTransactionField
 } from './types';
 
+const normalizeStatus = (value: string | null | undefined): Transaction['status'] => {
+  const status = (value || '').toLowerCase();
+  if (status.includes('reject') || status.includes('decline') || status.includes('fail') || status === 'error') {
+    return 'failed';
+  }
+  if (status.includes('pending') || status.includes('process') || status.includes('review')) {
+    return 'pending';
+  }
+  return 'completed';
+};
+
 const TransactionsPage = () => {
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(false);
@@ -177,9 +188,7 @@ const TransactionsPage = () => {
         }
 
         const normalized = (transactionPayload || []).map((entry: any) => {
-          const statusRaw = (entry.status || entry.transaction?.status || '').toString().toLowerCase();
-          const status: Transaction['status'] =
-            statusRaw === 'pending' ? 'pending' : 'completed';
+          const status = normalizeStatus((entry.status || entry.transaction?.status || '').toString());
           const txId = entry.transaction?.id || entry.transactionId || entry.id;
           const isExternal =
             entry.transaction?.type === 'INTERNAL_TRANSFER' && !entry.transaction?.destinationAccountId;
@@ -203,18 +212,22 @@ const TransactionsPage = () => {
         });
 
         // merge duplicates (pending + completed for same transaction id)
+        const statusPriority: Record<Transaction["status"], number> = { completed: 2, failed: 1, pending: 0 };
         const mergedMap = new Map<string, Transaction>();
-        normalized.forEach((tx: any) => {
+        normalized.forEach((tx: Transaction) => {
           const existing = mergedMap.get(tx.id);
           if (!existing) {
             mergedMap.set(tx.id, tx);
             return;
           }
-          const preferCompleted = existing.status === 'completed' || tx.status === 'completed';
+          const nextStatus =
+            statusPriority[tx.status] >= statusPriority[existing.status]
+              ? tx.status
+              : existing.status;
           mergedMap.set(tx.id, {
             ...existing,
             ...tx,
-            status: preferCompleted ? 'completed' : tx.status,
+            status: nextStatus,
             date: tx.date > existing.date ? tx.date : existing.date
           });
         });

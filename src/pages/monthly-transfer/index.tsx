@@ -14,9 +14,19 @@ import { TransferFormData, TransferSummary, TransferLimits, Account, VerifiedAcc
 import { toast } from 'react-toastify';
 import { API_BASE_URL, getStoredToken } from '../../utils/api';
 
+type RoutingLookupResponse = {
+  valid: boolean;
+  routingNumber: string;
+  bankName: string | null;
+  internal: boolean;
+  source: string;
+  error?: string;
+};
+
 const MoneyTransfer = () => {
   const navigate = useNavigate();
   const verifyTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const routingLookupTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [currentUser, setCurrentUser] = useState<{ name: string; email: string; avatar?: string } | null>(null);
   const [userAccount, setUserAccount] = useState<Account | null>(null);
@@ -61,6 +71,7 @@ const MoneyTransfer = () => {
   });
   const [isBankLookupLoading, setIsBankLookupLoading] = useState(false);
   const [bankLookupSuccess, setBankLookupSuccess] = useState(false);
+  const [bankLookupError, setBankLookupError] = useState<string | null>(null);
 
   useEffect(() => {
     if (formData.amount) {
@@ -141,6 +152,43 @@ const MoneyTransfer = () => {
     return () => controller.abort();
   }, [navigate]);
 
+  useEffect(() => {
+    if (routingLookupTimeout.current) {
+      clearTimeout(routingLookupTimeout.current);
+    }
+
+    if (formData.transferType !== 'external') {
+      setBankLookupError(null);
+      setBankLookupSuccess(false);
+      setIsBankLookupLoading(false);
+      return;
+    }
+
+    const trimmedRouting = bankCode.trim();
+    setBankLookupSuccess(false);
+    setBankLookupError(null);
+    setVerifiedAccount(null);
+    setFormData((prev) => ({ ...prev, bankName: '' }));
+
+    if (!trimmedRouting) {
+      return;
+    }
+
+    if (!/^[0-9]{9}$/.test(trimmedRouting)) {
+      setBankLookupError('Routing number must be 9 digits');
+      return;
+    }
+
+    routingLookupTimeout.current = setTimeout(() => {
+      lookupBankByRouting(trimmedRouting);
+    }, 500);
+
+    return () => {
+      if (routingLookupTimeout.current) clearTimeout(routingLookupTimeout.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bankCode, formData.transferType]);
+
   const calculateSummary = () => {
     const amount = parseFloat(formData.amount) || 0;
     const fee = formData.transferType === 'external' ? amount * 0.01 : 0;
@@ -155,15 +203,54 @@ const MoneyTransfer = () => {
     });
   };
 
+  const lookupBankByRouting = async (routingNumber: string) => {
+    setIsBankLookupLoading(true);
+    setBankLookupError(null);
+    setBankLookupSuccess(false);
+    setVerifiedAccount(null);
+    setVerifyError(null);
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/v1/routing/lookup?routingNumber=${encodeURIComponent(routingNumber)}`
+      );
+      const payload: RoutingLookupResponse | null = await response.json().catch(() => null);
+
+      if (payload?.valid && payload.bankName) {
+        setBankLookupSuccess(true);
+        setFormData((prev) => ({ ...prev, bankName: payload.bankName || '' }));
+        return;
+      }
+
+      const message = payload?.error || 'Bank not found. Please double-check the routing number.';
+      setBankLookupError(message);
+      setFormData((prev) => ({ ...prev, bankName: '' }));
+    } catch (_err) {
+      setBankLookupError('Lookup unavailable. You can retry or enter the bank name manually.');
+      setFormData((prev) => ({ ...prev, bankName: '' }));
+    } finally {
+      setIsBankLookupLoading(false);
+    }
+  };
+
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
     if (formData.transferType === 'external') {
-      if (!bankLookupSuccess) {
-        newErrors.accountNumber = 'Lookup bank first with holder name and routing number';
+      const routingNumber = bankCode.trim();
+      if (!routingNumber) {
+        newErrors.routingNumber = 'Enter a routing number';
+      } else if (!/^[0-9]{9}$/.test(routingNumber)) {
+        newErrors.routingNumber = 'Routing number must be 9 digits';
       }
       if (!formData.accountHolderName.trim()) {
-        newErrors.accountNumber = 'Account holder name is required';
+        newErrors.accountHolderName = 'Account holder name is required';
+      }
+      if (!formData.bankName.trim()) {
+        newErrors.bankName = bankLookupError || 'Bank name is required';
+      }
+      if (!bankLookupSuccess && !formData.bankName.trim()) {
+        newErrors.bankName = bankLookupError || 'Lookup bank first with holder name and routing number';
       }
       if (!formData.accountNumber) {
         newErrors.accountNumber = 'Enter a destination account number';
@@ -171,10 +258,7 @@ const MoneyTransfer = () => {
         newErrors.accountNumber = 'Please verify the account number before proceeding';
       }
       if (!formData.accountType) {
-        newErrors.accountNumber = 'Select account type';
-      }
-      if (!formData.bankName.trim()) {
-        newErrors.accountNumber = 'Bank name is required';
+        newErrors.accountType = 'Select account type';
       }
     } else {
       if (!fromAccountId) {
@@ -249,7 +333,7 @@ const MoneyTransfer = () => {
       const routing =
         formData.transferType === 'internal'
           ? destinationAccount?.routingNumber || userAccount?.routingNumber || '103219840'
-          : bankCode;
+          : bankCode.trim();
       if (!routing) {
         setTransferError('Missing routing number for destination account.');
         setIsProcessing(false);
@@ -300,6 +384,7 @@ const MoneyTransfer = () => {
     transferLimits.remainingToday,
     userAccount?.balance ?? transferLimits.availableBalance
   );
+  const canEditExternalFields = bankLookupSuccess || Boolean(formData.bankName.trim());
 
   const handleVerifyAccount = async (accountNumber: string, bankName: string) => {
     // sandbox: accept input as-is
@@ -320,21 +405,19 @@ const MoneyTransfer = () => {
   };
 
   const handleLookupBank = async () => {
-    const token = getStoredToken();
-    if (!token) {
-      navigate('/login');
+    if (formData.transferType !== 'external') return;
+
+    const routingNumber = bankCode.trim();
+    if (!routingNumber) {
+      setBankLookupError('Enter a routing number');
       return;
     }
-    if (!bankCode.trim() || !formData.accountHolderName?.trim()) {
-      toast.error('Enter routing number and account holder name first.');
+    if (!/^[0-9]{9}$/.test(routingNumber)) {
+      setBankLookupError('Routing number must be 9 digits');
       return;
     }
-    setIsBankLookupLoading(true);
-    // Sandbox: no external lookup, accept user input
-    setIsBankLookupLoading(false);
-    setBankLookupSuccess(true);
-    setFormData((prev) => ({ ...prev, bankName: prev.bankName || 'Sandbox Bank' }));
-    toast.success('Bank identified (sandbox)');
+
+    await lookupBankByRouting(routingNumber);
   };
 
   useEffect(() => {
@@ -343,7 +426,8 @@ const MoneyTransfer = () => {
     }
     if (formData.transferType === 'external') {
       verifyTimeout.current = setTimeout(() => {
-        if (bankLookupSuccess && formData.accountNumber.trim().length >= 6) {
+        const hasBankContext = bankLookupSuccess || Boolean(formData.bankName.trim());
+        if (hasBankContext && formData.accountNumber.trim().length >= 6) {
           handleVerifyAccount(formData.accountNumber, formData.bankName);
         } else {
           setVerifiedAccount(null);
@@ -366,6 +450,8 @@ const MoneyTransfer = () => {
   useEffect(() => {
     if (formData.transferType === 'internal') {
       setBankLookupSuccess(false);
+      setBankLookupError(null);
+      setBankCode('');
       setVerifyError(null);
       setVerifiedAccount(null);
       setFormData((prev) => ({
@@ -385,7 +471,7 @@ const MoneyTransfer = () => {
       <NavigationBar user={currentUser || undefined} onNavigate={(path) => navigate(path)} />
 
       <main className="pt-nav-height">
-        <div className="px-nav-margin py-8 max-w-6xl mx-auto">
+        <div className="px-nav-margin py-8 max-w-7xl mx-auto">
           <BreadcrumbTrail items={breadcrumbItems} className="mb-6" />
 
           <div className="mb-8">
@@ -473,7 +559,11 @@ const MoneyTransfer = () => {
                               label="Account Holder Name"
                               placeholder="Jane Doe"
                               value={formData.accountHolderName}
-                              onChange={(e) => setFormData({ ...formData, accountHolderName: e.target.value })}
+                              onChange={(e) => {
+                                setFormData({ ...formData, accountHolderName: e.target.value });
+                                setErrors({ ...errors, accountHolderName: '' });
+                              }}
+                              error={errors.accountHolderName}
                               required
                             />
                             <div className="relative">
@@ -481,8 +571,12 @@ const MoneyTransfer = () => {
                                 label="Routing number"
                                 placeholder="Routing number"
                                 value={bankCode}
-                                onChange={(e) => setBankCode(e.target.value)}
-                                // description="Used to auto-identify bank"
+                                onChange={(e) => {
+                                  setBankCode(e.target.value);
+                                  setErrors({ ...errors, routingNumber: '' });
+                                  setBankLookupError(null);
+                                }}
+                                error={errors.routingNumber || bankLookupError || undefined}
                                 required
                               />
 
@@ -493,8 +587,14 @@ const MoneyTransfer = () => {
                             <Input
                               placeholder="Bank"
                               value={formData.bankName}
-                              readOnly
-                              // description="Auto-filled from routing lookup"
+                              readOnly={bankLookupSuccess}
+                              onChange={(e) => {
+                                if (!bankLookupSuccess) {
+                                  setFormData({ ...formData, bankName: e.target.value });
+                                  setErrors({ ...errors, bankName: '' });
+                                }
+                              }}
+                              error={errors.bankName}
                               required
                             />
                             <button
@@ -525,6 +625,18 @@ const MoneyTransfer = () => {
                                 <span className="text-error">{verifyError}</span>
                               </>
                             )}
+                            {!isVerifyingAccount && bankLookupSuccess && !verifiedAccount && (
+                              <>
+                                <Icon name="CheckCircle" size={16} color="var(--color-success)" />
+                                <span className="text-success">Bank identified</span>
+                              </>
+                            )}
+                            {!isVerifyingAccount && bankLookupError && (
+                              <>
+                                <Icon name="AlertCircle" size={16} color="var(--color-error)" />
+                                <span className="text-error">{bankLookupError}</span>
+                              </>
+                            )}
                           </div>
                           <div className="grid gap-4 md:grid-cols-2">
                             <div className="space-y-2">
@@ -539,7 +651,7 @@ const MoneyTransfer = () => {
                                   setVerifyError(null);
                                 }}
                                 error={errors.accountNumber}
-                                disabled={!bankLookupSuccess}
+                                disabled={!canEditExternalFields}
                               />
                             </div>
                             <div className="space-y-2">
@@ -548,12 +660,15 @@ const MoneyTransfer = () => {
                                 className="w-full h-10 rounded-lg border border-input bg-background px-3 text-sm"
                                 value={formData.accountType || ''}
                                 onChange={(e) => setFormData({ ...formData, accountType: e.target.value as 'checking' | 'savings' })}
-                                disabled={!bankLookupSuccess}
+                                disabled={!canEditExternalFields}
                               >
                                 <option value="">Select account type</option>
                                 <option value="checking">Checking</option>
                                 <option value="savings">Savings</option>
                               </select>
+                              {errors.accountType && (
+                                <p className="text-xs text-error">{errors.accountType}</p>
+                              )}
                             </div>
                           </div>
                         </>

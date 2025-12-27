@@ -8,12 +8,16 @@ import ProfileInfoDisplay from './components/ProfileInfoDisplay';
 import ProfileEditForm from './components/ProfileEditForm';
 import PasswordChangeForm from './components/PasswordChangeForm';
 import ContactPreferencesForm from './components/ContactPreferencesForm';
+import Select from '../../components/ui/Select';
+import Button from '../../components/ui/Button';
+import CardDetailsDisplay from './components/CardDetailsDisplay';
 import { UserProfile, ContactPreferences, PasswordChangeData, ProfileEditData, EditMode } from './types';
 import { toast } from 'react-toastify';
 import { API_BASE_URL, clearStoredToken, getStoredToken } from '../../utils/api';
 
 const UserProfilePage = () => {
   const navigate = useNavigate();
+  const token = getStoredToken();
   const [editMode, setEditMode] = useState<EditMode>({
     isEditing: false,
     section: null
@@ -29,14 +33,23 @@ const UserProfilePage = () => {
     promotionalEmails: false,
     transactionAlerts: true
   });
+  const [cards, setCards] = useState<
+    { id: string; brand: string; last4: string; status: string; bankAccountId: string; createdAt: string; stripeCardId?: string }[]
+  >([]);
+  const [accounts, setAccounts] = useState<
+    { id: string; accountNumber: string; type?: string; status?: string }[]
+  >([]);
+  const [cardLoading, setCardLoading] = useState(false);
+  const [cardError, setCardError] = useState<string | null>(null);
+  const [selectedAccountId, setSelectedAccountId] = useState<string>('');
 
   const breadcrumbItems = [
   { label: 'Dashboard', path: '/dashboard' },
   { label: 'User Profile' }];
+  const kycApproved = userProfile?.kycStatus === 'APPROVED';
 
   useEffect(() => {
     const controller = new AbortController();
-    const token = getStoredToken();
 
     if (!token) {
       navigate('/login');
@@ -112,10 +125,74 @@ const UserProfilePage = () => {
       }
     };
 
+    const fetchCardsAndAccounts = async () => {
+      setCardLoading(true);
+      setCardError(null);
+      try {
+        const [cardRes, accountRes] = await Promise.all([
+          fetch(`${API_BASE_URL}/cards`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+            signal: controller.signal
+          }),
+          fetch(`${API_BASE_URL}/accounts`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+            signal: controller.signal
+          })
+        ]);
+
+        const cardPayload = await cardRes.json().catch(() => null);
+        const accountPayload = await accountRes.json().catch(() => null);
+
+        if (cardRes.ok && Array.isArray(cardPayload)) {
+          setCards(
+            cardPayload.map((c: any) => ({
+              id: c.id,
+              brand: c.brand,
+              last4: c.last4,
+              status: c.status,
+              bankAccountId: c.bankAccountId,
+              createdAt: c.createdAt,
+              stripeCardId: c.stripeCardId
+            }))
+          );
+        } else if (!cardRes.ok) {
+          const message = cardPayload?.errors || cardPayload?.message || 'Unable to load cards.';
+          setCardError(message);
+          toast.error(message);
+        }
+
+        if (accountRes.ok && Array.isArray(accountPayload)) {
+          setAccounts(
+            accountPayload.map((a: any) => ({
+              id: a.id,
+              accountNumber: a.account_number || a.accountNumber,
+              type: a.type || a.account_type || a.accountType,
+              status: a.status
+            }))
+          );
+          if (!selectedAccountId && Array.isArray(accountPayload) && accountPayload.length > 0) {
+            setSelectedAccountId(accountPayload[0].id);
+          }
+        }
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          setCardError('Unable to load cards.');
+          toast.error('Unable to load cards.');
+        }
+      } finally {
+        setCardLoading(false);
+      }
+    };
+
     fetchProfile();
+    fetchCardsAndAccounts();
 
     return () => controller.abort();
-  }, [navigate]);
+  }, [navigate, token]);
 
   const handleEditProfile = () => {
     setEditMode({ isEditing: true, section: 'profile' });
@@ -154,6 +231,44 @@ const UserProfilePage = () => {
     setContactPreferences(preferences);
     toast.success('Contact preferences updated successfully!');
     // alert('Contact preferences updated successfully!');
+  };
+
+  const handleRequestCard = async () => {
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    if (!selectedAccountId) {
+      toast.error('Select an account to fund your card.');
+      return;
+    }
+    setCardLoading(true);
+    setCardError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/cards`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ bankAccountId: selectedAccountId })
+      });
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        const message = payload?.errors || payload?.message || 'Unable to issue a card right now.';
+        setCardError(message);
+        toast.error(message);
+        return;
+      }
+      const newCard = payload;
+      setCards((prev) => [newCard, ...prev.filter((c) => c.id !== newCard.id)]);
+      toast.success('Virtual card issued and linked to your account.');
+    } catch (error) {
+      setCardError('Unable to issue a card right now.');
+      toast.error('Unable to issue a card right now.');
+    } finally {
+      setCardLoading(false);
+    }
   };
 
   return (
@@ -228,6 +343,67 @@ const UserProfilePage = () => {
                           />
                         )}
                       </>
+                    )}
+                  </ProfileSection>
+
+                  <ProfileSection
+                    title="Cards"
+                    description="Issue a virtual card that spends against your TrustPay balance"
+                  >
+                    {cardLoading && (
+                      <div className="rounded-lg border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
+                        Checking your card status...
+                      </div>
+                    )}
+                    {cardError && (
+                      <div className="rounded-lg border border-error/30 bg-error/5 p-4 text-sm text-error">
+                        {cardError}
+                      </div>
+                    )}
+                    {token && !cardLoading && cards.length > 0 && (
+                      <div className="space-y-3 mb-4">
+                        {cards.map((card) => {
+                          const account = accounts.find((a) => a.id === card.bankAccountId);
+                          const accountLast4 = account?.accountNumber
+                            ? account.accountNumber.slice(-4)
+                            : undefined;
+                          return (
+                            <CardDetailsDisplay
+                              key={card.id}
+                              card={card}
+                              token={token!}
+                              linkedAccountLast4={accountLast4}
+                            />
+                          );
+                        })}
+                      </div>
+                    )}
+                    {!cardLoading && cards.length === 0 && (
+                      <p className="text-sm text-muted-foreground mb-3">You have not issued a virtual card yet.</p>
+                    )}
+                    {kycApproved ? (
+                      accounts.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">Create a checking account to fund your card.</p>
+                      ) : (
+                        <div className="space-y-3">
+                          <Select
+                            label="Select funding account"
+                            value={selectedAccountId}
+                            onChange={(value) => setSelectedAccountId(String(value))}
+                            options={accounts.map((acct) => ({
+                              label: `${(acct.type || 'Account').toUpperCase()} ••••${(acct.accountNumber || '').slice(-4)}`,
+                              value: acct.id
+                            }))}
+                          />
+                          <Button onClick={handleRequestCard} loading={cardLoading}>
+                            Request virtual card
+                          </Button>
+                        </div>
+                      )
+                    ) : (
+                      <p className="text-sm text-muted-foreground">
+                        Your KYC must be approved before requesting a card.
+                      </p>
                     )}
                   </ProfileSection>
 

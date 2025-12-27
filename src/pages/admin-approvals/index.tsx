@@ -49,6 +49,35 @@ type KycRecord = {
   rejectionReason?: string | null;
 };
 
+type CardTransaction = {
+  id: string;
+  cardId?: string;
+  cardLast4?: string;
+  cardBrand?: string;
+  amount: number;
+  currency: string;
+  status: string;
+  type: string;
+  reference?: string;
+  externalReference?: string;
+  pendingAmount: number;
+  postedAmount: number;
+  description?: string;
+  userEmail?: string;
+  bankAccountId?: string;
+  createdAt: string;
+};
+
+type MobileDepositDetail = {
+  transactionId?: string | null;
+  frontImageUrl?: string | null;
+  backImageUrl?: string | null;
+  accountNumber?: string | null;
+  userEmail?: string | null;
+  amountCents?: number;
+  currency?: string;
+};
+
 const testFundOptions: SelectOption[] = [
   { value: 'deposit', label: 'Deposit' },
   { value: 'withdrawal', label: 'Withdrawal' },
@@ -70,8 +99,15 @@ const AdminApprovalsPage: React.FC = () => {
   const [kycStatusFilter, setKycStatusFilter] = useState<'PENDING' | 'APPROVED' | 'REJECTED'>('PENDING');
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingKyc, setIsLoadingKyc] = useState(false);
+  const [cardTransactions, setCardTransactions] = useState<CardTransaction[]>([]);
+  const [isLoadingCardTxns, setIsLoadingCardTxns] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [activeActionId, setActiveActionId] = useState<string | null>(null);
+  const [selectedTxn, setSelectedTxn] = useState<PendingTransaction | null>(null);
+  const [selectedKyc, setSelectedKyc] = useState<KycRecord | null>(null);
+  const [depositDetail, setDepositDetail] = useState<MobileDepositDetail | null>(null);
+  const [isLoadingDepositDetail, setIsLoadingDepositDetail] = useState(false);
+  const [depositDetailError, setDepositDetailError] = useState<string | null>(null);
 
   const [testFundForm, setTestFundForm] = useState({
     userId: '',
@@ -82,6 +118,19 @@ const AdminApprovalsPage: React.FC = () => {
     counterparty: ''
   });
   const [isTestFundLoading, setIsTestFundLoading] = useState(false);
+
+  const isMobileDeposit = (txn?: PendingTransaction | null) => {
+    if (!txn) return false;
+    const category = txn.transaction.category?.toUpperCase() || '';
+    const purpose = txn.transaction.purpose?.toUpperCase() || '';
+    const description = txn.transaction.description?.toUpperCase() || '';
+    return (
+      category.includes('MOBILE_DEPOSIT') ||
+      purpose.includes('MOBILE_DEPOSIT') ||
+      description.includes('MOBILE CHECK') ||
+      description.includes('MOBILE DEPOSIT')
+    );
+  };
 
   const formatAmount = (amount: number, currency?: string) => {
     try {
@@ -183,13 +232,76 @@ const AdminApprovalsPage: React.FC = () => {
     }
   };
 
+  const fetchCardTransactions = async (authToken: string, signal?: AbortSignal) => {
+    setIsLoadingCardTxns(true);
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/cards/transactions`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+        signal
+      });
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        const message = payload?.errors || payload?.message || 'Unable to load card transactions.';
+        if (response.status === 401 || response.status === 403) {
+          setToken(null);
+        }
+        toast.error(message);
+        return;
+      }
+      const list = Array.isArray(payload) ? payload : payload?.data || [];
+      setCardTransactions(list);
+    } catch (error) {
+      if ((error as Error).name !== 'AbortError') {
+        toast.error('Unable to load card transactions.');
+      }
+    } finally {
+      setIsLoadingCardTxns(false);
+    }
+  };
+
+  const fetchMobileDepositDetail = async (transactionId: string, authToken: string) => {
+    setIsLoadingDepositDetail(true);
+    setDepositDetailError(null);
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/admin/mobile-deposits?transactionId=${encodeURIComponent(transactionId)}`,
+        {
+          headers: { Authorization: `Bearer ${authToken}` }
+        }
+      );
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        const message = payload?.errors || payload?.message || 'Unable to load mobile deposit details.';
+        setDepositDetailError(message);
+        return;
+      }
+      const item = Array.isArray(payload) ? payload[0] : null;
+      setDepositDetail(item || null);
+    } catch (error) {
+      if ((error as Error).name !== 'AbortError') {
+        setDepositDetailError('Unable to load mobile deposit details.');
+      }
+    } finally {
+      setIsLoadingDepositDetail(false);
+    }
+  };
+
   useEffect(() => {
     if (!token) return;
     const controller = new AbortController();
     fetchPending(token, controller.signal);
     fetchKyc(token, controller.signal);
+    fetchCardTransactions(token, controller.signal);
     return () => controller.abort();
   }, [token]);
+
+  useEffect(() => {
+    setDepositDetail(null);
+    setDepositDetailError(null);
+    if (!selectedTxn || !token) return;
+    if (!isMobileDeposit(selectedTxn)) return;
+    fetchMobileDepositDetail(selectedTxn.transaction.id, token);
+  }, [selectedTxn, token]);
 
   const handleLoginSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -264,6 +376,7 @@ const AdminApprovalsPage: React.FC = () => {
       setPendingTransactions((prev) =>
         prev.filter((entry) => entry.transaction.id !== item.transaction.id)
       );
+      setSelectedTxn((prev) => (prev?.transaction.id === item.transaction.id ? null : prev));
       toast.success(`Transaction ${action}d.`);
     } catch (error) {
       toast.error(`Unable to ${action} transaction.`);
@@ -306,6 +419,7 @@ const AdminApprovalsPage: React.FC = () => {
           k.id === record.id ? { ...k, status, rejectionReason: rejectionReason ?? k.rejectionReason } : k
         )
       );
+      setSelectedKyc((prev) => (prev?.id === record.id ? null : prev));
     } catch {
       toast.error('Unable to update KYC.');
     }
@@ -553,6 +667,9 @@ const AdminApprovalsPage: React.FC = () => {
                         </div>
 
                         <div className="flex gap-2 justify-end">
+                          <Button variant="ghost" onClick={() => setSelectedTxn(item)}>
+                            View
+                          </Button>
                           <Button
                             variant="outline"
                             onClick={() => handleAction('reject', item)}
@@ -653,6 +770,85 @@ const AdminApprovalsPage: React.FC = () => {
               <section className="mt-10 space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
+                    <h2 className="text-2xl font-bold text-foreground">Card network activity</h2>
+                    <p className="text-sm text-muted-foreground">
+                      Issuing authorizations and settlements mapped to the internal ledger.
+                    </p>
+                  </div>
+                  <Button variant="outline" onClick={() => token && fetchCardTransactions(token)} loading={isLoadingCardTxns}>
+                    Refresh
+                  </Button>
+                </div>
+
+                {isLoadingCardTxns ? (
+                  <div className="rounded-lg border border-border bg-muted/30 p-6 text-sm text-muted-foreground">
+                    Loading card transactions...
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-border bg-card shadow-card overflow-x-auto">
+                    <table className="min-w-full text-sm">
+                      <thead className="text-left text-muted-foreground">
+                        <tr>
+                          <th className="py-2 px-4">Card</th>
+                          <th className="py-2 px-4">Amount</th>
+                          <th className="py-2 px-4">Status</th>
+                          <th className="py-2 px-4">Ledger</th>
+                          <th className="py-2 px-4">Reference</th>
+                          <th className="py-2 px-4">Created</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border/60">
+                        {cardTransactions.map((txn) => (
+                          <tr key={txn.id}>
+                            <td className="py-3 px-4">
+                              <div className="font-semibold text-foreground">
+                                {txn.cardBrand || 'Card'} ••••{txn.cardLast4 || '----'}
+                              </div>
+                              <div className="text-xs text-muted-foreground">{txn.userEmail || '—'}</div>
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="font-semibold">
+                                {formatAmount(txn.amount, txn.currency)}
+                              </div>
+                              <div className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                                {txn.type}
+                              </div>
+                            </td>
+                            <td className="py-3 px-4">
+                              <span className="px-2 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
+                                {txn.status}
+                              </span>
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="text-xs text-muted-foreground">
+                                Pending: {Number(txn.pendingAmount || 0).toFixed(2)} | Posted: {Number(txn.postedAmount || 0).toFixed(2)}
+                              </div>
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="text-xs text-muted-foreground break-all">
+                                {txn.reference || '—'}
+                              </div>
+                              {txn.externalReference && (
+                                <div className="text-[11px] text-muted-foreground">Settlement: {txn.externalReference}</div>
+                              )}
+                            </td>
+                            <td className="py-3 px-4 text-xs text-muted-foreground">
+                              {new Date(txn.createdAt).toLocaleString()}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    {cardTransactions.length === 0 && (
+                      <p className="text-sm text-muted-foreground p-4">No card authorizations or settlements found.</p>
+                    )}
+                  </div>
+                )}
+              </section>
+
+              <section className="mt-10 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
                     <h2 className="text-2xl font-bold text-foreground">KYC submissions</h2>
                     <p className="text-sm text-muted-foreground">Approve or reject identity verification submissions.</p>
                   </div>
@@ -715,6 +911,13 @@ const AdminApprovalsPage: React.FC = () => {
                               <td className="py-3 px-4 text-right space-x-2">
                                 <Button
                                   size="sm"
+                                  variant="ghost"
+                                  onClick={() => setSelectedKyc(k)}
+                                >
+                                  View
+                                </Button>
+                                <Button
+                                  size="sm"
                                   variant="secondary"
                                   disabled={k.status !== 'PENDING'}
                                   onClick={() => handleKycAction(k, 'APPROVED')}
@@ -744,6 +947,229 @@ const AdminApprovalsPage: React.FC = () => {
           )}
         </main>
       </div>
+
+      {selectedTxn && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="bg-card border border-border rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+              <div>
+                <p className="text-sm text-muted-foreground">Pending Transaction</p>
+                <h3 className="text-xl font-semibold text-foreground">{selectedTxn.transaction.description}</h3>
+              </div>
+              <Button variant="ghost" onClick={() => setSelectedTxn(null)}>
+                Close
+              </Button>
+            </div>
+
+            <div className="p-5 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="rounded-lg border border-border bg-muted/20 px-4 py-3">
+                  <p className="text-xs text-muted-foreground">Customer</p>
+                  <p className="font-medium text-foreground">{selectedTxn.userName}</p>
+                  <p className="text-sm text-muted-foreground">{selectedTxn.userEmail}</p>
+                </div>
+                <div className="rounded-lg border border-border bg-muted/20 px-4 py-3">
+                  <p className="text-xs text-muted-foreground">Date</p>
+                  <p className="font-medium text-foreground">
+                    {new Date(selectedTxn.transaction.date).toLocaleString()}
+                  </p>
+                </div>
+                <div className="rounded-lg border border-border bg-muted/20 px-4 py-3">
+                  <p className="text-xs text-muted-foreground">Amount</p>
+                  <p className="font-semibold text-foreground">
+                    {formatAmount(selectedTxn.transaction.amount, selectedTxn.transaction.currency)}
+                  </p>
+                </div>
+                <div className="rounded-lg border border-border bg-muted/20 px-4 py-3">
+                  <p className="text-xs text-muted-foreground">Type</p>
+                  <p className="font-medium text-foreground">{selectedTxn.transaction.type.toUpperCase()}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                {selectedTxn.transaction.purpose && (
+                  <div>
+                    <p className="text-muted-foreground">Purpose</p>
+                    <p className="font-medium text-foreground break-words">
+                      {selectedTxn.transaction.purpose}
+                    </p>
+                  </div>
+                )}
+                {selectedTxn.transaction.reference && (
+                  <div>
+                    <p className="text-muted-foreground">Reference</p>
+                    <p className="font-medium text-foreground break-words">
+                      {selectedTxn.transaction.reference}
+                    </p>
+                  </div>
+                )}
+                {selectedTxn.transaction.counterparty && (
+                  <div>
+                    <p className="text-muted-foreground">Counterparty</p>
+                    <p className="font-medium text-foreground break-words">
+                      {selectedTxn.transaction.counterparty}
+                    </p>
+                  </div>
+                )}
+                {selectedTxn.transaction.beneficiaryEmail && (
+                  <div>
+                    <p className="text-muted-foreground">Beneficiary Email</p>
+                    <p className="font-medium text-foreground break-words">
+                      {selectedTxn.transaction.beneficiaryEmail}
+                    </p>
+                  </div>
+                )}
+                {selectedTxn.transaction.destinationAccountId && (
+                  <div>
+                    <p className="text-muted-foreground">Destination Account</p>
+                    <p className="font-medium text-foreground break-words">
+                      {selectedTxn.transaction.destinationAccountId}
+                    </p>
+                  </div>
+                )}
+                {selectedTxn.transaction.note && (
+                  <div className="sm:col-span-2">
+                    <p className="text-muted-foreground">Note</p>
+                    <p className="font-medium text-foreground break-words">
+                      {selectedTxn.transaction.note}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {isMobileDeposit(selectedTxn) && (
+                <div className="space-y-3">
+                  <p className="text-sm font-semibold text-foreground">Check images</p>
+                  {isLoadingDepositDetail && (
+                    <div className="text-sm text-muted-foreground">Loading check images...</div>
+                  )}
+                  {depositDetailError && (
+                    <div className="text-sm text-destructive">{depositDetailError}</div>
+                  )}
+                  {!isLoadingDepositDetail && !depositDetail && !depositDetailError && (
+                    <div className="text-sm text-muted-foreground">No images found for this deposit.</div>
+                  )}
+                  {depositDetail && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="rounded-lg border border-border bg-muted/20 p-2">
+                        <p className="text-xs text-muted-foreground mb-2">Front of check</p>
+                        {depositDetail.frontImageUrl ? (
+                          <img
+                            src={depositDetail.frontImageUrl}
+                            alt="Front of check"
+                            className="w-full h-56 object-contain bg-white"
+                          />
+                        ) : (
+                          <p className="text-xs text-muted-foreground">Not provided</p>
+                        )}
+                      </div>
+                      <div className="rounded-lg border border-border bg-muted/20 p-2">
+                        <p className="text-xs text-muted-foreground mb-2">Back of check</p>
+                        {depositDetail.backImageUrl ? (
+                          <img
+                            src={depositDetail.backImageUrl}
+                            alt="Back of check"
+                            className="w-full h-56 object-contain bg-white"
+                          />
+                        ) : (
+                          <p className="text-xs text-muted-foreground">Not provided</p>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="flex justify-end gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  onClick={() => handleAction('reject', selectedTxn)}
+                  loading={activeActionId === `${selectedTxn.transaction.id}-reject`}
+                >
+                  Reject
+                </Button>
+                <Button
+                  onClick={() => handleAction('approve', selectedTxn)}
+                  loading={activeActionId === `${selectedTxn.transaction.id}-approve`}
+                >
+                  Approve
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {selectedKyc && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="bg-card border border-border rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+              <div>
+                <p className="text-sm text-muted-foreground">KYC Submission</p>
+                <h3 className="text-xl font-semibold text-foreground">{selectedKyc.fullName}</h3>
+              </div>
+              <Button variant="ghost" onClick={() => setSelectedKyc(null)}>
+                Close
+              </Button>
+            </div>
+
+            <div className="p-5 space-y-4 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <p className="text-muted-foreground">Email</p>
+                  <p className="font-medium text-foreground break-words">{selectedKyc.email}</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Submitted</p>
+                  <p className="font-medium text-foreground">
+                    {new Date(selectedKyc.submittedAt).toLocaleString()}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Document Type</p>
+                  <p className="font-medium text-foreground">{selectedKyc.documentType}</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Document Number</p>
+                  <p className="font-medium text-foreground break-words">{selectedKyc.documentNumber}</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Country</p>
+                  <p className="font-medium text-foreground">{selectedKyc.country}</p>
+                </div>
+                <div>
+                  <p className="text-muted-foreground">Status</p>
+                  <p className="font-medium text-foreground">{selectedKyc.status}</p>
+                  {selectedKyc.rejectionReason && (
+                    <span className="block text-xs text-muted-foreground">
+                      Reason: {selectedKyc.rejectionReason}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  disabled={selectedKyc.status !== 'PENDING'}
+                  onClick={() => handleKycAction(selectedKyc, 'APPROVED')}
+                >
+                  Approve
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  disabled={selectedKyc.status !== 'PENDING'}
+                  onClick={() => handleKycAction(selectedKyc, 'REJECTED')}
+                >
+                  Reject
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };

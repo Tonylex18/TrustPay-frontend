@@ -28,12 +28,25 @@ type Account = {
 	balance?: number;
 };
 
+type AdminCard = {
+	id: string;
+	userId: string;
+	bankAccountId: string;
+	brand: string;
+	last4: string;
+	status: string;
+	createdAt: string;
+};
+
 const AdminUsersPage: React.FC = () => {
 	const navigate = useNavigate();
 	const token = getStoredToken();
 
 	const [users, setUsers] = useState<UserRow[]>([]);
 	const [accounts, setAccounts] = useState<Account[]>([]);
+	const [cards, setCards] = useState<AdminCard[]>([]);
+	const [cardsLoading, setCardsLoading] = useState(false);
+	const [cardActionId, setCardActionId] = useState<string | null>(null);
 	const [filterKyc, setFilterKyc] = useState<string>("ALL");
 	const [filterDisabled, setFilterDisabled] = useState<string>("ALL");
 	const [search, setSearch] = useState("");
@@ -93,8 +106,37 @@ const AdminUsersPage: React.FC = () => {
 			}
 		};
 
+		const fetchCards = async () => {
+			setCardsLoading(true);
+			try {
+				const res = await fetch(`${API_BASE_URL}/admin/cards`, {
+					headers: { Authorization: `Bearer ${token}` },
+					signal: controller.signal,
+				});
+				const payload = await res.json().catch(() => []);
+				if (res.ok && Array.isArray(payload)) {
+					setCards(
+						payload.map((card: any) => ({
+							id: card.id,
+							userId: card.userId,
+							bankAccountId: card.bankAccountId,
+							brand: card.brand,
+							last4: card.last4,
+							status: card.status,
+							createdAt: card.createdAt,
+						}))
+					);
+				}
+			} catch {
+				// ignore card fetch failures to avoid blocking user list
+			} finally {
+				setCardsLoading(false);
+			}
+		};
+
 		fetchUsers();
 		fetchAccounts();
+		fetchCards();
 		return () => controller.abort();
 	}, [navigate, token]);
 
@@ -107,6 +149,14 @@ const AdminUsersPage: React.FC = () => {
 			return true;
 		});
 	}, [users, filterKyc, filterDisabled, search]);
+
+	const cardCountByUser = useMemo(() => {
+		const counts: Record<string, number> = {};
+		cards.forEach((c) => {
+			counts[c.userId] = (counts[c.userId] || 0) + 1;
+		});
+		return counts;
+	}, [cards]);
 
 	const mutateUser = (userId: string, changes: Partial<UserRow>) => {
 		setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, ...changes } : u)));
@@ -139,9 +189,46 @@ const AdminUsersPage: React.FC = () => {
 		}
 	};
 
+	const performCardAction = async (cardId: string, action: "freeze" | "unfreeze") => {
+		if (!token) return;
+		setCardActionId(`${cardId}:${action}`);
+		try {
+			const res = await fetch(
+				`${API_BASE_URL}/admin/cards/${cardId}/${action}`,
+				{
+					method: "PATCH",
+					headers: { Authorization: `Bearer ${token}` },
+				}
+			);
+			const payload = await res.json().catch(() => null);
+			if (!res.ok) {
+				const msg = payload?.errors || payload?.message || "Unable to update card.";
+				toast.error(msg);
+				return;
+			}
+			setCards((prev) =>
+				prev.map((c) =>
+					c.id === cardId
+						? { ...c, status: payload?.status || (action === "freeze" ? "FROZEN" : "ACTIVE") }
+						: c
+				)
+			);
+			toast.success(`Card ${action}d.`);
+		} catch {
+			toast.error("Unable to update card.");
+		} finally {
+			setCardActionId(null);
+		}
+	};
+
 	const selectedAccounts = useMemo(
 		() => (selectedUser ? accounts.filter((a) => a.userId === selectedUser.id) : []),
 		[accounts, selectedUser]
+	);
+
+	const selectedCards = useMemo(
+		() => (selectedUser ? cards.filter((c) => c.userId === selectedUser.id) : []),
+		[cards, selectedUser]
 	);
 
 	const totalUsers = users.length;
@@ -203,6 +290,7 @@ const AdminUsersPage: React.FC = () => {
 										<th className="py-2 pr-4">Role</th>
 										<th className="py-2 pr-4">KYC</th>
 										<th className="py-2 pr-4">Accounts</th>
+										<th className="py-2 pr-4">Cards</th>
 										<th className="py-2 pr-4">Total Balance</th>
 										<th className="py-2 pr-4">State</th>
 										<th className="py-2 pr-4 text-right">Actions</th>
@@ -222,6 +310,7 @@ const AdminUsersPage: React.FC = () => {
 												</span>
 											</td>
 											<td className="py-3 pr-4">{u.accountCount}</td>
+											<td className="py-3 pr-4">{cardCountByUser[u.id] || 0}</td>
 											<td className="py-3 pr-4">${u.totalBalance.toFixed(2)}</td>
 											<td className="py-3 pr-4">
 												{u.disabled ? (
@@ -294,6 +383,46 @@ const AdminUsersPage: React.FC = () => {
 											<div className="text-xs text-muted-foreground uppercase">{acct.status}</div>
 										</div>
 									))}
+								</div>
+							)}
+						</div>
+						<div className="mt-4">
+							<h4 className="text-sm font-semibold text-foreground mb-2">Cards</h4>
+							{cardsLoading ? (
+								<p className="text-sm text-muted-foreground">Loading cards...</p>
+							) : selectedCards.length === 0 ? (
+								<p className="text-sm text-muted-foreground">No cards for this user.</p>
+							) : (
+								<div className="grid sm:grid-cols-2 gap-3">
+									{selectedCards.map((card) => {
+										const account = accounts.find((a) => a.id === card.bankAccountId);
+										return (
+											<div key={card.id} className="border border-border rounded-lg px-3 py-2 text-sm space-y-1">
+												<div className="flex items-center justify-between">
+													<div>
+														<div className="font-semibold">{card.brand || "Card"}</div>
+														<div className="text-xs text-muted-foreground">••••{card.last4}</div>
+													</div>
+													<span className="text-[11px] font-semibold uppercase text-muted-foreground">{card.status}</span>
+												</div>
+												<div className="text-xs text-muted-foreground">
+													Account: {account ? `••••${account.accountNumber.slice(-4)}` : card.bankAccountId}
+												</div>
+												<div className="flex gap-2 pt-1">
+													<Button
+														size="sm"
+														variant="secondary"
+														loading={cardActionId === `${card.id}:${card.status === "FROZEN" ? "unfreeze" : "freeze"}`}
+														onClick={() =>
+															performCardAction(card.id, card.status === "FROZEN" ? "unfreeze" : "freeze")
+														}
+													>
+														{card.status === "FROZEN" ? "Unfreeze" : "Freeze"}
+													</Button>
+												</div>
+											</div>
+										);
+									})}
 								</div>
 							)}
 						</div>
