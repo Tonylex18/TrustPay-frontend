@@ -8,6 +8,7 @@ import TransactionsPage from "./pages/transaction";
 import MoneyTransfer from "./pages/monthly-transfer";
 import DepositPage from "./pages/deposit";
 import BillsPage from "./pages/bills";
+import BillPaymentDetailsPage from "./pages/bills/details";
 import BusinessPage from "./pages/business";
 import CommercialBankingPage from "./pages/commercial-banking";
 import InvestWealthManagementPage from "./pages/investWealthManagement";
@@ -39,6 +40,7 @@ const Routes: React.FC = () => {
         <Route path="/deposit" element={<DepositPage />} />
         <Route path="/deposit/confirmation" element={<DepositConfirmationPage />} />
         <Route path="/bills" element={<BillsPage />} />
+        <Route path="/bills/:id" element={<BillPaymentDetailsPage />} />
         <Route path="/business" element={<BusinessPage />} />
         <Route path="/commercial-banking" element={<CommercialBankingPage />} />
         <Route path="/investWealthManagement" element={<InvestWealthManagementPage />} />

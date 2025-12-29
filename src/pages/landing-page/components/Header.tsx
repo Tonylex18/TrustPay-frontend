@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Icon from '../../../components/AppIcon';
+import { getStoredToken } from '../../../utils/api';
 
 interface NavItem {
   label: string;
@@ -20,6 +21,14 @@ const navItems: NavItem[] = [
 const Header: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [hasToken, setHasToken] = useState<boolean>(false);
+
+  useEffect(() => {
+    const syncAuth = () => setHasToken(Boolean(getStoredToken()));
+    syncAuth();
+    window.addEventListener('storage', syncAuth);
+    return () => window.removeEventListener('storage', syncAuth);
+  }, []);
 
   const handleNavigate = (item: NavItem) => {
     if (item.hash) {
@@ -75,11 +84,13 @@ const Header: React.FC = () => {
               </button>
 
               <button
-                onClick={() => handleNavigate({ label: 'Sign On', path: '/login' })}
+                onClick={() =>
+                  handleNavigate({ label: hasToken ? 'Dashboard' : 'Sign On', path: hasToken ? '/dashboard' : '/login' })
+                }
                 className="inline-flex items-center gap-2 h-10 px-5 rounded-full bg-white text-[#2f2a28] text-sm font-semibold shadow-md hover:shadow-lg transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
               >
-                <span>Sign On</span>
-                <Icon name="LogIn" size={16} color="#2f2a28" />
+                <span>{hasToken ? 'Dashboard' : 'Sign On'}</span>
+                <Icon name={hasToken ? 'Home' : 'LogIn'} size={16} color="#2f2a28" />
               </button>
             </div>
           </div>

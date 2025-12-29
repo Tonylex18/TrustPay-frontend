@@ -593,9 +593,9 @@ const Dashboard: React.FC = () => {
       {showKycModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-card border border-border rounded-xl shadow-card w-full max-w-md p-6 space-y-4">
-            <h3 className="text-lg font-semibold text-foreground">Complete your KYC</h3>
+            <h3 className="text-lg font-semibold text-foreground">Complete your Profile</h3>
             <p className="text-sm text-muted-foreground">
-              Your profile is not verified yet. Complete KYC to enable banking features.
+              Your profile is not verified yet. Provide all necessary details to enable banking features.
             </p>
             <div className="flex justify-end gap-3 pt-2">
               <Button variant="outline" onClick={() => setShowKycModal(false)}>

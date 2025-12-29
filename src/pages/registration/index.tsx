@@ -13,6 +13,8 @@ import { API_BASE_URL, setStoredToken } from '../../utils/api';
 const Registration = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [awaitingOtp, setAwaitingOtp] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
   const [formData, setFormData] = useState<RegistrationFormData>({
     email: '',
     password: '',
@@ -56,6 +58,14 @@ const Registration = () => {
 
   const validateForm = (): boolean => {
     const newErrors: ValidationErrors = {};
+
+    if (awaitingOtp) {
+      if (!otpCode || otpCode.trim().length !== 6) {
+        newErrors.otp = 'Enter the 6-digit code sent to your email';
+      }
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
@@ -111,15 +121,17 @@ const Registration = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+      const endpoint = awaitingOtp ? `${API_BASE_URL}/auth/signup/verify-otp` : `${API_BASE_URL}/auth/signup`;
+      const body = awaitingOtp
+        ? { email: formData.email, otp: otpCode.trim() }
+        : { email: formData.email, password: formData.password };
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password
-        })
+        body: JSON.stringify(body)
       });
 
       const payload = await response.json().catch(() => null);
@@ -128,6 +140,25 @@ const Registration = () => {
         setFormError(message);
         toast.error(message);
         return;
+      }
+
+      if (!awaitingOtp) {
+        if (payload?.otpRequired) {
+          const message = payload?.message || 'Enter the code sent to your email to activate your account.';
+          setFormError(null);
+          setAwaitingOtp(true);
+          setOtpCode('');
+          toast.info(message);
+          return;
+        }
+
+        if (payload?.emailVerificationRequired) {
+          const message = payload?.message || 'Check your email to verify your account before signing in.';
+          setFormError(null);
+          toast.info(message);
+          navigate('/login', { state: { email: formData.email, notice: message } });
+          return;
+        }
       }
 
       const token = payload?.token;
@@ -226,14 +257,46 @@ const Registration = () => {
               </div>
             )}
             
-            <RegistrationForm
-              formData={formData}
-              errors={errors}
-              onInputChange={handleInputChange}
-              passwordStrength={passwordStrength}
-              onSubmit={handleSubmit}
-              isSubmitting={isSubmitting}
-            />
+            {!awaitingOtp ? (
+              <RegistrationForm
+                formData={formData}
+                errors={errors}
+                onInputChange={handleInputChange}
+                passwordStrength={passwordStrength}
+                onSubmit={handleSubmit}
+                isSubmitting={isSubmitting}
+              />
+            ) : (
+              <form className="space-y-4" onSubmit={handleSubmit}>
+                <p className="text-sm text-muted-foreground">
+                  Enter the 6-digit code we emailed to <strong>{formData.email}</strong> to activate your account.
+                </p>
+                <input
+                  className="w-full rounded-lg border border-input bg-background px-3 py-2 text-center text-2xl tracking-[0.4em]"
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
+                  placeholder="••••••"
+                  maxLength={6}
+                  inputMode="numeric"
+                />
+                {errors.otp && <p className="text-xs text-error">{errors.otp}</p>}
+                <Button type="submit" size="lg" className="w-full" loading={isSubmitting}>
+                  Verify code
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="w-full"
+                  onClick={() => {
+                    setAwaitingOtp(false);
+                    setOtpCode('');
+                    setFormError(null);
+                  }}
+                >
+                  Edit email or password
+                </Button>
+              </form>
+            )}
 
             <SecurityMessage />
 

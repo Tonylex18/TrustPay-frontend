@@ -12,6 +12,7 @@ export interface ValidationErrors {
 	confirmPassword?: string;
 	agreeToTerms?: string;
 	agreeToPrivacy?: string;
+	otp?: string;
 }
   
   export interface PasswordStrength {

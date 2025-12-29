@@ -16,6 +16,8 @@ const LoginPage: React.FC = () => {
     password: '',
     rememberMe: false
   });
+  const [otpCode, setOtpCode] = useState('');
+  const [awaitingOtp, setAwaitingOtp] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -39,6 +41,10 @@ const LoginPage: React.FC = () => {
   ];
 
   const handleInputChange = (field: keyof LoginFormData, value: string | boolean) => {
+    if (awaitingOtp && field === 'email') {
+      setAwaitingOtp(false);
+      setOtpCode('');
+    }
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
@@ -58,10 +64,16 @@ const LoginPage: React.FC = () => {
       newErrors.email = 'Enter a valid email address';
     }
 
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    if (!awaitingOtp) {
+      if (!formData.password) {
+        newErrors.password = 'Password is required';
+      } else if (formData.password.length < 6) {
+        newErrors.password = 'Password must be at least 6 characters';
+      }
+    } else {
+      if (!otpCode || otpCode.trim().length !== 6) {
+        newErrors.password = 'Enter the 6-digit code sent to your email';
+      }
     }
 
     setErrors(newErrors);
@@ -74,15 +86,17 @@ const LoginPage: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      const endpoint = awaitingOtp ? `${API_BASE_URL}/auth/login/verify-otp` : `${API_BASE_URL}/auth/login`;
+      const payloadBody = awaitingOtp
+        ? { email: formData.email, otp: otpCode.trim() }
+        : { email: formData.email, password: formData.password };
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password
-        })
+        body: JSON.stringify(payloadBody)
       });
 
       const payload = await response.json().catch(() => null);
@@ -90,6 +104,24 @@ const LoginPage: React.FC = () => {
         const message = payload?.errors || payload?.message || 'Unable to sign in. Please try again.';
         setFormError(message);
         toast.error(message);
+        return;
+      }
+
+      if (payload?.emailVerificationRequired) {
+        setAwaitingOtp(false);
+        setOtpCode('');
+        const message = payload?.message || 'Please verify your email address to continue.';
+        setFormError(message);
+        toast.info(message);
+        return;
+      }
+
+      if (payload?.otpRequired) {
+        setAwaitingOtp(true);
+        setOtpCode('');
+        const message = payload?.message || 'Check your email for the 6-digit code.';
+        setFormError(message);
+        toast.info(message);
         return;
       }
 
@@ -198,15 +230,27 @@ const LoginPage: React.FC = () => {
                 required
               />
 
-              <Input
-                label="Password"
-                type="password"
-                value={formData.password}
-                onChange={(e) => handleInputChange('password', e.target.value)}
-                placeholder="••••••••"
-                error={errors.password}
-                required
-              />
+              {!awaitingOtp ? (
+                <Input
+                  label="Password"
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => handleInputChange('password', e.target.value)}
+                  placeholder="••••••••"
+                  error={errors.password}
+                  required
+                />
+              ) : (
+                <Input
+                  label="Login code"
+                  type="text"
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
+                  placeholder="6-digit code"
+                  error={errors.password}
+                  required
+                />
+              )}
 
               <div className="flex items-center justify-between gap-3">
                 <Checkbox
@@ -223,7 +267,7 @@ const LoginPage: React.FC = () => {
               </div>
 
               <Button type="submit" size="lg" className="w-full" loading={isSubmitting}>
-                Sign In
+                {awaitingOtp ? 'Verify code' : 'Sign In'}
               </Button>
 
               <div className="flex items-center justify-between text-sm text-muted-foreground">

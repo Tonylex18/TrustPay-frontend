@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Icon from '../AppIcon';
 import UserMenu from './UserMenu';
+import { API_BASE_URL, getStoredToken } from '../../utils/api';
 
 interface NavigationBarProps {
   user?: {
@@ -24,6 +25,18 @@ const NavigationBar = ({ user, onNavigate }: NavigationBarProps) => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [resolvedUser, setResolvedUser] = useState(user);
+
+  const getDisplayName = (u?: { name?: string; fullName?: string; email?: string }) => {
+    if (!u) return '';
+    if (u.name && u.name.trim().length > 0) return u.name;
+    if ((u as any).fullName && String((u as any).fullName).trim().length > 0) return (u as any).fullName;
+    if (u.email) {
+      const [local] = u.email.split('@');
+      return local || u.email;
+    }
+    return '';
+  };
 
   const navItems: NavItem[] = [
     {
@@ -64,6 +77,43 @@ const NavigationBar = ({ user, onNavigate }: NavigationBarProps) => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    setResolvedUser(user);
+  }, [user]);
+
+  useEffect(() => {
+    if (user) return;
+    const token = getStoredToken();
+    if (!token) return;
+    const controller = new AbortController();
+    fetch(`${API_BASE_URL}/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+      signal: controller.signal
+    })
+      .then((res) => res.json().then((payload) => ({ ok: res.ok, payload })).catch(() => ({ ok: res.ok, payload: null })))
+      .then(({ ok, payload }) => {
+        if (ok && payload) {
+          const me = payload.user || payload;
+          setResolvedUser({
+            name: getDisplayName(me),
+            email: me.email,
+            avatar: me.avatarUrl
+          });
+        }
+      })
+      .catch(() => {});
+    return () => controller.abort();
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+    setResolvedUser({
+      name: getDisplayName(user),
+      email: user.email,
+      avatar: user.avatar
+    });
+  }, [user]);
 
   const handleNavigation = (path: string) => {
     if (onNavigate) {
@@ -130,7 +180,7 @@ const NavigationBar = ({ user, onNavigate }: NavigationBarProps) => {
           )}
 
           <div className="flex items-center gap-4 ml-auto">
-            {!isMobile && user && <UserMenu user={user} />}
+            {!isMobile && resolvedUser && <UserMenu user={resolvedUser} />}
             
             {isMobile && (
               <button
@@ -183,9 +233,9 @@ const NavigationBar = ({ user, onNavigate }: NavigationBarProps) => {
                 ))}
               </div>
 
-              {user && (
+              {resolvedUser && (
                 <div className="border-t border-border p-4">
-                  <UserMenu user={user} isMobile />
+                  <UserMenu user={resolvedUser} isMobile />
                 </div>
               )}
             </div>
