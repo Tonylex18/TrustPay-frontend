@@ -68,6 +68,15 @@ type CardTransaction = {
   createdAt: string;
 };
 
+type CardRequest = {
+  id: string;
+  status: string;
+  userEmail?: string;
+  accountLast4?: string;
+  feeStatus?: string;
+  rejectionReason?: string | null;
+};
+
 type MobileDepositDetail = {
   transactionId?: string | null;
   frontImageUrl?: string | null;
@@ -101,6 +110,9 @@ const AdminApprovalsPage: React.FC = () => {
   const [isLoadingKyc, setIsLoadingKyc] = useState(false);
   const [cardTransactions, setCardTransactions] = useState<CardTransaction[]>([]);
   const [isLoadingCardTxns, setIsLoadingCardTxns] = useState(false);
+  const [cardRequests, setCardRequests] = useState<CardRequest[]>([]);
+  const [isLoadingCardRequests, setIsLoadingCardRequests] = useState(false);
+  const [cardRequestError, setCardRequestError] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [activeActionId, setActiveActionId] = useState<string | null>(null);
   const [selectedTxn, setSelectedTxn] = useState<PendingTransaction | null>(null);
@@ -259,6 +271,44 @@ const AdminApprovalsPage: React.FC = () => {
     }
   };
 
+  const fetchCardRequests = async (authToken: string, signal?: AbortSignal) => {
+    setIsLoadingCardRequests(true);
+    setCardRequestError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/card-requests?status=PENDING_APPROVAL`, {
+        headers: { Authorization: `Bearer ${authToken}` },
+        signal
+      });
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        const message = payload?.errors || payload?.message || 'Unable to load card requests.';
+        if (response.status === 401 || response.status === 403) {
+          setToken(null);
+        }
+        setCardRequestError(message);
+        toast.error(message);
+        return;
+      }
+      const list = Array.isArray(payload) ? payload : payload?.data || [];
+      setCardRequests(
+        list.map((r: any) => ({
+          id: r.id,
+          status: r.status,
+          userEmail: r.userEmail || r.user_email,
+          accountLast4: r.accountLast4 || r.account_last4,
+          feeStatus: r.feeStatus || r.fee_status,
+          rejectionReason: r.rejectionReason || r.rejection_reason
+        }))
+      );
+    } catch (error) {
+      if ((error as Error).name !== 'AbortError') {
+        setCardRequestError('Unable to load card requests.');
+      }
+    } finally {
+      setIsLoadingCardRequests(false);
+    }
+  };
+
   const fetchMobileDepositDetail = async (transactionId: string, authToken: string) => {
     setIsLoadingDepositDetail(true);
     setDepositDetailError(null);
@@ -292,6 +342,7 @@ const AdminApprovalsPage: React.FC = () => {
     fetchPending(token, controller.signal);
     fetchKyc(token, controller.signal);
     fetchCardTransactions(token, controller.signal);
+    fetchCardRequests(token, controller.signal);
     return () => controller.abort();
   }, [token]);
 
@@ -380,6 +431,46 @@ const AdminApprovalsPage: React.FC = () => {
       toast.success(`Transaction ${action}d.`);
     } catch (error) {
       toast.error(`Unable to ${action} transaction.`);
+    } finally {
+      setActiveActionId(null);
+    }
+  };
+
+  const handleCardRequestAction = async (id: string, action: 'approve' | 'reject') => {
+    if (!token) {
+      toast.error('Please sign in as an admin.');
+      return;
+    }
+
+    const actionKey = `card-${id}-${action}`;
+    setActiveActionId(actionKey);
+    const reason =
+      action === 'reject'
+        ? window.prompt('Add a rejection reason (optional):') || undefined
+        : undefined;
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/admin/card-requests/${id}/${action === 'approve' ? 'approve' : 'reject'}`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: action === 'reject' ? JSON.stringify({ reason }) : undefined
+        }
+      );
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        const message = payload?.errors || payload?.message || 'Unable to update card request.';
+        toast.error(message);
+        return;
+      }
+      toast.success(action === 'approve' ? 'Card request approved and issued.' : 'Card request rejected and refunded.');
+      fetchCardRequests(token);
+    } catch (error) {
+      toast.error('Unable to update card request.');
     } finally {
       setActiveActionId(null);
     }
@@ -691,6 +782,80 @@ const AdminApprovalsPage: React.FC = () => {
               </section>
 
               <aside className="space-y-6">
+                <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
+                  <div className="flex items-center justify-between mb-2">
+                    <div>
+                      <h3 className="text-lg font-semibold text-foreground">Card requests</h3>
+                      <p className="text-sm text-muted-foreground">Approve or reject virtual card issuance fees.</p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => token && fetchCardRequests(token)}
+                      loading={isLoadingCardRequests}
+                    >
+                      Refresh
+                    </Button>
+                  </div>
+                  {cardRequestError && (
+                    <div className="rounded-lg border border-error/30 bg-error/5 px-3 py-2 text-sm text-error">
+                      {cardRequestError}
+                    </div>
+                  )}
+                  {isLoadingCardRequests ? (
+                    <p className="text-sm text-muted-foreground">Loading card requests...</p>
+                  ) : cardRequests.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No card requests awaiting approval.</p>
+                  ) : (
+                    <div className="space-y-3">
+                      {cardRequests.map((req) => {
+                        const badge =
+                          (req.status || '').toUpperCase() === 'REJECTED'
+                            ? 'bg-error/10 text-error border-error/30'
+                            : 'bg-amber-50 text-amber-700 border-amber-200';
+                        const label =
+                          (req.status || '').toUpperCase() === 'REJECTED' ? 'Rejected' : 'Pending Approval';
+                        return (
+                          <div key={req.id} className="rounded-lg border border-border bg-muted/20 p-3">
+                            <div className="flex items-start justify-between gap-3">
+                              <div>
+                                <p className="text-sm font-semibold text-foreground">{req.userEmail || 'User'}</p>
+                                <p className="text-xs text-muted-foreground">Account ••••{req.accountLast4 || '----'}</p>
+                                <p className="text-xs text-muted-foreground">
+                                  Fee status: {(req.feeStatus || 'PENDING').toString().replace(/_/g, ' ')}
+                                </p>
+                                {req.rejectionReason && (
+                                  <p className="text-xs text-error mt-1">Reason: {req.rejectionReason}</p>
+                                )}
+                              </div>
+                              <span className={`px-2 py-1 text-[11px] font-semibold rounded-full border ${badge}`}>
+                                {label}
+                              </span>
+                            </div>
+                            <div className="flex gap-2 justify-end mt-3">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleCardRequestAction(req.id, 'reject')}
+                                loading={activeActionId === `card-${req.id}-reject`}
+                              >
+                                Reject
+                              </Button>
+                              <Button
+                                size="sm"
+                                onClick={() => handleCardRequestAction(req.id, 'approve')}
+                                loading={activeActionId === `card-${req.id}-approve`}
+                              >
+                                Approve
+                              </Button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
                 <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
                   <h3 className="text-lg font-semibold text-foreground mb-2">Create test funds</h3>
                   <p className="text-sm text-muted-foreground mb-5">

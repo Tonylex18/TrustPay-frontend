@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
 import NavigationBar from '../../components/ui/NavigationBar';
@@ -33,15 +33,43 @@ const UserProfilePage = () => {
     promotionalEmails: false,
     transactionAlerts: true
   });
+  type CardRequestSummary = {
+    id: string;
+    status: string;
+    bankAccountId: string;
+    feeStatus?: string;
+    rejectionReason?: string | null;
+    accountLast4?: string;
+    cardId?: string | null;
+    createdAt?: string;
+  };
   const [cards, setCards] = useState<
     { id: string; brand: string; last4: string; status: string; bankAccountId: string; createdAt: string; stripeCardId?: string }[]
   >([]);
   const [accounts, setAccounts] = useState<
-    { id: string; accountNumber: string; type?: string; status?: string }[]
+    { id: string; accountNumber: string; type?: string; status?: string; availableBalance?: number }[]
   >([]);
+  const [cardRequests, setCardRequests] = useState<CardRequestSummary[]>([]);
   const [cardLoading, setCardLoading] = useState(false);
   const [cardError, setCardError] = useState<string | null>(null);
+  const [cardRequestError, setCardRequestError] = useState<string | null>(null);
   const [selectedAccountId, setSelectedAccountId] = useState<string>('');
+  const selectedAccount = useMemo(
+    () => accounts.find((acct) => acct.id === selectedAccountId) || null,
+    [accounts, selectedAccountId]
+  );
+  const hasIssuedCard = useMemo(
+    () => cards.some((card) => card.bankAccountId === selectedAccountId),
+    [cards, selectedAccountId]
+  );
+  const hasPendingRequest = useMemo(
+    () => cardRequests.some((r) => ['PENDING_APPROVAL', 'APPROVED'].includes((r.status || '').toUpperCase())),
+    [cardRequests]
+  );
+  const insufficientBalance = useMemo(() => {
+    const balance = selectedAccount?.availableBalance ?? 0;
+    return balance < 5;
+  }, [selectedAccount]);
 
   const breadcrumbItems = [
   { label: 'Dashboard', path: '/dashboard' },
@@ -128,8 +156,9 @@ const UserProfilePage = () => {
     const fetchCardsAndAccounts = async () => {
       setCardLoading(true);
       setCardError(null);
+      setCardRequestError(null);
       try {
-        const [cardRes, accountRes] = await Promise.all([
+        const [cardRes, accountRes, requestRes] = await Promise.all([
           fetch(`${API_BASE_URL}/cards`, {
             headers: {
               Authorization: `Bearer ${token}`
@@ -141,11 +170,18 @@ const UserProfilePage = () => {
               Authorization: `Bearer ${token}`
             },
             signal: controller.signal
+          }),
+          fetch(`${API_BASE_URL}/card-requests`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+            signal: controller.signal
           })
         ]);
 
         const cardPayload = await cardRes.json().catch(() => null);
         const accountPayload = await accountRes.json().catch(() => null);
+        const requestPayload = await requestRes.json().catch(() => null);
 
         if (cardRes.ok && Array.isArray(cardPayload)) {
           setCards(
@@ -171,12 +207,32 @@ const UserProfilePage = () => {
               id: a.id,
               accountNumber: a.account_number || a.accountNumber,
               type: a.type || a.account_type || a.accountType,
-              status: a.status
+              status: a.status,
+              availableBalance: a.available_balance ?? a.availableBalance ?? a.balance ?? 0
             }))
           );
           if (!selectedAccountId && Array.isArray(accountPayload) && accountPayload.length > 0) {
             setSelectedAccountId(accountPayload[0].id);
           }
+        }
+
+        if (requestRes.ok && Array.isArray(requestPayload)) {
+          setCardRequests(
+            requestPayload.map((r: any) => ({
+              id: r.id,
+              status: r.status,
+              bankAccountId: r.bankAccountId,
+              feeStatus: r.feeStatus || r.fee_status,
+              rejectionReason: r.rejectionReason || r.rejection_reason,
+              accountLast4: r.accountLast4 || r.account_last4,
+              cardId: r.cardId || r.card_id,
+              createdAt: r.createdAt || r.created_at
+            }))
+          );
+        } else if (!requestRes.ok) {
+          const message = requestPayload?.errors || requestPayload?.message || 'Unable to load card requests.';
+          setCardRequestError(message);
+          toast.error(message);
         }
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {
@@ -255,17 +311,28 @@ const UserProfilePage = () => {
       });
       const payload = await response.json().catch(() => null);
       if (!response.ok) {
-        const message = payload?.errors || payload?.message || 'Unable to issue a card right now.';
+        const message = payload?.errors || payload?.message || 'Unable to submit your card request right now.';
         setCardError(message);
         toast.error(message);
         return;
       }
-      const newCard = payload;
-      setCards((prev) => [newCard, ...prev.filter((c) => c.id !== newCard.id)]);
-      toast.success('Virtual card issued and linked to your account.');
+      const newRequest: CardRequestSummary = {
+        id: payload?.requestId || payload?.id,
+        status: payload?.status,
+        bankAccountId: payload?.bankAccountId,
+        feeStatus: payload?.feeStatus,
+        rejectionReason: payload?.rejectionReason,
+        accountLast4: payload?.accountLast4,
+        cardId: payload?.cardId,
+        createdAt: payload?.createdAt
+      };
+      if (newRequest.id) {
+        setCardRequests((prev) => [newRequest, ...prev.filter((r) => r.id !== newRequest.id)]);
+      }
+      toast.success(payload?.message || 'Your card request is under review. This typically takes 2–3 business days.');
     } catch (error) {
-      setCardError('Unable to issue a card right now.');
-      toast.error('Unable to issue a card right now.');
+      setCardError('Unable to submit your card request right now.');
+      toast.error('Unable to submit your card request right now.');
     } finally {
       setCardLoading(false);
     }
@@ -360,6 +427,62 @@ const UserProfilePage = () => {
                         {cardError}
                       </div>
                     )}
+                    {cardRequestError && (
+                      <div className="rounded-lg border border-error/30 bg-error/5 p-4 text-sm text-error">
+                        {cardRequestError}
+                      </div>
+                    )}
+                    {!cardLoading && cardRequests.length > 0 && (
+                      <div className="space-y-3 mb-4">
+                        {cardRequests.map((request) => {
+                          const badge = (() => {
+                            const normalized = (request.status || '').toUpperCase();
+                            if (normalized === 'REJECTED') {
+                              return 'bg-error/10 text-error border-error/30';
+                            }
+                            if (normalized === 'APPROVED' || normalized === 'ISSUED') {
+                              return 'bg-success/10 text-success border-success/30';
+                            }
+                            return 'bg-amber-50 text-amber-700 border-amber-200';
+                          })();
+                          const label = (() => {
+                            const normalized = (request.status || '').toUpperCase();
+                            if (normalized === 'REJECTED') return 'Rejected';
+                            if (normalized === 'APPROVED') return 'Approved';
+                            if (normalized === 'ISSUED') return 'Issued';
+                            return 'Pending Approval';
+                          })();
+                          return (
+                            <div key={request.id} className="border border-border rounded-lg p-4 bg-muted/20">
+                              <div className="flex items-start justify-between gap-3">
+                                <div>
+                                  <p className="text-sm font-semibold text-foreground">Virtual Card Request</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    Account ••••{request.accountLast4 || '----'}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground mt-1">
+                                    Fee status: {(request.feeStatus || 'PENDING').toString().replace(/_/g, ' ')}
+                                  </p>
+                                  {request.rejectionReason && (
+                                    <p className="text-xs text-error mt-1">
+                                      Reason: {request.rejectionReason}
+                                    </p>
+                                  )}
+                                </div>
+                                <span className={`px-2 py-1 text-[11px] font-semibold rounded-full border ${badge}`}>
+                                  {label}
+                                </span>
+                              </div>
+                              {label === 'Pending Approval' && (
+                                <p className="text-xs text-muted-foreground mt-2">
+                                  Your card request is under review. This typically takes 2–3 business days.
+                                </p>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
                     {token && !cardLoading && cards.length > 0 && (
                       <div className="space-y-3 mb-4">
                         {cards.map((card) => {
@@ -386,6 +509,16 @@ const UserProfilePage = () => {
                         <p className="text-sm text-muted-foreground">Create a checking account to fund your card.</p>
                       ) : (
                         <div className="space-y-3">
+                          <div className="border border-border rounded-lg p-3 bg-card/40">
+                            <p className="text-sm font-semibold text-foreground">Virtual Card Fee</p>
+                            <p className="text-sm text-muted-foreground">
+                              A one-time $5 issuance fee will be deducted from your balance when you apply.
+                            </p>
+                            <p className="text-sm font-semibold text-foreground mt-2">Processing Time</p>
+                            <p className="text-sm text-muted-foreground">
+                              Card requests are reviewed within 2–3 business days.
+                            </p>
+                          </div>
                           <Select
                             label="Select funding account"
                             value={selectedAccountId}
@@ -395,9 +528,22 @@ const UserProfilePage = () => {
                               value: acct.id
                             }))}
                           />
-                          <Button onClick={handleRequestCard} loading={cardLoading}>
-                            Request virtual card
+                          <Button
+                            onClick={handleRequestCard}
+                            loading={cardLoading}
+                            disabled={cardLoading || hasPendingRequest || insufficientBalance || hasIssuedCard}
+                          >
+                            {hasPendingRequest ? 'Request pending review' : 'Request virtual card'}
                           </Button>
+                          {(hasPendingRequest || insufficientBalance || hasIssuedCard) && (
+                            <p className="text-xs text-muted-foreground">
+                              {insufficientBalance
+                                ? 'You need at least $5 available to apply.'
+                                : hasPendingRequest
+                                  ? 'You already have a request awaiting approval.'
+                                  : 'A card is already linked to this account.'}
+                            </p>
+                          )}
                         </div>
                       )
                     ) : (

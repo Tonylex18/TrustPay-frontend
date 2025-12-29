@@ -24,6 +24,15 @@ type CardSummary = {
   stripeCardId?: string;
 };
 
+type CardRequestSummary = {
+  id: string;
+  status: string;
+  bankAccountId: string;
+  accountLast4?: string;
+  feeStatus?: string;
+  rejectionReason?: string | null;
+};
+
 const normalizeStatus = (value: string | null | undefined): DashboardStatus => {
   const status = (value || '').toLowerCase();
   if (
@@ -48,6 +57,7 @@ const Dashboard: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [cards, setCards] = useState<CardSummary[]>([]);
+  const [cardRequests, setCardRequests] = useState<CardRequestSummary[]>([]);
   const [cardLoadError, setCardLoadError] = useState<string | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newAccountType, setNewAccountType] = useState<'checking' | 'savings'>('checking');
@@ -107,8 +117,9 @@ const Dashboard: React.FC = () => {
       setLoadError(null);
       setCardLoadError(null);
       setCards([]);
+      setCardRequests([]);
       try {
-        const [meRes, accountsRes, kycRes, cardsRes] = await Promise.all([
+        const [meRes, accountsRes, kycRes, cardsRes, cardRequestsRes] = await Promise.all([
           fetch(`${API_BASE_URL}/me`, {
             headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
@@ -122,6 +133,10 @@ const Dashboard: React.FC = () => {
             signal: controller.signal
           }),
           fetch(`${API_BASE_URL}/cards`, {
+            headers: { Authorization: `Bearer ${token}` },
+            signal: controller.signal
+          }),
+          fetch(`${API_BASE_URL}/card-requests`, {
             headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
@@ -164,6 +179,7 @@ const Dashboard: React.FC = () => {
         }
 
         const cardsPayload = await cardsRes.json().catch(() => null);
+        const cardRequestsPayload = await cardRequestsRes.json().catch(() => null);
         if (!cardsRes.ok) {
           if (cardsRes.status === 401) {
             clearStoredToken();
@@ -183,6 +199,22 @@ const Dashboard: React.FC = () => {
               stripeCardId: c.stripeCardId
             }))
           );
+        }
+
+        if (cardRequestsRes.ok && Array.isArray(cardRequestsPayload)) {
+          setCardRequests(
+            cardRequestsPayload.map((r: any) => ({
+              id: r.id,
+              status: r.status,
+              bankAccountId: r.bankAccountId,
+              accountLast4: r.accountLast4 || r.account_last4,
+              feeStatus: r.feeStatus || r.fee_status,
+              rejectionReason: r.rejectionReason || r.rejection_reason,
+            }))
+          );
+        } else if (!cardRequestsRes.ok) {
+          const message = cardRequestsPayload?.errors || cardRequestsPayload?.message || 'Unable to load card requests.';
+          setCardLoadError((prev) => prev || message);
         }
 
         const accountsData = Array.isArray(accountsPayload) ? accountsPayload : [];
@@ -329,6 +361,10 @@ const Dashboard: React.FC = () => {
     }
     return cards[0] || null;
   }, [cards, primaryAccount?.id]);
+  const activeRequest = useMemo(() => {
+    const prioritized = cardRequests.find((r) => ['PENDING_APPROVAL', 'APPROVED'].includes((r.status || '').toUpperCase()));
+    return prioritized || cardRequests[0] || null;
+  }, [cardRequests]);
 
   const linkedAccount = useMemo(
     () => (activeCard ? (dashboardData?.accounts || []).find((a) => a.id === activeCard.bankAccountId) || null : null),
@@ -439,6 +475,29 @@ const Dashboard: React.FC = () => {
     });
   };
 
+  const renderRequestBadge = (status?: string) => {
+    const normalized = (status || '').toUpperCase();
+    if (normalized === 'REJECTED') {
+      return (
+        <span className="px-2 py-1 text-[11px] font-semibold rounded-full border bg-error/10 text-error border-error/30">
+          Rejected
+        </span>
+      );
+    }
+    if (normalized === 'APPROVED' || normalized === 'ISSUED') {
+      return (
+        <span className="px-2 py-1 text-[11px] font-semibold rounded-full border bg-success/10 text-success border-success/30">
+          {normalized === 'ISSUED' ? 'Issued' : 'Approved'}
+        </span>
+      );
+    }
+    return (
+      <span className="px-2 py-1 text-[11px] font-semibold rounded-full border bg-amber-50 text-amber-700 border-amber-200">
+        Pending Approval
+      </span>
+    );
+  };
+
   return (
     <>
       <Helmet>
@@ -526,6 +585,30 @@ const Dashboard: React.FC = () => {
                         {cardLoadError}
                       </div>
                     )}
+                    {activeRequest && (!activeCard || (activeRequest.status || '').toUpperCase() !== 'ISSUED') && (
+                      <div className="border border-border rounded-lg p-4 bg-card/60">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="text-sm font-semibold text-foreground">Virtual Card Request</p>
+                            <p className="text-xs text-muted-foreground">
+                              Account ••••{activeRequest.accountLast4 || '----'}
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Fee status: {(activeRequest.feeStatus || 'PENDING').toString().replace(/_/g, ' ')}
+                            </p>
+                            {activeRequest.rejectionReason && (
+                              <p className="text-xs text-error mt-1">Reason: {activeRequest.rejectionReason}</p>
+                            )}
+                            {(!activeRequest.rejectionReason && (activeRequest.status || '').toUpperCase() !== 'REJECTED') && (
+                              <p className="text-xs text-muted-foreground mt-2">
+                                Your card request is under review. This typically takes 2–3 business days.
+                              </p>
+                            )}
+                          </div>
+                          {renderRequestBadge(activeRequest.status)}
+                        </div>
+                      </div>
+                    )}
                     {token ? (
                       activeCard ? (
                         <CardDetailsDisplay
@@ -535,7 +618,13 @@ const Dashboard: React.FC = () => {
                         />
                       ) : (
                         <div className="bg-card border border-border rounded-lg p-4 text-sm text-muted-foreground">
-                          Issue a virtual card from your profile to view secure card numbers.
+                          <p>Issue a virtual card from your profile to view secure card numbers.</p>
+                          <p className="text-xs mt-2">
+                            Virtual Card Fee: A one-time $5 issuance fee will be deducted from your balance when you apply.
+                          </p>
+                          <p className="text-xs">
+                            Processing Time: Card requests are reviewed within 2–3 business days.
+                          </p>
                         </div>
                       )
                     ) : null}
