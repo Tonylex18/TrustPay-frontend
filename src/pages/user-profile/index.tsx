@@ -44,7 +44,7 @@ const UserProfilePage = () => {
     createdAt?: string;
   };
   const [cards, setCards] = useState<
-    { id: string; brand: string; last4: string; status: string; bankAccountId: string; createdAt: string; stripeCardId?: string }[]
+    { id: string; brand: string; last4: string; status: string; bankAccountId: string; createdAt: string; stripeCardId?: string; activationStatus?: string; activatedAt?: string }[]
   >([]);
   const [accounts, setAccounts] = useState<
     { id: string; accountNumber: string; type?: string; status?: string; availableBalance?: number }[]
@@ -70,6 +70,14 @@ const UserProfilePage = () => {
     const balance = selectedAccount?.availableBalance ?? 0;
     return balance < 5;
   }, [selectedAccount]);
+
+  const handleCardActivated = (cardId: string) => {
+    setCards((prev) =>
+      prev.map((c) =>
+        c.id === cardId ? { ...c, status: 'ACTIVE', activationStatus: 'ACTIVE' } : c
+      )
+    );
+  };
 
   const breadcrumbItems = [
   { label: 'Dashboard', path: '/dashboard' },
@@ -192,7 +200,9 @@ const UserProfilePage = () => {
               status: c.status,
               bankAccountId: c.bankAccountId,
               createdAt: c.createdAt,
-              stripeCardId: c.stripeCardId
+              stripeCardId: c.stripeCardId,
+              activationStatus: c.activationStatus,
+              activatedAt: c.activatedAt
             }))
           );
         } else if (!cardRes.ok) {
@@ -496,6 +506,8 @@ const UserProfilePage = () => {
                               card={card}
                               token={token!}
                               linkedAccountLast4={accountLast4}
+                              userEmail={userProfile?.email}
+                              onActivated={handleCardActivated}
                             />
                           );
                         })}

@@ -192,6 +192,7 @@ const KycPage: React.FC = () => {
                 </div>
                 <Input label="Address Line 1" value={form.addressLine1} onChange={(e) => handleChange("addressLine1", e.target.value)} required />
                 <Input label="Address Line 2 (optional)" value={form.addressLine2} onChange={(e) => handleChange("addressLine2", e.target.value)} />
+                {/* <Input label="ssn (optional for US citizen only)" type="number" /> */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-foreground">State / Province</label>

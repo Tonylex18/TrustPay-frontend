@@ -45,4 +45,5 @@ export interface Account {
   balance: number;
   accountType: string;
   routingNumber?: string;
+  pinRequired?: boolean;
 }

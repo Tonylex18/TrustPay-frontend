@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import NavigationBar from '../../components/ui/NavigationBar';
 import BreadcrumbTrail from '../../components/ui/BreadcrumbTrail';
 import Icon from '../../components/AppIcon';
@@ -25,6 +25,9 @@ type RoutingLookupResponse = {
 
 const MoneyTransfer = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const navState = (location.state as any) || {};
+  const navHasPin = typeof navState.hasTransferPin === 'boolean' ? navState.hasTransferPin : undefined;
   const verifyTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const routingLookupTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -35,6 +38,21 @@ const MoneyTransfer = () => {
   const [toInternalAccountId, setToInternalAccountId] = useState<string | null>(null);
   const [isLoadingAccount, setIsLoadingAccount] = useState(true);
   const [transferError, setTransferError] = useState<string | null>(null);
+  const [hasTransferPin, setHasTransferPin] = useState<boolean>(() => {
+    const stored = sessionStorage.getItem('hasTransferPin');
+    if (stored === 'true') return true;
+    if (stored === 'false') return false;
+    if (typeof navHasPin === 'boolean') return navHasPin;
+    return true;
+  });
+  const [showPinSetup, setShowPinSetup] = useState(false);
+  const [pinSetup, setPinSetup] = useState({ pin: '', confirmPin: '', currentPin: '' });
+  const [pinSetupError, setPinSetupError] = useState<string | null>(null);
+  const [pinSetupLoading, setPinSetupLoading] = useState(false);
+  const [showPinEntry, setShowPinEntry] = useState(false);
+  const [pinEntry, setPinEntry] = useState('');
+  const [pinEntryError, setPinEntryError] = useState<string | null>(null);
+  const [pinEntryLoading, setPinEntryLoading] = useState(false);
 
   const [formData, setFormData] = useState<TransferFormData>({
     accountNumber: '',
@@ -126,9 +144,16 @@ const MoneyTransfer = () => {
           accountNumber: acct.account_number || acct.accountNumber,
           balance: acct.available_balance ?? acct.posted_balance ?? acct.balance ?? 0,
           accountType: acct.type || 'checking',
-          routingNumber: acct.routing_number || acct.routingNumber
+          routingNumber: acct.routing_number || acct.routingNumber,
+          pinRequired: Boolean(acct.pin_required ?? acct.pinRequired ?? false)
         }));
         setAccounts(normalized);
+        const requiresPin = normalized.some((acct) => acct.pinRequired);
+        setHasTransferPin(!requiresPin);
+        sessionStorage.setItem('hasTransferPin', (!requiresPin).toString());
+        if (requiresPin) {
+          setShowPinSetup(true);
+        }
         if (normalized.length > 0) {
           const primary = normalized[0];
           setUserAccount(primary);
@@ -310,8 +335,32 @@ const MoneyTransfer = () => {
     }
   };
 
+  const openPinEntry = () => {
+    if (!hasTransferPin) {
+      setShowPinSetup(true);
+      setTransferError('Set your transfer PIN before sending money.');
+      return;
+    }
+    setIsConfirmationOpen(false);
+    setShowPinEntry(true);
+    setPinEntry('');
+    setPinEntryError(null);
+  };
+
   const handleConfirmTransfer = async () => {
+    // Confirmation modal confirm -> open PIN entry modal
+    openPinEntry();
+  };
+
+  const submitTransferWithPin = async () => {
+    setPinEntryError(null);
+    if (!pinEntry || !/^[0-9]{4,6}$/.test(pinEntry)) {
+      setPinEntryError('Enter your 4–6 digit transfer PIN.');
+      return;
+    }
+
     setIsProcessing(true);
+    setPinEntryLoading(true);
     setTransferError(null);
 
     const token = getStoredToken();
@@ -326,8 +375,7 @@ const MoneyTransfer = () => {
           ? accounts.find((a) => a.id === toInternalAccountId)
           : verifiedAccount;
       if (!destinationAccount) {
-        setTransferError('Select a destination account.');
-        setIsProcessing(false);
+        setPinEntryError('Select a destination account.');
         return;
       }
       const routing =
@@ -335,8 +383,7 @@ const MoneyTransfer = () => {
           ? destinationAccount?.routingNumber || userAccount?.routingNumber || '103219840'
           : bankCode.trim();
       if (!routing) {
-        setTransferError('Missing routing number for destination account.');
-        setIsProcessing(false);
+        setPinEntryError('Missing routing number for destination account.');
         return;
       }
 
@@ -354,28 +401,45 @@ const MoneyTransfer = () => {
               : verifiedAccount?.accountNumber,
           to_routing_number: routing,
           amount: transferSummary.amount,
-          description: formData.memo || `Transfer to ${destinationAccount ? 'your account' : 'beneficiary'}`
+          description: formData.memo || `Transfer to ${destinationAccount ? 'your account' : 'beneficiary'}`,
+          pin: pinEntry
         })
       });
 
       const payload = await response.json().catch(() => null);
       if (!response.ok) {
+        if (response.status === 423) {
+          const message = 'PIN locked, try later.';
+          setPinEntryError(message);
+          toast.error(message);
+          return;
+        }
         const message = payload?.errors || payload?.message || 'Unable to complete transfer.';
-        setTransferError(message);
+        setPinEntryError(message);
         toast.error(message);
         return;
       }
 
-      toast.success('Transfer submitted. It will complete shortly.');
+      if (payload?.step_up_required) {
+        toast.info('Transfer submitted. Additional verification may be required for this amount.');
+      } else {
+        toast.success('Transfer submitted. It will complete shortly.');
+      }
       setIsConfirmationOpen(false);
+      setShowPinEntry(false);
+      setPinEntry('');
       navigate('/dashboard', {
         state: {
-          message: 'Transfer submitted successfully',
-          type: 'success'
+          message: payload?.step_up_required
+            ? 'Transfer submitted. Additional verification may be required.'
+            : 'Transfer submitted successfully',
+            type: 'success',
+            stepUpRequired: Boolean(payload?.step_up_required)
         }
       });
     } finally {
       setIsProcessing(false);
+      setPinEntryLoading(false);
     }
   };
 
@@ -418,6 +482,55 @@ const MoneyTransfer = () => {
     }
 
     await lookupBankByRouting(routingNumber);
+  };
+
+  const handleSavePin = async () => {
+    const token = getStoredToken();
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    const targetAccountId = fromAccountId || userAccount?.id;
+    if (!targetAccountId) {
+      setPinSetupError('Select a source account first.');
+      return;
+    }
+    if (!/^[0-9]{4,6}$/.test(pinSetup.pin) || pinSetup.pin !== pinSetup.confirmPin) {
+      setPinSetupError('Enter matching 4–6 digit PINs.');
+      return;
+    }
+    setPinSetupLoading(true);
+    setPinSetupError(null);
+    try {
+      const res = await fetch(`${API_BASE_URL}/accounts/${targetAccountId}/set-pin`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          pin: pinSetup.pin,
+          currentPin: pinSetup.currentPin || undefined
+        })
+      });
+      const payload = await res.json().catch(() => null);
+      if (!res.ok) {
+        const message = payload?.errors || payload?.message || 'Unable to save PIN.';
+        setPinSetupError(message);
+        toast.error(message);
+        return;
+      }
+      toast.success('Transfer PIN set.');
+      setHasTransferPin(true);
+      sessionStorage.setItem('hasTransferPin', 'true');
+      setShowPinSetup(false);
+      setPinSetup({ pin: '', confirmPin: '', currentPin: '' });
+      setFormData((prev) => ({ ...prev, pin: pinSetup.pin }));
+    } catch (_err) {
+      setPinSetupError('Unable to save PIN right now.');
+    } finally {
+      setPinSetupLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -770,6 +883,90 @@ const MoneyTransfer = () => {
           errorMessage={transferError}
           currency={transferLimits.currency}
         />
+      )}
+
+      {showPinEntry && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-card border border-border rounded-xl shadow-card w-full max-w-md p-6 space-y-4">
+            <h3 className="text-lg font-semibold text-foreground">Enter transfer PIN</h3>
+            <p className="text-sm text-muted-foreground">
+              Enter your 4–6 digit transfer PIN to authorize this transfer.
+            </p>
+            <Input
+              label="PIN"
+              type="password"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              maxLength={6}
+              value={pinEntry}
+              onChange={(e) => setPinEntry(e.target.value.trim())}
+              error={pinEntryError || undefined}
+            />
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <Button variant="outline" onClick={() => { setShowPinEntry(false); setPinEntry(''); setPinEntryError(null); }} disabled={pinEntryLoading}>
+                Cancel
+              </Button>
+              <Button onClick={submitTransferWithPin} loading={pinEntryLoading}>
+                Confirm Transfer
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showPinSetup && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-card border border-border rounded-xl shadow-card w-full max-w-md p-6 space-y-4">
+            <h3 className="text-lg font-semibold text-foreground">Set your transfer PIN</h3>
+            <p className="text-sm text-muted-foreground">
+              Create a 4–6 digit PIN to authorize transfers and withdrawals. Do not share this PIN.
+            </p>
+            <div className="space-y-3">
+              <Input
+                label="New PIN"
+                type="password"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={6}
+                value={pinSetup.pin}
+                onChange={(e) => setPinSetup((prev) => ({ ...prev, pin: e.target.value.trim() }))}
+              />
+              <Input
+                label="Confirm PIN"
+                type="password"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={6}
+                value={pinSetup.confirmPin}
+                onChange={(e) => setPinSetup((prev) => ({ ...prev, confirmPin: e.target.value.trim() }))}
+              />
+              {hasTransferPin && (
+                <Input
+                  label="Current PIN (if updating)"
+                  type="password"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={6}
+                  value={pinSetup.currentPin}
+                  onChange={(e) => setPinSetup((prev) => ({ ...prev, currentPin: e.target.value.trim() }))}
+                />
+              )}
+              {pinSetupError && (
+                <div className="text-sm text-error border border-error/20 bg-error/5 rounded-md p-2">
+                  {pinSetupError}
+                </div>
+              )}
+            </div>
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <Button variant="outline" onClick={() => setShowPinSetup(false)} disabled={pinSetupLoading}>
+                Cancel
+              </Button>
+              <Button onClick={handleSavePin} loading={pinSetupLoading}>
+                Save PIN
+              </Button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

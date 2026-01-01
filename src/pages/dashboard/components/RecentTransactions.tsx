@@ -91,7 +91,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
                       <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-[320px]">
                         Description
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-[180px]">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-[250px]">
                         Category
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-[120px]">
@@ -133,7 +133,7 @@ const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions })
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground align-top">
+                        <td className="px-6 py-4 text-sm text-muted-foreground align-top max-w-[250px]" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}>
                           {transaction.category}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap align-top">

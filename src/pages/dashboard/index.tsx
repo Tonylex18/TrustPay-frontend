@@ -21,6 +21,8 @@ type CardSummary = {
   last4: string;
   status: string;
   bankAccountId: string;
+  activationStatus?: string;
+  activatedAt?: string;
   stripeCardId?: string;
 };
 
@@ -68,6 +70,12 @@ const Dashboard: React.FC = () => {
   const [showAccountPrompt, setShowAccountPrompt] = useState(false);
   const [kycRecord, setKycRecord] = useState<any>(null);
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(false);
+  const [hasTransferPin, setHasTransferPin] = useState<boolean>(() => sessionStorage.getItem('hasTransferPin') === 'true');
+  const [showPinModal, setShowPinModal] = useState(false);
+  const [pinAccountId, setPinAccountId] = useState<string | null>(null);
+  const [pinForm, setPinForm] = useState({ pin: '', confirmPin: '', currentPin: '' });
+  const [pinError, setPinError] = useState<string | null>(null);
+  const [pinLoading, setPinLoading] = useState(false);
 
   // Poll KYC status if pending
   useEffect(() => {
@@ -196,7 +204,9 @@ const Dashboard: React.FC = () => {
               last4: c.last4,
               status: c.status,
               bankAccountId: c.bankAccountId,
-              stripeCardId: c.stripeCardId
+              stripeCardId: c.stripeCardId,
+              activationStatus: c.activationStatus,
+              activatedAt: c.activatedAt
             }))
           );
         }
@@ -225,7 +235,12 @@ const Dashboard: React.FC = () => {
           accountNumber: acct.account_number || acct.accountNumber || '',
           currency: acct.currency || 'USD',
           routingNumber: acct.routing_number || acct.routingNumber,
+          pinRequired: Boolean(acct.pin_required ?? acct.pinRequired ?? false),
         }));
+
+        const requiresPin = normalizedAccounts.some((acct) => acct.pinRequired);
+        setHasTransferPin(!requiresPin);
+        sessionStorage.setItem('hasTransferPin', (!requiresPin).toString());
 
         setDashboardData({
           user: {
@@ -241,6 +256,9 @@ const Dashboard: React.FC = () => {
           setShowKycModal(true);
         } else if (normalizedAccounts.length === 0 && kyc.status === 'APPROVED') {
           setShowAccountPrompt(true);
+        } else if (requiresPin) {
+          setPinAccountId(normalizedAccounts[0]?.id || null);
+          setShowPinModal(true);
         }
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {
@@ -383,7 +401,7 @@ const Dashboard: React.FC = () => {
     {
       label: "Transfer Funds",
       icon: "Send",
-      onClick: () => navigate('/money-transfer'),
+      onClick: () => navigate('/money-transfer', { state: { hasTransferPin } }),
       variant: "outline",
       description: "Send money to any account"
     },
@@ -447,7 +465,8 @@ const Dashboard: React.FC = () => {
           type: (account.type?.toLowerCase?.() || newAccountType) as 'checking' | 'savings' | 'credit',
           balance: account.balance ?? 0,
           accountNumber: account.account_number || account.accountNumber || '',
-          currency: account.currency || 'USD'
+          currency: account.currency || 'USD',
+          pinRequired: Boolean(account.pin_required ?? account.pinRequired ?? false),
         };
         const accounts = [...(prev.accounts || []), updatedAccount];
         return {
@@ -458,6 +477,15 @@ const Dashboard: React.FC = () => {
       });
       toast.success('Account created successfully.');
       setShowCreateModal(false);
+      if (account.pin_required) {
+        setHasTransferPin(false);
+        sessionStorage.setItem('hasTransferPin', 'false');
+        setPinAccountId(account.id);
+        setShowPinModal(true);
+      } else {
+        setHasTransferPin(true);
+        sessionStorage.setItem('hasTransferPin', 'true');
+      }
     } catch (err) {
       setCreateAccountError('Unable to create account.');
       toast.error('Unable to create account.');
@@ -473,6 +501,64 @@ const Dashboard: React.FC = () => {
       if (!prev) return prev;
       return { ...prev, primaryAccount: account };
     });
+  };
+
+  const handleCardActivated = (cardId: string) => {
+    setCards((prev) =>
+      prev.map((c) =>
+        c.id === cardId
+          ? { ...c, activationStatus: 'ACTIVE', status: 'ACTIVE' }
+          : c
+      )
+    );
+  };
+
+  const handleSavePin = async () => {
+    const targetAccountId = pinAccountId || dashboardData?.primaryAccount?.id;
+    if (!targetAccountId) {
+      setPinError('Select an account first.');
+      return;
+    }
+    if (!/^[0-9]{4,6}$/.test(pinForm.pin) || pinForm.pin !== pinForm.confirmPin) {
+      setPinError('Enter matching 4–6 digit PINs.');
+      return;
+    }
+    setPinLoading(true);
+    setPinError(null);
+    try {
+      const token = getStoredToken();
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+      const res = await fetch(`${API_BASE_URL}/accounts/${targetAccountId}/set-pin`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          pin: pinForm.pin,
+          currentPin: pinForm.currentPin || undefined
+        })
+      });
+      const payload = await res.json().catch(() => null);
+      if (!res.ok) {
+        const message = payload?.errors || payload?.message || 'Unable to save PIN.';
+        setPinError(message);
+        toast.error(message);
+        return;
+      }
+      toast.success('Transfer PIN set.');
+      setHasTransferPin(true);
+      sessionStorage.setItem('hasTransferPin', 'true');
+      setShowPinModal(false);
+      setPinForm({ pin: '', confirmPin: '', currentPin: '' });
+    } catch (_err) {
+      setPinError('Unable to save PIN right now.');
+    } finally {
+      setPinLoading(false);
+    }
   };
 
   const renderRequestBadge = (status?: string) => {
@@ -615,6 +701,8 @@ const Dashboard: React.FC = () => {
                           card={activeCard}
                           token={token!}
                           linkedAccountLast4={linkedAccountLast4}
+                          userEmail={dashboardData?.user?.email || ''}
+                          onActivated={handleCardActivated}
                         />
                       ) : (
                         <div className="bg-card border border-border rounded-lg p-4 text-sm text-muted-foreground">
@@ -711,6 +799,66 @@ const Dashboard: React.FC = () => {
               </Button>
               <Button onClick={() => { setShowAccountPrompt(false); setShowCreateModal(true); }}>
                 Create Account
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showPinModal && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-card border border-border rounded-xl shadow-card w-full max-w-md p-6 space-y-4">
+            <h3 className="text-lg font-semibold text-foreground">Set your transfer PIN</h3>
+            <p className="text-sm text-muted-foreground">
+              Create a 4–6 digit PIN to authorize transfers and withdrawals. Do not share this PIN.
+            </p>
+            <div className="space-y-3">
+              <label className="text-xs text-muted-foreground">New PIN</label>
+              <input
+                type="password"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={6}
+                className="w-full border border-border rounded-md px-3 py-2 bg-background text-foreground"
+                value={pinForm.pin}
+                onChange={(e) => setPinForm((prev) => ({ ...prev, pin: e.target.value.trim() }))}
+              />
+              <label className="text-xs text-muted-foreground">Confirm PIN</label>
+              <input
+                type="password"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                maxLength={6}
+                className="w-full border border-border rounded-md px-3 py-2 bg-background text-foreground"
+                value={pinForm.confirmPin}
+                onChange={(e) => setPinForm((prev) => ({ ...prev, confirmPin: e.target.value.trim() }))}
+              />
+              {hasTransferPin && (
+                <>
+                  <label className="text-xs text-muted-foreground">Current PIN (if updating)</label>
+                  <input
+                    type="password"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    maxLength={6}
+                    className="w-full border border-border rounded-md px-3 py-2 bg-background text-foreground"
+                    value={pinForm.currentPin}
+                    onChange={(e) => setPinForm((prev) => ({ ...prev, currentPin: e.target.value.trim() }))}
+                  />
+                </>
+              )}
+              {pinError && (
+                <div className="text-sm text-error border border-error/20 bg-error/5 rounded-md p-2">
+                  {pinError}
+                </div>
+              )}
+            </div>
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <Button variant="outline" onClick={() => setShowPinModal(false)} disabled={pinLoading}>
+                Cancel
+              </Button>
+              <Button onClick={handleSavePin} loading={pinLoading}>
+                Save PIN
               </Button>
             </div>
           </div>

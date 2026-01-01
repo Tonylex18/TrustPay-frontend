@@ -5,6 +5,7 @@ export interface Account {
 	accountNumber: string;
 	currency: string;
 	routingNumber?: string;
+	pinRequired?: boolean;
 }
 
 export interface Transaction {
