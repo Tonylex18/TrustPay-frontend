@@ -70,20 +70,6 @@ const Header: React.FC = () => {
 
             <div className="ml-auto flex items-center gap-6">
               <button
-                onClick={() => handleNavigate({ label: 'Customer Service', path: '/user-profile' })}
-                className="hidden sm:inline-flex items-center gap-2 text-sm font-semibold tracking-tight hover:text-white/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded-md"
-              >
-                Customer Service
-              </button>
-
-              <button
-                className="p-2 rounded-full hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-                aria-label="Search"
-              >
-                <Icon name="Search" size={22} color="white" />
-              </button>
-
-              <button
                 onClick={() =>
                   handleNavigate({ label: hasToken ? 'Dashboard' : 'Sign On', path: hasToken ? '/dashboard' : '/login' })
                 }
