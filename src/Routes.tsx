@@ -23,12 +23,14 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import ScrollToTop from "./components/ScrollToTop";
 import KycPage from "./pages/kyc";
 import DepositConfirmationPage from "./pages/deposit/confirmation";
+import TawkChat from "./components/TawkChat";
 
 const Routes: React.FC = () => {
   return (
     <BrowserRouter>
       <ErrorBoundary>
         <ScrollToTop />
+        <TawkChat />
         <RouterRoutes>
           {/* Define your routes here */}
         <Route path="/" element={<LandingPage />} />
