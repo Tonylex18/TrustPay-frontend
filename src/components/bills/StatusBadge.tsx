@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import Icon from "../AppIcon";
 import { cn } from "../../utils/cn";
 
@@ -13,14 +14,14 @@ export type BillStatus =
 
 export const BILL_STATUS_COPY: Record<
 	string,
-	{ label: string; tone: "warning" | "success" | "error" | "muted" | "info"; icon: string }
+	{ key: string; tone: "warning" | "success" | "error" | "muted" | "info"; icon: string }
 > = {
-	SUBMITTED: { label: "Pending approval", tone: "warning", icon: "Clock" },
-	APPROVED: { label: "Approved", tone: "info", icon: "ShieldCheck" },
-	PAID: { label: "Paid", tone: "success", icon: "BadgeCheck" },
-	REJECTED: { label: "Rejected", tone: "error", icon: "Ban" },
-	FAILED: { label: "Failed", tone: "error", icon: "AlertTriangle" },
-	DRAFT: { label: "Draft", tone: "muted", icon: "FileText" },
+	SUBMITTED: { key: "statusBadge.SUBMITTED", tone: "warning", icon: "Clock" },
+	APPROVED: { key: "statusBadge.APPROVED", tone: "info", icon: "ShieldCheck" },
+	PAID: { key: "statusBadge.PAID", tone: "success", icon: "BadgeCheck" },
+		REJECTED: { key: "statusBadge.REJECTED", tone: "error", icon: "Ban" },
+	FAILED: { key: "statusBadge.FAILED", tone: "error", icon: "AlertTriangle" },
+	DRAFT: { key: "statusBadge.DRAFT", tone: "muted", icon: "FileText" },
 };
 
 const toneClassNames: Record<string, string> = {
@@ -39,8 +40,9 @@ interface StatusBadgeProps {
 
 const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = "md", className }) => {
 	const normalized = (status || "").toUpperCase();
+	const { t } = useTranslation("bills");
 	const config = BILL_STATUS_COPY[normalized] || {
-		label: normalized || "Unknown",
+		key: "statusBadge.UNKNOWN",
 		tone: "muted",
 		icon: "Info",
 	};
@@ -53,7 +55,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = "md", classNam
 	return (
 		<span className={cn(baseClasses, sizeClasses, toneClasses, className)}>
 			<Icon name={config.icon} size={size === "sm" ? 14 : 16} />
-			<span className="leading-none">{config.label}</span>
+			<span className="leading-none">{t(config.key)}</span>
 		</span>
 	);
 };

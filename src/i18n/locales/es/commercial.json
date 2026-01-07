@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "title": "Banca comercial e de inversión | TrustPay",
+    "description": "Banca comercial enfocada en industrias con acceso a mercados, tesorería experta y gestión de riesgo siempre activa."
+  },
+  "hero": {
+    "eyebrow": "Banca comercial",
+    "title": "Banca con la confianza de un socio de mercados de capital",
+    "description": "Inspirado en la mejor banca corporativa y de inversión, TrustPay aporta cobertura, profundidad de producto y rieles digitales para moverte rápido.",
+    "ctaPrimary": { "label": "Comenzar", "path": "/registration" },
+    "ctaSecondary": { "label": "Explorar cobertura CIB", "path": "/commercial-banking#cib" },
+    "priorities": [
+      { "label": "Prioridad", "value": "Capital", "description": "Reportes listos para el board, aprobaciones y rutas de ejecución." },
+      { "label": "Prioridad", "value": "Liquidez", "description": "Reportes listos para el board, aprobaciones y rutas de ejecución." },
+      { "label": "Prioridad", "value": "Riesgo", "description": "Reportes listos para el board, aprobaciones y rutas de ejecución." }
+    ]
+  },
+  "offerings": {
+    "eyebrow": "Corporate & Investment Banking",
+    "title": "Equipos de asesoría con profundidad de producto",
+    "description": "Acceso a mercados de capital, excelencia en tesorería y vigilancia continua, entregados por especialistas sectoriales como un solo equipo.",
+    "items": [
+      {
+        "title": "Mercados de capital y asesoría",
+        "description": "Deuda, equity y M&A con equipos de ejecución alineados a la agenda del board.",
+        "icon": "LineChart",
+        "badges": ["Capital Markets", "M&A", "Colocaciones privadas"]
+      },
+      {
+        "title": "Tesorería y pagos",
+        "description": "Gestión de efectivo global con RTP, transferencias, desembolso controlado y automatización de cobranzas.",
+        "icon": "Banknote",
+        "badges": ["Tesorería", "Rieles de pago", "AP/AR"]
+      },
+      {
+        "title": "Riesgo y liquidez",
+        "description": "Estrategias de FX, tasas e insumos para proteger margen mientras escalas.",
+        "icon": "Shield",
+        "badges": ["FX", "Tasas", "Coberturas"]
+      },
+      {
+        "title": "Cobertura sectorial",
+        "description": "Bankers y especialistas producto con profunda fluidez sectorial e inteligencia de mercado.",
+        "icon": "Briefcase",
+        "badges": ["Insights para board", "Playbooks", "Benchmarking"]
+      }
+    ]
+  },
+  "industries": {
+    "eyebrow": "Cobertura por industria",
+    "title": "Equipos construidos alrededor de tu sector",
+    "description": "De tecnología a sector público, aportamos modelos de cobertura, suscripción especializada y flujos alineados a tus clientes.",
+    "items": [
+      { "name": "Tecnología y medios", "focus": "Facturación por uso, pagos de plataforma y ciclos de suscripción.", "icon": "Cpu" },
+      { "name": "Salud y ciencias de la vida", "focus": "Reembolsos, financiamiento de investigación y pagos de ensayos clínicos.", "icon": "HeartPulse" },
+      { "name": "Industrial y manufactura", "focus": "Planeación de capex, financiamiento de inventario y flujos de supply chain global.", "icon": "Factory" },
+      { "name": "Energía y renovables", "focus": "Project finance, PPAs y coberturas de commodities.", "icon": "Sun" },
+      { "name": "Sector público y educación", "focus": "Emisión de bonos, escrow y desembolsos transparentes.", "icon": "GraduationCap" },
+      { "name": "Real estate y hospitality", "focus": "Desembolsos de obra, depósitos y experiencias sin contacto.", "icon": "Building2" }
+    ]
+  },
+  "execution": {
+    "eyebrow": "Soporte de ejecución",
+    "title": "Lo que obtienes con TrustPay",
+    "description": "Combinamos profundidad de producto y servicio ágil para enfocarte en el siguiente hito.",
+    "insights": [
+      { "title": "Equipos listos para ejecutar", "detail": "Líderes de deals, tesorería y crédito alineados a tu crecimiento y liquidez.", "icon": "Users" },
+      { "title": "Conectividad por diseño", "detail": "APIs y transfers seguros a tu ERP, TMS y data warehouse.", "icon": "Globe2" },
+      { "title": "Riesgo gestionado en tiempo real", "detail": "Controles pre-transacción, doble aprobación y monitoreo que reduce riesgo operativo.", "icon": "ShieldCheck" }
+    ],
+    "coverage": {
+      "eyebrow": "Cobertura",
+      "title": "Habla con un lead banker",
+      "description": "Elige el corredor y la especialidad que encaja con tu roadmap.",
+      "advisors": [
+        { "name": "Amelia Grant", "region": "Cobertura nacional", "specialty": "CIB - Industriales y servicios", "icon": "User" },
+        { "name": "Victor Lin", "region": "Oeste y corredor APAC", "specialty": "Tech, plataformas, cross-border", "icon": "User" },
+        { "name": "Priya Desai", "region": "Este y corredor LATAM", "specialty": "Transición energética, consumo, fintech", "icon": "User" }
+      ],
+      "ctaPrimary": { "label": "Ver cuentas operativas", "path": "/business" },
+      "ctaSecondary": { "label": "Conocer TrustPay", "path": "/about-trustpay" }
+    }
+  }
+}

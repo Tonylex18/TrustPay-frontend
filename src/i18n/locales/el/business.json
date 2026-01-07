@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "title": "Τραπεζική επιχειρήσεων | TrustPay",
+    "description": "Τραπεζική για επιχειρήσεις με ταμειακή διαχείριση, πληρωμές και κλαδικούς ειδικούς για σιγουριά στη λειτουργία."
+  },
+  "hero": {
+    "eyebrow": "Business Banking",
+    "title": "Κεφάλαιο, ρευστότητα και πληρωμές για operators",
+    "description": "Συνδυάστε ομάδα σχέσης με σύγχρονα rails (RTP, εμβάσματα, ACH, acquiring) και ελέγχους ταμειακής διαχείρισης που ταιριάζουν στο μοντέλο σας.",
+    "chips": ["Ταμειακή", "Πληρωμές", "Συμβουλή", "Ασφάλεια"],
+    "ctaPrimary": { "label": "Ανοίξτε λογαριασμό", "path": "/registration" },
+    "ctaSecondary": { "label": "Μιλήστε με σύμβουλο", "path": "/commercial-banking" },
+    "highlights": [
+      { "label": "Διαθεσιμότητα κεφαλαίων", "value": "Αυθημερόν", "description": "Rails RTP και εμβασμάτων με σαφή cutoff και προληπτικές ειδοποιήσεις." },
+      { "label": "Διαθεσιμότητα πλατφόρμας", "value": "99,95%", "description": "Πλεονάζουσα αρχιτεκτονική και dual control σε κρίσιμες ροές." },
+      { "label": "Παρακολούθηση απάτης", "value": "24/7", "description": "Συμπεριφορική ανάλυση και ενισχυμένο auth όταν αυξάνεται ο κίνδυνος." }
+    ]
+  },
+  "solutions": {
+    "eyebrow": "Κύριες λύσεις",
+    "title": "Ό,τι χρειάζεστε για λειτουργία και κλίμακα",
+    "subtitle": "Εμπνευσμένο από corporate banking με σύγχρονη ψηφιακή εμπειρία ώστε να κινείτε χρήματα με ασφάλεια.",
+    "cta": { "label": "Δείτε θέση μετρητών", "path": "/dashboard" },
+    "items": [
+      {
+        "title": "Κεφάλαιο κίνησης & Treasury",
+        "description": "Βελτιστοποιήστε ρευστότητα με smart sweeps, ασφαλείς καταθέσεις και ακριβές cash positioning.",
+        "icon": "Banknote",
+        "tags": ["Ρευστότητα", "Treasury", "RTP & εμβάσματα"]
+      },
+      {
+        "title": "Πληρωμές & Εισπράξεις",
+        "description": "STP για ACH, εμβάσματα, RTP και lockbox για να πληρώνεστε γρηγορότερα.",
+        "icon": "Send",
+        "tags": ["ACH & RTP", "Lockbox", "Τιμολόγηση"]
+      },
+      {
+        "title": "Εμπόριο & e-commerce",
+        "description": "Omnichannel acquiring με real-time antifraud και καθαρά αρχεία εκκαθάρισης.",
+        "icon": "ShoppingBag",
+        "tags": ["Κάρτα", "Checkout", "Fraud"]
+      },
+      {
+        "title": "Μισθοδοσία & πληρωμές",
+        "description": "Πληρώστε ομάδες και προμηθευτές παντού με ελεγχόμενες εγκρίσεις και rails έτοιμα για FX.",
+        "icon": "Wallet",
+        "tags": ["Μισθοδοσία", "AP automation", "Global-ready"]
+      }
+    ]
+  },
+  "advisory": {
+    "eyebrow": "Προσέγγιση συμβουλευτική",
+    "title": "Συνεργάτης που καταλαβαίνει το μοντέλο σας",
+    "description": "Συνδυάζουμε playbooks εμπορικής τραπεζικής με ταχύτητα digital ομάδας. Χαρτογραφούμε ροές και μειώνουμε τριβή.",
+    "capabilities": [
+      {
+        "title": "Κεφάλαιο ανάπτυξης",
+        "description": "Γραμμές πίστωσης, χρηματοδότηση εξοπλισμού και επιλογές SBA προσαρμοσμένες στον κύκλο σας.",
+        "icon": "Handshake",
+        "items": [
+          "Ευέλικτες revolving/term δομές",
+          "Τιμολόγηση και covenants ανά κλάδο",
+          "Σενάρια με τον relationship lead"
+        ]
+      },
+      {
+        "title": "Διαχείριση μετρητών",
+        "description": "Κεντρικοποιήστε υπόλοιπα, αυτοματοποιήστε συμφωνίες και κρατήστε καθαρές εγκρίσεις.",
+        "icon": "Layers",
+        "items": [
+          "Controlled disbursement & smart sweeps",
+          "Positive pay με διπλή έγκριση",
+          "APIs και αρχεία για ERP"
+        ]
+      },
+      {
+        "title": "Συμβουλή & onboarding",
+        "description": "Ειδικοί κλάδου που χαρτογραφούν ροές, συνδέουν συστήματα και ετοιμάζουν ομάδες γρήγορα.",
+        "icon": "Users",
+        "items": [
+          "Playbooks για μεγάλα volumes πληρωμών",
+          "Οδηγοί SFTP, APIs, portals",
+          "Εκπαίδευση και change management"
+        ]
+      }
+    ]
+  },
+  "service": {
+    "pillars": [
+      {
+        "title": "Βάθος κλάδου",
+        "description": "Κάλυψη για βιομηχανία, logistics, υγεία, τεχνολογία και δημόσιο.",
+        "icon": "BarChart3",
+        "emphasis": "Ειδικοί κλάδου"
+      },
+      {
+        "title": "Έλεγχος & συμμόρφωση",
+        "description": "Πρόσβαση ανά ρόλο, εγκρίσεις επιπέδου audit και retention δεδομένων ευθυγραμμισμένο με SOC 2.",
+        "icon": "ShieldCheck",
+        "emphasis": "Ενσωματωμένη διακυβέρνηση"
+      },
+      {
+        "title": "Υποστήριξη άνθρωπος + ψηφιακό",
+        "description": "Ομάδες σχέσης και γραμμή 24/7 με ψηφιακές ροές.",
+        "icon": "Headset",
+        "emphasis": "Απόκριση 24/7"
+      }
+    ],
+    "cta": {
+      "eyebrow": "Ας μιλήσουμε",
+      "title": "Χτίστε το operating plan με εμάς",
+      "description": "Θα χαρτογραφήσουμε πληρωμές, ανάγκες treasury και κλαδικές ιδιαιτερότητες σε εκτελέσιμο πλάνο.",
+      "primary": { "label": "Γνωρίστε τον banker σας", "path": "/commercial-banking#cib" },
+      "secondary": { "label": "Γιατί TrustPay", "path": "/about-trustpay" }
+    }
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "title": "Banco para empresas | TrustPay",
+    "description": "Banca empresarial com tesouraria, pagamentos e especialistas setoriais para operar com confiança."
+  },
+  "hero": {
+    "eyebrow": "Business Banking",
+    "title": "Capital, caixa e pagamentos para operadores",
+    "description": "Equipe dedicada + trilhos modernos (RTP, transferências, ACH, adquirência) e controles de tesouraria alinhados ao seu negócio.",
+    "chips": ["Tesouraria", "Pagamentos", "Assessoria", "Segurança"],
+    "ctaPrimary": { "label": "Abrir uma conta", "path": "/registration" },
+    "ctaSecondary": { "label": "Falar com um assessor", "path": "/commercial-banking" },
+    "highlights": [
+      { "label": "Disponibilidade de fundos", "value": "Mesmo dia", "description": "RTP e transferências com janelas claras e alertas proativos." },
+      { "label": "Disponibilidade da plataforma", "value": "99,95%", "description": "Arquitetura redundante e duplo controle nos fluxos críticos." },
+      { "label": "Monitoramento de fraude", "value": "24/7", "description": "Analítica comportamental e autenticação reforçada quando o risco sobe." }
+    ]
+  },
+  "solutions": {
+    "eyebrow": "Soluções principais",
+    "title": "Tudo para operar e escalar",
+    "subtitle": "Inspirado em playbooks de banco corporativo, com experiência digital moderna para mover dinheiro com segurança.",
+    "cta": { "label": "Ver posição de caixa", "path": "/dashboard" },
+    "items": [
+      {
+        "title": "Capital de giro & tesouraria",
+        "description": "Otimize liquidez com sweeps inteligentes, depósitos seguros e posicionamento preciso de caixa.",
+        "icon": "Banknote",
+        "tags": ["Liquidez", "Tesouraria", "RTP e transferências"]
+      },
+      {
+        "title": "Pagamentos & recebimentos",
+        "description": "STP para ACH, transferências, RTP e lockbox para receber mais rápido com menos exceções.",
+        "icon": "Send",
+        "tags": ["ACH e RTP", "Lockbox", "Faturamento"]
+      },
+      {
+        "title": "Comércio & e-commerce",
+        "description": "Adquirência omnicanal com antifraude em tempo real e arquivos de liquidação claros.",
+        "icon": "ShoppingBag",
+        "tags": ["Cartão", "Checkout", "Fraude"]
+      },
+      {
+        "title": "Folha & pagamentos",
+        "description": "Pague equipes e fornecedores em qualquer lugar com aprovações controladas e trilhos prontos para FX.",
+        "icon": "Wallet",
+        "tags": ["Folha", "Automação AP", "Pronto para global"]
+      }
+    ]
+  },
+  "advisory": {
+    "eyebrow": "Abordagem consultiva",
+    "title": "Um parceiro que entende sua operação",
+    "description": "Pegamos o melhor da banca comercial global com a velocidade de um time digital. Mapeamos seus fluxos e reduzimos fricção.",
+    "capabilities": [
+      {
+        "title": "Capital para crescer",
+        "description": "Linhas de crédito, financiamento de equipamento e opções SBA alinhadas ao seu ciclo de caixa.",
+        "icon": "Handshake",
+        "items": [
+          "Estruturas revolving e a prazo flexíveis",
+          "Preço e covenants por setor",
+          "Cenários com seu banker"
+        ]
+      },
+      {
+        "title": "Gestão de caixa",
+        "description": "Centralize saldos, automatize conciliações e mantenha aprovações limpas ao escalar entidades.",
+        "icon": "Layers",
+        "items": [
+          "Desembolso controlado e smart sweeps",
+          "Positive pay com dupla aprovação",
+          "APIs e arquivos para ERP"
+        ]
+      },
+      {
+        "title": "Consultoria & onboarding",
+        "description": "Especialistas setoriais que mapeiam fluxos, conectam sistemas e deixam equipes prontas rápido.",
+        "icon": "Users",
+        "items": [
+          "Playbooks para alto volume de pagamentos",
+          "Guias SFTP, APIs e portais",
+          "Treinamento e gestão da mudança"
+        ]
+      }
+    ]
+  },
+  "service": {
+    "pillars": [
+      {
+        "title": "Profundidade setorial",
+        "description": "Cobertura dedicada para indústria, logística, saúde, tech e setor público.",
+        "icon": "BarChart3",
+        "emphasis": "Especialistas setoriais"
+      },
+      {
+        "title": "Controle & compliance",
+        "description": "Acesso por função, aprovações auditáveis e retenção de dados alinhada ao SOC 2.",
+        "icon": "ShieldCheck",
+        "emphasis": "Governança embutida"
+      },
+      {
+        "title": "Suporte humano + digital",
+        "description": "Equipes de relacionamento e service desk 24/7 com fluxos digitais guiados.",
+        "icon": "Headset",
+        "emphasis": "Resposta 24/7"
+      }
+    ],
+    "cta": {
+      "eyebrow": "Vamos conversar",
+      "title": "Monte seu plano operacional conosco",
+      "description": "Mapearemos seus fluxos de pagamento, necessidades de tesouraria e nuances do setor em um plano executável.",
+      "primary": { "label": "Conheça seu banker", "path": "/commercial-banking#cib" },
+      "secondary": { "label": "Por que TrustPay", "path": "/about-trustpay" }
+    }
+  }
+}

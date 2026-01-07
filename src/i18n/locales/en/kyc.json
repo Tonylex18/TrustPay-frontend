@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "title": "KYC Verification - TrustPay",
+    "description": "Complete your KYC to enable banking features."
+  },
+  "breadcrumb": {
+    "dashboard": "Dashboard",
+    "kyc": "KYC"
+  },
+  "hero": {
+    "title": "Verify your identity",
+    "subtitle": "Provide your details and document images to complete KYC."
+  },
+  "form": {
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "dob": {
+      "day": "Day",
+      "month": "Month",
+      "year": "Year"
+    },
+    "country": {
+      "label": "Country",
+      "placeholder": "Select a country"
+    },
+    "addressLine1": "Address Line 1",
+    "addressLine2": "Address Line 2 (optional)",
+    "state": {
+      "label": "State / Province",
+      "placeholder": "Select a state",
+      "placeholderDisabled": "Select country first"
+    },
+    "city": {
+      "label": "City",
+      "placeholder": "Select a city",
+      "placeholderDisabled": "Select state first"
+    },
+    "postalCode": "Postal Code",
+    "documentType": {
+      "label": "Document Type",
+      "options": {
+        "passport": "Passport",
+        "national_id": "National ID",
+        "driver_license": "Driver License"
+      }
+    },
+    "documentNumber": "Document Number",
+    "documentImageFront": "Document Image (front)",
+    "documentImageBack": "Document Image (back, optional)",
+    "selfieImage": "Selfie Image (optional)",
+    "cancel": "Cancel",
+    "submit": "Submit KYC"
+  },
+  "messages": {
+    "error": {
+      "documentImageRequired": "Document image is required.",
+      "dobIncomplete": "Complete date of birth.",
+      "locationRequired": "Country, state, and city are required.",
+      "submitFailed": "Unable to submit KYC."
+    },
+    "success": "KYC submitted. Status: pending."
+  }
+}

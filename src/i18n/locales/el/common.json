@@ -1,0 +1,54 @@
+{
+  "brand": {
+    "name": "TrustPay",
+    "product": "Τραπεζική"
+  },
+  "navigation": {
+    "personal": "Προσωπικοί",
+    "investing": "Επενδύσεις & Διαχείριση πλούτου",
+    "business": "Επιχειρήσεις",
+    "commercial": "Εμπορική Τραπεζική",
+    "cib": "Εταιρική & Επενδυτική Τραπεζική",
+    "about": "Σχετικά με την TrustPay",
+    "dashboard": "Πίνακας",
+    "transactions": "Συναλλαγές",
+    "transfer": "Μεταφορά",
+    "profile": "Προφίλ",
+    "signOn": "Σύνδεση"
+  },
+  "tooltips": {
+    "dashboard": "Προβολή επισκόπησης λογαριασμών και γρήγορων ενεργειών",
+    "transactions": "Προβολή ιστορικού και λεπτομερειών συναλλαγών",
+    "transfer": "Αποστολή χρημάτων σε λογαριασμούς",
+    "profile": "Διαχείριση ρυθμίσεων λογαριασμού"
+  },
+  "language": {
+    "label": "Γλώσσα",
+    "english": "Αγγλικά",
+    "french": "Γαλλικά",
+    "spanish": "Ισπανικά",
+    "german": "Γερμανικά",
+    "greek": "Ελληνικά",
+    "portuguese": "Πορτογαλικά"
+  },
+  "actions": {
+    "dashboard": "Πίνακας",
+    "signOn": "Σύνδεση",
+    "createAccount": "Δημιουργία λογαριασμού",
+    "depositMoney": "Κατάθεση χρημάτων",
+    "payBill": "Πληρωμή λογαριασμού",
+    "showCardDetails": "Προβολή στοιχείων κάρτας",
+    "hideCardDetails": "Απόκρυψη στοιχείων κάρτας",
+    "sendCode": "Αποστολή κωδικού",
+    "activate": "Ενεργοποίηση",
+    "verifyCode": "Επαλήθευση κωδικού",
+    "signIn": "Σύνδεση"
+  },
+  "aria": {
+    "home": "Αρχική TrustPay",
+    "languageSelector": "Επιλογή γλώσσας"
+  },
+  "status": {
+    "loadingDashboard": "Φόρτωση πίνακα..."
+  }
+}

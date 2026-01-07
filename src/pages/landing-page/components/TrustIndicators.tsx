@@ -4,9 +4,11 @@ import { TrustIndicator } from '../types';
 
 interface TrustIndicatorsProps {
   indicators: TrustIndicator[];
+  title: string;
+  assurance: string;
 }
 
-const TrustIndicators = ({ indicators }: TrustIndicatorsProps) => {
+const TrustIndicators = ({ indicators, title, assurance }: TrustIndicatorsProps) => {
   return (
     <section className="bg-card border-y border-border py-8">
       <div className="px-nav-margin">
@@ -15,7 +17,7 @@ const TrustIndicators = ({ indicators }: TrustIndicatorsProps) => {
             <div className="flex items-center gap-3">
               <Icon name="Shield" size={24} color="var(--color-success)" />
               <span className="text-sm font-medium text-foreground">
-                Bank-Level Security
+                {title}
               </span>
             </div>
 
@@ -40,7 +42,7 @@ const TrustIndicators = ({ indicators }: TrustIndicatorsProps) => {
             <div className="flex items-center gap-2 px-4 py-2 bg-success/10 rounded-full">
               <Icon name="CheckCircle" size={16} color="var(--color-success)" />
               <span className="text-sm font-medium text-success">
-                FDIC Insured
+                {assurance}
               </span>
             </div>
           </div>

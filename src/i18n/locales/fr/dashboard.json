@@ -1,0 +1,60 @@
+{
+  "metaTitle": "Tableau de bord - TrustPay",
+  "metaDescription": "Gérez vos comptes, consultez les transactions et accédez aux services bancaires depuis votre tableau de bord TrustPay.",
+  "welcomeWithName": "Bon retour, {{name}} !",
+  "welcome": "Bon retour !",
+  "overview": "Voici la vue d'ensemble de vos comptes et vos dernières activités",
+  "noPrimaryAccount": "Aucun compte principal pour l'instant.",
+  "quickActions": {
+    "title": "Actions rapides",
+    "description": "Accédez à vos fonctionnalités bancaires les plus utilisées"
+  },
+  "allAccounts": "Tous les comptes",
+  "createAccount": "Créer un compte",
+  "noAccounts": "Aucun compte disponible pour l'instant.",
+  "virtualCardRequest": {
+    "title": "Demande de carte virtuelle",
+    "accountLine": "Compte ••••{{last4}}",
+    "feeStatus": "Statut des frais : {{status}}",
+    "underReview": "Votre demande de carte est en cours d'examen. Cela prend généralement 2 à 3 jours ouvrés.",
+    "reason": "Raison : {{reason}}",
+    "rejected": "Rejetée",
+    "approved": "Approuvée",
+    "issued": "Émise",
+    "pendingApproval": "En attente de validation"
+  },
+  "virtualCardEmpty": {
+    "prompt": "Émettez une carte virtuelle depuis votre profil pour afficher les numéros sécurisés.",
+    "fee": "Frais de carte virtuelle : des frais uniques de 5 $ seront prélevés lors de la demande.",
+    "processing": "Délai de traitement : les demandes de carte sont examinées sous 2 à 3 jours ouvrés."
+  },
+  "payments": {
+    "title": "Paiements & Factures"
+  },
+  "financialTip": {
+    "title": "Conseil financier",
+    "body": "Envisagez de programmer des virements automatiques vers votre épargne pour constituer votre fonds d'urgence régulièrement."
+  },
+  "quickActionsItems": {
+    "deposit": {
+      "label": "Déposer des fonds",
+      "description": "Ajouter des fonds sur votre compte"
+    },
+    "transfer": {
+      "label": "Effectuer un virement",
+      "description": "Envoyer de l'argent vers tout compte"
+    },
+    "payBills": {
+      "label": "Payer des factures",
+      "description": "Régler vos factures de services"
+    },
+    "viewTransactions": {
+      "label": "Voir les transactions",
+      "description": "Consulter l'historique des transactions"
+    }
+  },
+  "breadcrumb": {
+    "home": "Accueil",
+    "dashboard": "Tableau de bord"
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "title": "Commercial & Investment Banking | TrustPay",
+    "description": "Industry-focused commercial banking with capital markets access, treasury expertise, and always-on risk management."
+  },
+  "hero": {
+    "eyebrow": "Commercial Banking",
+    "title": "Bank with the confidence of a capital markets partner",
+    "description": "Inspired by the best of corporate and investment banking, TrustPay delivers the coverage, product depth, and digital rails you need to move quickly in every market.",
+    "ctaPrimary": { "label": "Get started", "path": "/registration" },
+    "ctaSecondary": { "label": "Explore CIB coverage", "path": "/commercial-banking#cib" },
+    "priorities": [
+      { "label": "Priority", "value": "Capital", "description": "Board-ready reporting, approvals, and execution pathways." },
+      { "label": "Priority", "value": "Liquidity", "description": "Board-ready reporting, approvals, and execution pathways." },
+      { "label": "Priority", "value": "Risk", "description": "Board-ready reporting, approvals, and execution pathways." }
+    ]
+  },
+  "offerings": {
+    "eyebrow": "Corporate & Investment Banking",
+    "title": "Advisory teams with product depth",
+    "description": "Capital markets access, treasury excellence, and always-on surveillance—delivered by industry specialists working as one team.",
+    "items": [
+      {
+        "title": "Capital Markets & Advisory",
+        "description": "Debt, equity, and M&A guidance with execution teams that know your board agenda.",
+        "icon": "LineChart",
+        "badges": ["Capital Markets", "M&A", "Private placements"]
+      },
+      {
+        "title": "Treasury & Payments",
+        "description": "Global cash management with RTP, wires, controlled disbursement, and receivables automation.",
+        "icon": "Banknote",
+        "badges": ["Treasury", "Payment Rails", "AP/AR"]
+      },
+      {
+        "title": "Risk & Liquidity",
+        "description": "FX, interest-rate, and commodity strategies so you protect margin while you scale.",
+        "icon": "Shield",
+        "badges": ["FX", "Rates", "Hedging"]
+      },
+      {
+        "title": "Sector Coverage",
+        "description": "Coverage bankers and product specialists with deep sector fluency and market intelligence.",
+        "icon": "Briefcase",
+        "badges": ["Board-ready insights", "Playbooks", "Benchmarking"]
+      }
+    ]
+  },
+  "industries": {
+    "eyebrow": "Industry Coverage",
+    "title": "Teams built around your sector",
+    "description": "From technology to public sector, we bring nuanced coverage models, specialized underwriting, and payment flows tuned to your customers.",
+    "items": [
+      { "name": "Technology & Media", "focus": "Usage-based billing, platform payouts, and subscription cash cycles.", "icon": "Cpu" },
+      { "name": "Healthcare & Life Sciences", "focus": "Provider reimbursements, research funding, and clinical trial disbursements.", "icon": "HeartPulse" },
+      { "name": "Industrial & Manufacturing", "focus": "Capex planning, inventory financing, and global supply-chain flows.", "icon": "Factory" },
+      { "name": "Energy & Renewables", "focus": "Project finance, power purchase agreements, and commodity hedging.", "icon": "Sun" },
+      { "name": "Public Sector & Education", "focus": "Bond issuance, escrow, and transparent disbursements for constituents.", "icon": "GraduationCap" },
+      { "name": "Real Estate & Hospitality", "focus": "Construction draws, deposits, and touchless guest experiences.", "icon": "Building2" }
+    ]
+  },
+  "execution": {
+    "eyebrow": "Execution Support",
+    "title": "What you get with TrustPay",
+    "description": "We blend product depth with responsive service so you can focus on the next milestone—funding, expansion, or liquidity.",
+    "insights": [
+      { "title": "Execution-ready teams", "detail": "Deal, treasury, and credit leads aligned to your growth and liquidity plans.", "icon": "Users" },
+      { "title": "Connectivity by design", "detail": "APIs and secure file transfers to your ERP, treasury workstation, and data warehouse.", "icon": "Globe2" },
+      { "title": "Risk managed in real time", "detail": "Pre-transaction checks, dual approvals, and surveillance that reduces operational risk.", "icon": "ShieldCheck" }
+    ],
+    "coverage": {
+      "eyebrow": "Coverage",
+      "title": "Talk with a lead banker",
+      "description": "Choose the corridor and specialty that fits your roadmap.",
+      "advisors": [
+        { "name": "Amelia Grant", "region": "National Coverage", "specialty": "CIB - Industrials & Services", "icon": "User" },
+        { "name": "Victor Lin", "region": "West & APAC corridor", "specialty": "Technology, platforms, cross-border", "icon": "User" },
+        { "name": "Priya Desai", "region": "East & LATAM corridor", "specialty": "Energy transition, consumer, fintech", "icon": "User" }
+      ],
+      "ctaPrimary": { "label": "See operating accounts", "path": "/business" },
+      "ctaSecondary": { "label": "Learn about TrustPay", "path": "/about-trustpay" }
+    }
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "title": "Bills - TrustPay",
+    "description": "Submit and track bill payments with approvals and status visibility."
+  },
+  "breadcrumb": {
+    "dashboard": "Dashboard",
+    "bills": "Bills",
+    "details": "Payment details"
+  },
+  "page": {
+    "title": "Bills & Payments",
+    "subtitle": "Submit bill payments with clear approval states and audit-friendly details.",
+    "loading": "Loading bills data...",
+    "statusLegendTitle": "Status awareness",
+    "statusLegendBody": "Submitted ≠ paid. Pending payments stay in review until an admin posts the debit. Your available balance is not reduced until posting or a backend hold is applied.",
+    "refresh": "Refresh"
+  },
+  "list": {
+    "title": "Recent bill payments",
+    "subtitle": "View submitted, approved, rejected, or failed payments.",
+    "empty": "No bill payments yet. Submit your first bill on the right to see it here.",
+    "loading": "Loading bills...",
+    "auditTitle": "Audit tips",
+    "audit1": "Status chips show if a payment is pending approval, paid, rejected, or failed.",
+    "audit2": "Click any bill to view reference numbers, review timestamps, and rejection reasons.",
+    "audit3": "Refreshing pulls the latest state from the backend—no client-side balance edits."
+  },
+  "steps": {
+    "category": { "title": "Category", "description": "Choose the bill type" },
+    "biller": { "title": "Biller", "description": "Select who you are paying" },
+    "details": { "title": "Details", "description": "Reference, amount, account" },
+    "review": { "title": "Review", "description": "Confirm & submit" },
+    "selectCategoryTitle": "Select a bill category",
+    "selectCategorySubtitle": "Choose the bill type to load the right billers and review requirements.",
+    "billersAvailable": "{{count}} billers available",
+    "noCategories": "No bill categories available yet.",
+    "loadingCategories": "Loading categories...",
+    "continue": "Continue",
+    "selectBillerTitle": "Select the biller",
+    "selectBillerSubtitle": "Pick a listed biller or add the name exactly as it appears on your bill.",
+    "changeCategory": "Change category",
+    "listedBiller": "Listed biller",
+    "noBillers": "No billers are listed for this category yet. You can enter a custom biller name.",
+    "customBiller": "Custom biller name",
+    "customBillerPlaceholder": "e.g., Lakeside Apartments",
+    "billersLabel": "Billers",
+    "customBillerInfo": "If you enter a custom biller, we will use that name for this payment only.",
+    "referenceLabel": "Reference or account number",
+    "referencePlaceholder": "Enter the reference number shown on your bill",
+    "amountLabel": "Amount",
+    "noteLabel": "Note (optional)",
+    "notePlaceholder": "Add a note for this payment",
+    "sourceAccountLabel": "Source account",
+    "detailsIntroTitle": "Payment details",
+    "detailsIntroBody": "Use the reference/account number printed on your bill. Pending payments do not reduce available balance until approved.",
+    "paymentDescriptionLabel": "Payment description (optional)",
+    "paymentDescriptionPlaceholder": "Visible to you and admins for audit (e.g., \"July rent, unit 12B\").",
+    "adminApprovalTitle": "Admin approval required",
+    "adminApprovalBody": "Submitted ≠ paid. Admins review and post the debit before funds leave your account. Pending items do not reduce available balance unless a backend hold is applied.",
+    "back": "Back"
+  },
+  "statusHelp": {
+    "SUBMITTED": "Waiting for admin approval. Funds may stay in available balance until posted.",
+    "PAID": "Posted to your account and settled to the biller.",
+    "REJECTED": "Not processed. Any holds are released.",
+    "FAILED": "Attempted but failed. Review and resubmit."
+  },
+  "labels": {
+    "biller": "Biller",
+    "category": "Category",
+    "reference": "Reference",
+    "amount": "Amount",
+    "note": "Note",
+    "account": "Account",
+    "sourceAccount": "Source account",
+    "description": "Description",
+    "created": "Created"
+  },
+  "table": {
+    "status": "Status"
+  },
+  "errors": {
+    "selectCategory": "Select a bill category to continue.",
+    "selectBiller": "Choose a biller or enter a custom name.",
+    "referenceRequired": "Add the reference or account number on your bill.",
+    "amountInvalid": "Enter a valid amount greater than $0.00.",
+    "accountRequired": "Select the account to fund this payment.",
+    "kycRequired": "KYC approval is required before submitting bill payments.",
+    "disabledProfile": "Your account is disabled. Contact support for assistance.",
+    "completeFields": "Complete all required fields before submitting.",
+    "loadCategories": "Unable to load bill categories.",
+    "loadPayments": "Unable to load bill payments.",
+    "refreshPayments": "Unable to refresh bill payments.",
+    "submitFailed": "Unable to submit bill payment right now.",
+    "billNotFound": "Bill payment not found.",
+    "loadPayment": "Unable to load bill payment."
+  },
+  "success": {
+    "submitted": "Bill payment submitted for admin approval."
+  },
+  "friendly": {
+    "kyc": "Complete KYC before submitting bill payments.",
+    "disabled": "Your profile is disabled. Contact support for help.",
+    "insufficient": "Insufficient available balance for this payment.",
+    "active": "Select an active source account.",
+    "fallback": "Unable to process request."
+  },
+  "statusBadge": {
+    "SUBMITTED": "Pending approval",
+    "APPROVED": "Approved",
+    "PAID": "Paid",
+    "REJECTED": "Rejected",
+    "FAILED": "Failed",
+    "DRAFT": "Draft",
+    "UNKNOWN": "Unknown"
+  },
+  "cards": {
+    "defaultCategory": "Bill payment",
+    "defaultBiller": "Biller",
+    "ref": "Ref {{ref}}"
+  },
+  "review": {
+    "summaryTitle": "Review & submit",
+    "summarySubtitle": "Confirm the bill payment details. This payment will be submitted for admin approval.",
+    "noticeTitle": "Submission notice",
+    "noticeBody": "Payments remain pending until an admin approves and posts the ledger entry. You will see the status update below once processed.",
+    "submitCta": "Submit for approval"
+  },
+  "detailsPage": {
+    "metaTitle": "Bill Payment Details - TrustPay",
+    "metaDescription": "View detailed status and audit data for your bill payment.",
+    "title": "Bill payment",
+    "subtitle": "View bill status, reference number, review timestamps, and rejection reasons.",
+    "back": "Back to bills",
+    "refresh": "Refresh",
+    "statusTitle": "Status awareness",
+    "statusBody": "Submitted ≠ paid. Admin approval posts the debit. Pending items do not reduce available balance unless held by the backend.",
+    "loading": "Loading bill payment...",
+    "amount": "Amount",
+    "adminReviewDate": "Admin review date",
+    "pending": "Pending",
+    "paymentDescription": "Payment description",
+    "rejectionReason": "Rejection reason"
+  }
+}

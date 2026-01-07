@@ -1,98 +1,28 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Header from '../landing-page/components/Header';
 import Icon from '../../components/AppIcon';
 import Button from '../../components/ui/Button';
-import { Advisor, Industry, Insight, Offering } from './types';
+import { CommercialContent } from './types';
 
 const CommercialBankingPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation('commercial');
 
-  const offerings: Offering[] = [
-    {
-      title: 'Capital Markets & Advisory',
-      description: 'Debt, equity, and M&A guidance with execution teams that know your board agenda.',
-      icon: 'LineChart',
-      badges: ['Capital Markets', 'M&A', 'Private placements']
-    },
-    {
-      title: 'Treasury & Payments',
-      description: 'Global cash management with RTP, wires, controlled disbursement, and receivables automation.',
-      icon: 'Banknote',
-      badges: ['Treasury', 'Payment Rails', 'AP/AR']
-    },
-    {
-      title: 'Risk & Liquidity',
-      description: 'FX, interest-rate, and commodity strategies so you protect margin while you scale.',
-      icon: 'Shield',
-      badges: ['FX', 'Rates', 'Hedging']
-    },
-    {
-      title: 'Sector Coverage',
-      description: 'Coverage bankers and product specialists with deep sector fluency and market intelligence.',
-      icon: 'Briefcase',
-      badges: ['Board-ready insights', 'Playbooks', 'Benchmarking']
-    }
-  ];
-
-  const industries: Industry[] = [
-    {
-      name: 'Technology & Media',
-      focus: 'Usage-based billing, platform payouts, and subscription cash cycles.',
-      icon: 'Cpu'
-    },
-    {
-      name: 'Healthcare & Life Sciences',
-      focus: 'Provider reimbursements, research funding, and clinical trial disbursements.',
-      icon: 'HeartPulse'
-    },
-    {
-      name: 'Industrial & Manufacturing',
-      focus: 'Capex planning, inventory financing, and global supply-chain flows.',
-      icon: 'Factory'
-    },
-    {
-      name: 'Energy & Renewables',
-      focus: 'Project finance, power purchase agreements, and commodity hedging.',
-      icon: 'Sun'
-    },
-    {
-      name: 'Public Sector & Education',
-      focus: 'Bond issuance, escrow, and transparent disbursements for constituents.',
-      icon: 'GraduationCap'
-    },
-    {
-      name: 'Real Estate & Hospitality',
-      focus: 'Construction draws, deposits, and touchless guest experiences.',
-      icon: 'Building2'
-    }
-  ];
-
-  const insights: Insight[] = [
-    {
-      title: 'Execution-ready teams',
-      detail: 'Deal, treasury, and credit leads aligned to your growth and liquidity plans.',
-      icon: 'Users'
-    },
-    {
-      title: 'Connectivity by design',
-      detail: 'APIs and secure file transfers to your ERP, treasury workstation, and data warehouse.',
-      icon: 'Globe2'
-    },
-    {
-      title: 'Risk managed in real time',
-      detail: 'Pre-transaction checks, dual approvals, and surveillance that reduces operational risk.',
-      icon: 'ShieldCheck'
-    }
-  ];
-
-  const advisors: Advisor[] = [
-    { name: 'Amelia Grant', region: 'National Coverage', specialty: 'CIB - Industrials & Services', icon: 'User' },
-    { name: 'Victor Lin', region: 'West & APAC corridor', specialty: 'Technology, platforms, cross-border', icon: 'User' },
-    { name: 'Priya Desai', region: 'East & LATAM corridor', specialty: 'Energy transition, consumer, fintech', icon: 'User' }
-  ];
+  const content = useMemo(
+    () =>
+      ({
+        meta: t('meta', { returnObjects: true }),
+        hero: t('hero', { returnObjects: true }),
+        offerings: t('offerings', { returnObjects: true }),
+        industries: t('industries', { returnObjects: true }),
+        execution: t('execution', { returnObjects: true })
+      }) as CommercialContent,
+    [t]
+  );
 
   useEffect(() => {
     if (location.hash) {
@@ -107,10 +37,10 @@ const CommercialBankingPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Commercial & Investment Banking | TrustPay</title>
+        <title>{content.meta.title}</title>
         <meta
           name="description"
-          content="Industry-focused commercial banking with capital markets access, treasury expertise, and always-on risk management."
+          content={content.meta.description}
         />
       </Helmet>
 
@@ -122,44 +52,43 @@ const CommercialBankingPage: React.FC = () => {
             <div className="max-w-7xl mx-auto py-16 lg:py-20 grid lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-6">
                 <p className="text-sm uppercase tracking-[0.3em] text-white/80">
-                  Commercial Banking
+                  {content.hero.eyebrow}
                 </p>
                 <h1 className="text-3xl lg:text-5xl font-bold leading-tight">
-                  Bank with the confidence of a capital markets partner
+                  {content.hero.title}
                 </h1>
                 <p className="text-lg text-white/90">
-                  Inspired by the best of corporate and investment banking, TrustPay delivers the coverage,
-                  product depth, and digital rails you need to move quickly in every market.
+                  {content.hero.description}
                 </p>
                 <div className="flex gap-4 flex-wrap">
                   <Button
                     size="lg"
                     className="bg-white text-[#7d1420] hover:bg-white/90 border-none"
-                    onClick={() => navigate('/registration')}
+                    onClick={() => navigate(content.hero.ctaPrimary.path)}
                   >
-                    Get started
+                    {content.hero.ctaPrimary.label}
                   </Button>
                   <Button
                     variant="outline"
                     size="lg"
                     className="border-white/60 text-white hover:text-white hover:bg-white/10"
-                    onClick={() => navigate('/commercial-banking#cib')}
+                    onClick={() => navigate(content.hero.ctaSecondary.path)}
                   >
-                    Explore CIB coverage
+                    {content.hero.ctaSecondary.label}
                   </Button>
                 </div>
               </div>
 
               <div className="grid sm:grid-cols-3 gap-4">
-                {['Capital', 'Liquidity', 'Risk'].map((item) => (
+                {content.hero.priorities.map((item) => (
                   <div
-                    key={item}
+                    key={item.value}
                     className="bg-white/10 border border-white/20 rounded-2xl p-4 backdrop-blur text-center"
                   >
-                    <p className="text-sm text-white/80">Priority</p>
-                    <p className="text-2xl font-semibold mt-1">{item}</p>
+                    <p className="text-sm text-white/80">{item.label}</p>
+                    <p className="text-2xl font-semibold mt-1">{item.value}</p>
                     <p className="text-sm text-white/70 mt-2">
-                      Board-ready reporting, approvals, and execution pathways.
+                      {item.description}
                     </p>
                   </div>
                 ))}
@@ -173,17 +102,16 @@ const CommercialBankingPage: React.FC = () => {
             <div className="max-w-7xl mx-auto space-y-10">
               <div className="flex flex-col gap-3">
                 <p className="text-sm font-semibold text-[#d1202f] uppercase tracking-wide">
-                  Corporate & Investment Banking
+                  {content.offerings.eyebrow}
                 </p>
-                <h2 className="text-3xl font-bold text-foreground">Advisory teams with product depth</h2>
+                <h2 className="text-3xl font-bold text-foreground">{content.offerings.title}</h2>
                 <p className="text-muted-foreground max-w-3xl">
-                  Capital markets access, treasury excellence, and always-on surveillance—delivered by industry
-                  specialists working as one team.
+                  {content.offerings.description}
                 </p>
               </div>
 
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {offerings.map((offering) => (
+                {content.offerings.items.map((offering) => (
                   <div
                     key={offering.title}
                     className="border border-border rounded-2xl p-5 bg-white shadow-card hover:shadow-card-hover transition-shadow flex flex-col gap-4"
@@ -217,17 +145,16 @@ const CommercialBankingPage: React.FC = () => {
             <div className="max-w-7xl mx-auto space-y-10">
               <div className="flex flex-col gap-3">
                 <p className="text-sm font-semibold text-[#d1202f] uppercase tracking-wide">
-                  Industry Coverage
+                  {content.industries.eyebrow}
                 </p>
-                <h2 className="text-3xl font-bold text-foreground">Teams built around your sector</h2>
+                <h2 className="text-3xl font-bold text-foreground">{content.industries.title}</h2>
                 <p className="text-muted-foreground max-w-3xl">
-                  From technology to public sector, we bring nuanced coverage models, specialized underwriting,
-                  and payment flows tuned to your customers.
+                  {content.industries.description}
                 </p>
               </div>
 
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {industries.map((industry) => (
+                {content.industries.items.map((industry) => (
                   <div
                     key={industry.name}
                     className="bg-card border border-border rounded-2xl p-5 shadow-card hover:shadow-card-hover transition-shadow flex gap-4"
@@ -251,16 +178,15 @@ const CommercialBankingPage: React.FC = () => {
             <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10">
               <div className="space-y-4">
                 <p className="text-sm font-semibold text-[#d1202f] uppercase tracking-wide">
-                  Execution Support
+                  {content.execution.eyebrow}
                 </p>
-                <h2 className="text-3xl font-bold text-foreground">What you get with TrustPay</h2>
+                <h2 className="text-3xl font-bold text-foreground">{content.execution.title}</h2>
                 <p className="text-muted-foreground">
-                  We blend product depth with responsive service so you can focus on the next milestone—funding,
-                  expansion, or liquidity.
+                  {content.execution.description}
                 </p>
 
                 <div className="space-y-3">
-                  {insights.map((insight) => (
+                  {content.execution.insights.map((insight) => (
                     <div key={insight.title} className="flex items-start gap-3">
                       <div className="w-10 h-10 rounded-lg bg-[#d1202f]/10 text-[#d1202f] flex items-center justify-center flex-shrink-0">
                         <Icon name={insight.icon} size={18} />
@@ -277,17 +203,17 @@ const CommercialBankingPage: React.FC = () => {
               <div className="bg-card border border-border rounded-2xl p-6 shadow-card">
                 <div className="flex items-center justify-between gap-2">
                   <div>
-                    <p className="text-sm uppercase tracking-[0.3em] text-[#d1202f]">Coverage</p>
-                    <h3 className="text-2xl font-bold text-foreground">Talk with a lead banker</h3>
+                    <p className="text-sm uppercase tracking-[0.3em] text-[#d1202f]">{content.execution.coverage.eyebrow}</p>
+                    <h3 className="text-2xl font-bold text-foreground">{content.execution.coverage.title}</h3>
                     <p className="text-muted-foreground mt-1">
-                      Choose the corridor and specialty that fits your roadmap.
+                      {content.execution.coverage.description}
                     </p>
                   </div>
                   <Icon name="PhoneCall" size={32} className="text-[#d1202f]" />
                 </div>
 
                 <div className="mt-6 space-y-4">
-                  {advisors.map((advisor) => (
+                  {content.execution.coverage.advisors.map((advisor) => (
                     <div key={advisor.name} className="flex items-start gap-3 p-3 rounded-xl bg-muted">
                       <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-border">
                         <Icon name={advisor.icon} size={18} />
@@ -304,16 +230,16 @@ const CommercialBankingPage: React.FC = () => {
                 <div className="flex gap-3 mt-6">
                   <Button
                     className="bg-[#d1202f] text-white hover:bg-[#b71b24]"
-                    onClick={() => navigate('/business')}
+                    onClick={() => navigate(content.execution.coverage.ctaPrimary.path)}
                   >
-                    See operating accounts
+                    {content.execution.coverage.ctaPrimary.label}
                   </Button>
                   <Button
                     variant="outline"
                     className="border-border text-foreground hover:bg-muted"
-                    onClick={() => navigate('/about-trustpay')}
+                    onClick={() => navigate(content.execution.coverage.ctaSecondary.path)}
                   >
-                    Learn about TrustPay
+                    {content.execution.coverage.ctaSecondary.label}
                   </Button>
                 </div>
               </div>

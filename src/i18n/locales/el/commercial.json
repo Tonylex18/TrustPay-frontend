@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "title": "Εμπορική & Επενδυτική Τραπεζική | TrustPay",
+    "description": "Τραπεζική προσαρμοσμένη σε κλάδους με πρόσβαση σε κεφαλαιαγορές, τεχνογνωσία treasury και συνεχή διαχείριση κινδύνου."
+  },
+  "hero": {
+    "eyebrow": "Εμπορική Τραπεζική",
+    "title": "Τραπεζική με την ασφάλεια ενός συνεργάτη κεφαλαιαγορών",
+    "description": "Εμπνευσμένο από το corporate & investment banking, το TrustPay προσφέρει κάλυψη, βάθος προϊόντων και ψηφιακά rails ώστε να κινείστε γρήγορα σε κάθε αγορά.",
+    "ctaPrimary": { "label": "Ξεκινήστε", "path": "/registration" },
+    "ctaSecondary": { "label": "Δείτε την κάλυψη CIB", "path": "/commercial-banking#cib" },
+    "priorities": [
+      { "label": "Προτεραιότητα", "value": "Κεφάλαιο", "description": "Αναφορές έτοιμες για το board, εγκρίσεις και διαδρομές εκτέλεσης." },
+      { "label": "Προτεραιότητα", "value": "Ρευστότητα", "description": "Αναφορές έτοιμες για το board, εγκρίσεις και διαδρομές εκτέλεσης." },
+      { "label": "Προτεραιότητα", "value": "Κίνδυνος", "description": "Αναφορές έτοιμες για το board, εγκρίσεις και διαδρομές εκτέλεσης." }
+    ]
+  },
+  "offerings": {
+    "eyebrow": "Corporate & Investment Banking",
+    "title": "Advisory ομάδες με βάθος προϊόντος",
+    "description": "Πρόσβαση σε κεφαλαιαγορές, αριστεία treasury και συνεχή επιτήρηση—από κλαδικούς ειδικούς ως μία ομάδα.",
+    "items": [
+      {
+        "title": "Κεφαλαιαγορές & Advisory",
+        "description": "Καθοδήγηση για χρέος, μετοχές και M&A με execution ομάδες που γνωρίζουν την ατζέντα του board σας.",
+        "icon": "LineChart",
+        "badges": ["Capital Markets", "M&A", "Ιδιωτικές τοποθετήσεις"]
+      },
+      {
+        "title": "Treasury & Πληρωμές",
+        "description": "Παγκόσμια διαχείριση μετρητών με RTP, εμβάσματα, controlled disbursement και αυτοματοποίηση εισπράξεων.",
+        "icon": "Banknote",
+        "badges": ["Treasury", "Πληρωμές", "AP/AR"]
+      },
+      {
+        "title": "Κίνδυνος & Ρευστότητα",
+        "description": "Στρατηγικές FX, επιτοκίων και εμπορευμάτων ώστε να προστατεύετε το περιθώριο ενώ κλιμακώνετε.",
+        "icon": "Shield",
+        "badges": ["FX", "Επιτόκια", "Hedging"]
+      },
+      {
+        "title": "Κλαδική κάλυψη",
+        "description": "Coverage bankers και product specialists με βαθιά γνώση κλάδου και market intelligence.",
+        "icon": "Briefcase",
+        "badges": ["Insights για το board", "Playbooks", "Benchmarking"]
+      }
+    ]
+  },
+  "industries": {
+    "eyebrow": "Καλύψεις ανά κλάδο",
+    "title": "Ομάδες σχεδιασμένες γύρω από τον κλάδο σας",
+    "description": "Από τεχνολογία έως δημόσιο τομέα, φέρνουμε λεπτομερή coverage models, εξειδικευμένο underwriting και flows πληρωμών προσαρμοσμένα στους πελάτες σας.",
+    "items": [
+      { "name": "Technology & Media", "focus": "Χρέωση βάσει χρήσης, πληρωμές πλατφόρμας και cash cycles συνδρομών.", "icon": "Cpu" },
+      { "name": "Healthcare & Life Sciences", "focus": "Αποζημιώσεις παρόχων, χρηματοδότηση έρευνας και εκταμιεύσεις κλινικών δοκιμών.", "icon": "HeartPulse" },
+      { "name": "Industrial & Manufacturing", "focus": "Σχεδιασμός capex, χρηματοδότηση αποθεμάτων και παγκόσμιες ροές εφοδιαστικής αλυσίδας.", "icon": "Factory" },
+      { "name": "Energy & Renewables", "focus": "Project finance, συμβάσεις PPA και αντιστάθμιση εμπορευμάτων.", "icon": "Sun" },
+      { "name": "Public Sector & Education", "focus": "Έκδοση ομολόγων, escrow και διαφανείς εκταμιεύσεις για πολίτες.", "icon": "GraduationCap" },
+      { "name": "Real Estate & Hospitality", "focus": "Κατασκευαστικές εκταμιεύσεις, καταθέσεις και εμπειρίες φιλοξενίας χωρίς επαφή.", "icon": "Building2" }
+    ]
+  },
+  "execution": {
+    "eyebrow": "Υποστήριξη εκτέλεσης",
+    "title": "Τι παίρνετε με το TrustPay",
+    "description": "Συνδυάζουμε βάθος προϊόντων με άμεση υποστήριξη ώστε να εστιάζετε στο επόμενο ορόσημο—χρηματοδότηση, ανάπτυξη ή ρευστότητα.",
+    "insights": [
+      { "title": "Ομάδες έτοιμες για εκτέλεση", "detail": "Leads για deals, treasury και πιστωτικά ευθυγραμμισμένα με τα σχέδια ανάπτυξης και ρευστότητας σας.", "icon": "Users" },
+      { "title": "Συνδεσιμότητα by design", "detail": "APIs και ασφαλείς μεταφορές αρχείων προς το ERP, το treasury workstation και το data warehouse.", "icon": "Globe2" },
+      { "title": "Διαχείριση κινδύνου σε πραγματικό χρόνο", "detail": "Έλεγχοι πριν τη συναλλαγή, διπλές εγκρίσεις και επιτήρηση που μειώνει τον λειτουργικό κίνδυνο.", "icon": "ShieldCheck" }
+    ],
+    "coverage": {
+      "eyebrow": "Κάλυψη",
+      "title": "Μιλήστε με lead banker",
+      "description": "Επιλέξτε τον διάδρομο και την ειδικότητα που ταιριάζει στη στρατηγική σας.",
+      "advisors": [
+        { "name": "Amelia Grant", "region": "Εθνική κάλυψη", "specialty": "CIB - Βιομηχανίες & υπηρεσίες", "icon": "User" },
+        { "name": "Victor Lin", "region": "Δυτικά & διάδρομος APAC", "specialty": "Τεχνολογία, πλατφόρμες, cross-border", "icon": "User" },
+        { "name": "Priya Desai", "region": "Ανατολικά & διάδρομος LATAM", "specialty": "Ενεργειακή μετάβαση, consumer, fintech", "icon": "User" }
+      ],
+      "ctaPrimary": { "label": "Δείτε λειτουργικούς λογαριασμούς", "path": "/business" },
+      "ctaSecondary": { "label": "Μάθετε για το TrustPay", "path": "/about-trustpay" }
+    }
+  }
+}

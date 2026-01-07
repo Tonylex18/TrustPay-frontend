@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import Icon from "../AppIcon";
 import StatusBadge, { BillStatus } from "./StatusBadge";
 import { cn } from "../../utils/cn";
@@ -16,13 +17,13 @@ export type BillPaymentListItem = {
 	rejectionReason?: string | null;
 };
 
-const formatCurrency = (value: number, currency: string = "USD") =>
-	new Intl.NumberFormat("en-US", { style: "currency", currency: currency.toUpperCase() }).format(value);
+const formatCurrency = (value: number, currency: string = "USD", locale: string = "en-US") =>
+	new Intl.NumberFormat(locale, { style: "currency", currency: currency.toUpperCase() }).format(value);
 
-const formatDate = (value?: string | Date | null) => {
+const formatDate = (value?: string | Date | null, locale: string = "en-US") => {
 	if (!value) return "—";
 	const date = typeof value === "string" ? new Date(value) : value;
-	return new Intl.DateTimeFormat("en-US", {
+	return new Intl.DateTimeFormat(locale, {
 		month: "short",
 		day: "numeric",
 		year: "numeric",
@@ -45,7 +46,8 @@ const BillCard: React.FC<BillCardProps> = ({
 	onClick,
 }) => {
 	const amount = amountCents / 100;
-	const displayName = biller || "Biller";
+	const { t, i18n } = useTranslation("bills");
+	const displayName = biller || t("cards.defaultBiller");
 
 	return (
 		<button
@@ -64,16 +66,18 @@ const BillCard: React.FC<BillCardProps> = ({
 					<div className="min-w-0">
 						<p className="text-base font-semibold text-foreground truncate">{displayName}</p>
 						<p className="text-sm text-muted-foreground truncate">
-							{category || "Bill payment"} • Ref {referenceNumber || "—"}
+							{category || t("cards.defaultCategory")} • {t("cards.ref", { ref: referenceNumber || "—" })}
 						</p>
 					</div>
 					<StatusBadge status={status} size="sm" />
 				</div>
 
 				<div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-					<span className="font-medium text-foreground">{formatCurrency(amount, currency || "USD")}</span>
+					<span className="font-medium text-foreground">
+						{formatCurrency(amount, currency || "USD", i18n.language)}
+					</span>
 					<span className="text-xs text-border">•</span>
-					<span>{formatDate(createdAt)}</span>
+					<span>{formatDate(createdAt, i18n.language)}</span>
 				</div>
 			</div>
 			<Icon name="ChevronRight" size={18} className="text-muted-foreground flex-shrink-0 mt-1" />

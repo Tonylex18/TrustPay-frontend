@@ -2,8 +2,28 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../../components/ui/Button';
 import Icon from '../../../components/AppIcon';
+import { CTAButton } from '../types';
 
-const CTASection = () => {
+type CTAContent = {
+  badge: string;
+  title: string;
+  description: string;
+  primaryButton: CTAButton;
+  stats: {
+    usersValue: string;
+    usersLabel: string;
+    transactionsValue: string;
+    transactionsLabel: string;
+    ratingValue: string;
+    ratingLabel: string;
+  };
+};
+
+type Props = {
+  content: CTAContent;
+};
+
+const CTASection = ({ content }: Props) => {
   const navigate = useNavigate();
 
   return (
@@ -13,28 +33,28 @@ const CTASection = () => {
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full mb-6">
             <Icon name="Sparkles" size={16} color="white" />
             <span className="text-sm font-medium text-white">
-              Get Started Today
+              {content.badge}
             </span>
           </div>
 
           <h2 className="text-3xl lg:text-5xl font-bold text-white mb-6">
-            Ready to Transform Your Banking Experience?
+            {content.title}
           </h2>
 
           <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
-            Join thousands of satisfied customers who trust TrustPay for their financial needs. Open your account in minutes and start banking smarter.
+            {content.description}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
-              variant="secondary"
+              variant={content.primaryButton.variant}
               size="lg"
-              onClick={() => navigate('/registration')}
-              iconName="UserPlus"
+              onClick={() => navigate(content.primaryButton.path)}
+              iconName={content.primaryButton.icon as any}
               iconPosition="right"
               className="min-w-[200px]"
             >
-              Create Free Account
+              {content.primaryButton.label}
             </Button>
             {/* <Button
               variant="outline"
@@ -50,18 +70,18 @@ const CTASection = () => {
 
           <div className="flex items-center justify-center gap-8 mt-12 pt-8 border-t border-white/20">
             <div className="text-center">
-              <p className="text-2xl font-bold text-white">50K+</p>
-              <p className="text-sm text-white/80">Active Users</p>
+              <p className="text-2xl font-bold text-white">{content.stats.usersValue}</p>
+              <p className="text-sm text-white/80">{content.stats.usersLabel}</p>
             </div>
             <div className="w-px h-12 bg-white/20" aria-hidden="true" />
             <div className="text-center">
-              <p className="text-2xl font-bold text-white">$2B+</p>
-              <p className="text-sm text-white/80">Transactions</p>
+              <p className="text-2xl font-bold text-white">{content.stats.transactionsValue}</p>
+              <p className="text-sm text-white/80">{content.stats.transactionsLabel}</p>
             </div>
             <div className="w-px h-12 bg-white/20" aria-hidden="true" />
             <div className="text-center">
-              <p className="text-2xl font-bold text-white">4.9/5</p>
-              <p className="text-sm text-white/80">User Rating</p>
+              <p className="text-2xl font-bold text-white">{content.stats.ratingValue}</p>
+              <p className="text-sm text-white/80">{content.stats.ratingLabel}</p>
             </div>
           </div>
         </div>

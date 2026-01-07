@@ -1,0 +1,60 @@
+{
+  "metaTitle": "Panel - TrustPay",
+  "metaDescription": "Administra tus cuentas, consulta transacciones y accede a servicios bancarios desde tu panel TrustPay.",
+  "welcomeWithName": "Bienvenido de nuevo, {{name}}!",
+  "welcome": "Bienvenido de nuevo!",
+  "overview": "Aquí tienes el resumen de tus cuentas y actividad reciente",
+  "noPrimaryAccount": "Aún no hay una cuenta principal.",
+  "quickActions": {
+    "title": "Acciones rápidas",
+    "description": "Accede a tus funciones bancarias más usadas"
+  },
+  "allAccounts": "Todas las cuentas",
+  "createAccount": "Crear cuenta",
+  "noAccounts": "Aún no hay cuentas disponibles.",
+  "virtualCardRequest": {
+    "title": "Solicitud de tarjeta virtual",
+    "accountLine": "Cuenta ••••{{last4}}",
+    "feeStatus": "Estado de la tarifa: {{status}}",
+    "underReview": "Tu solicitud de tarjeta está en revisión. Esto suele tardar 2–3 días hábiles.",
+    "reason": "Motivo: {{reason}}",
+    "rejected": "Rechazada",
+    "approved": "Aprobada",
+    "issued": "Emitida",
+    "pendingApproval": "Pendiente de aprobación"
+  },
+  "virtualCardEmpty": {
+    "prompt": "Emite una tarjeta virtual desde tu perfil para ver los números seguros.",
+    "fee": "Tarifa de tarjeta virtual: se descontará una tarifa única de $5 cuando la solicites.",
+    "processing": "Tiempo de procesamiento: las solicitudes de tarjeta se revisan en 2–3 días hábiles."
+  },
+  "payments": {
+    "title": "Pagos y facturas"
+  },
+  "financialTip": {
+    "title": "Consejo financiero",
+    "body": "Considera programar transferencias automáticas a tu ahorro para construir tu fondo de emergencia de manera constante."
+  },
+  "quickActionsItems": {
+    "deposit": {
+      "label": "Depositar dinero",
+      "description": "Agregar fondos a tu cuenta"
+    },
+    "transfer": {
+      "label": "Transferir fondos",
+      "description": "Enviar dinero a cualquier cuenta"
+    },
+    "payBills": {
+      "label": "Pagar facturas",
+      "description": "Pagar tus servicios"
+    },
+    "viewTransactions": {
+      "label": "Ver transacciones",
+      "description": "Revisar historial de transacciones"
+    }
+  },
+  "breadcrumb": {
+    "home": "Inicio",
+    "dashboard": "Panel"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "title": "Crear cuenta - TrustPay",
+    "description": "Cree su cuenta TrustPay y comience a operar de forma segura."
+  },
+  "hero": {
+    "eyebrow": "TrustPay",
+    "title": "Empiece a operar con TrustPay",
+    "subtitle": "Onboarding guiado con seguridad de nivel bancario para mover dinero y gestionar tesorería con confianza.",
+    "openAccount": "Abrir una cuenta",
+    "ctaLogin": "¿Ya tiene una cuenta?",
+    "ctaAbout": "Conozca TrustPay",
+    "features": [
+      { "icon": "ShieldCheck", "title": "Seguro por diseño", "text": "Cifrado, verificación de dispositivos y monitoreo proactivo." },
+      { "icon": "Rocket", "title": "Configuración rápida", "text": "Finalice el registro en minutos y comience a operar." },
+      { "icon": "Headset", "title": "Soporte 24/7", "text": "Especialistas listos para ayudar cuando lo necesite." },
+      { "icon": "Sparkles", "title": "Herramientas modernas", "text": "Pagos, tesorería y wealth en una sola experiencia." }
+    ]
+  },
+  "form": {
+    "title": "Cree su cuenta TrustPay",
+    "subtitle": "Abra una cuenta segura para acceder a pagos, tesorería y gestión patrimonial.",
+    "emailLabel": "Correo electrónico",
+    "emailPlaceholder": "Ingrese su correo",
+    "emailDescription": "Nunca compartiremos su correo con nadie",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Cree una contraseña segura",
+    "confirmPasswordLabel": "Confirmar contraseña",
+    "confirmPasswordPlaceholder": "Repita su contraseña",
+    "termsPrefix": "Acepto los",
+    "termsLink": "Términos de servicio",
+    "privacyPrefix": "Acepto la",
+    "privacyLink": "Política de privacidad",
+    "createAccount": "Crear cuenta",
+    "already": "¿Ya tiene una cuenta?",
+    "signIn": "Iniciar sesión",
+    "otpInstruction": "Ingrese el código de 6 dígitos que enviamos a {{email}} para activar su cuenta.",
+    "otpPlaceholder": "••••••",
+    "verifyCode": "Verificar código",
+    "editCredentials": "Editar correo o contraseña",
+    "footerNote": "Al crear una cuenta, acepta nuestras políticas de protección de datos y seguridad"
+  },
+  "password": {
+    "strengthTitle": "Fortaleza de la contraseña",
+    "strengthLabel": {
+      "weak": "Débil",
+      "fair": "Regular",
+      "medium": "Media",
+      "strong": "Fuerte",
+      "veryStrong": "Muy fuerte"
+    },
+    "requirements": {
+      "length": "Al menos 8 caracteres",
+      "uppercase": "Contiene mayúscula",
+      "lowercase": "Contiene minúscula",
+      "number": "Contiene número",
+      "special": "Contiene carácter especial"
+    },
+    "tooWeak": "Contraseña demasiado débil. Cumpla al menos 3 requisitos"
+  },
+  "messages": {
+    "errors": {
+      "otpRequired": "Ingrese el código de 6 dígitos enviado a su correo",
+      "emailRequired": "El correo es obligatorio",
+      "emailInvalid": "Ingrese un correo electrónico válido",
+      "passwordRequired": "La contraseña es obligatoria",
+      "confirmPasswordRequired": "Confirme su contraseña",
+      "passwordsMismatch": "Las contraseñas no coinciden",
+      "termsRequired": "Debe aceptar los Términos de servicio",
+      "privacyRequired": "Debe aceptar la Política de privacidad",
+      "registrationFailed": "No se pudo registrar. Intente nuevamente.",
+      "incompleteResponse": "La respuesta de registro estuvo incompleta. Intente nuevamente."
+    },
+    "info": {
+      "otpPrompt": "Ingrese el código enviado a su correo para activar su cuenta.",
+      "emailVerification": "Revise su correo para verificar la cuenta antes de iniciar sesión."
+    },
+    "success": {
+      "accountCreated": "Cuenta creada con éxito."
+    }
+  },
+  "security": {
+    "title": "Su seguridad es nuestra prioridad",
+    "items": [
+      "Cifrado de nivel bancario",
+      "Almacenamiento seguro de datos",
+      "Privacidad protegida"
+    ]
+  }
+}

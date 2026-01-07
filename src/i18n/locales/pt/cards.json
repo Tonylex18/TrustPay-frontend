@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "virtualCard": "Cartão virtual",
+    "linkedAccount": "Conta associada:",
+    "activation": "Ativação:"
+  },
+  "actions": {
+    "showDetails": "Mostrar detalhes do cartão",
+    "hideDetails": "Ocultar detalhes do cartão",
+    "sendCode": "Enviar código",
+    "activate": "Ativar"
+  },
+  "details": {
+    "digitalAccess": "Acesso digital",
+    "securedByStripe": "Protegido pelo Stripe Issuing",
+    "validThruPlaceholder": "Válido até — — / — —",
+    "cvcPlaceholder": "CVC — — —",
+    "sensitiveHeading": "Dados sensíveis",
+    "sensitiveSubheading": "Não compartilhe",
+    "numberLabel": "Número",
+    "expiryLabel": "Validade",
+    "cvcLabel": "CVC"
+  },
+  "activation": {
+    "title": "Ative seu cartão",
+    "description": "Envie um código de 6 dígitos para seu e-mail e insira abaixo para ativar este cartão virtual.",
+    "placeholder": "Insira o código de ativação",
+    "messageLabel": "Mensagem de ativação",
+    "loadingDetails": "Carregando detalhes seguros…",
+    "secureNote": "Número e CVC do cartão são exibidos pela Stripe e nunca passam pelos servidores ou estado local do TrustPay."
+  },
+  "messages": {
+    "emailRequired": "É necessário e-mail para enviar o código de ativação.",
+    "sendFailed": "Não foi possível enviar o código de ativação.",
+    "sendError": "Não é possível enviar o código de ativação agora.",
+    "sendSuccess": "Código de ativação enviado para seu e-mail.",
+    "codeRequired": "Insira o código de ativação que enviamos.",
+    "activateFailed": "Ativação falhou. Verifique o código e tente novamente.",
+    "activated": "Cartão ativado.",
+    "activateError": "Não é possível ativar o cartão agora.",
+    "stripeMissing": "Chave pública da Stripe ausente.",
+    "stripeInitFailed": "A Stripe não pôde ser inicializada.",
+    "cardRefMissing": "Falta referência do cartão para dados seguros.",
+    "authError": "Não foi possível autorizar o acesso seguro ao cartão.",
+    "loadFailed": "Não foi possível carregar os detalhes do cartão."
+  }
+}

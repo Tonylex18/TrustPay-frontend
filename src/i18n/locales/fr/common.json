@@ -1,0 +1,54 @@
+{
+  "brand": {
+    "name": "TrustPay",
+    "product": "Banque"
+  },
+  "navigation": {
+    "personal": "Particuliers",
+    "investing": "Investissement & gestion de patrimoine",
+    "business": "Entreprises",
+    "commercial": "Banque commerciale",
+    "cib": "Banque d'entreprise et d'investissement",
+    "about": "À propos de TrustPay",
+    "dashboard": "Tableau de bord",
+    "transactions": "Transactions",
+    "transfer": "Virements",
+    "profile": "Profil",
+    "signOn": "Connexion"
+  },
+  "tooltips": {
+    "dashboard": "Voir la synthèse des comptes et les actions rapides",
+    "transactions": "Consulter l'historique et le détail des transactions",
+    "transfer": "Envoyer des fonds vers des comptes",
+    "profile": "Gérer les paramètres du compte"
+  },
+  "language": {
+    "label": "Langue",
+    "english": "Anglais",
+    "french": "Français",
+    "spanish": "Espagnol",
+    "german": "Allemand",
+    "greek": "Grec",
+    "portuguese": "Portugais"
+  },
+  "actions": {
+    "dashboard": "Tableau de bord",
+    "signOn": "Connexion",
+    "createAccount": "Créer un compte",
+    "depositMoney": "Déposer des fonds",
+    "payBill": "Payer une facture",
+    "showCardDetails": "Afficher les détails de la carte",
+    "hideCardDetails": "Masquer les détails de la carte",
+    "sendCode": "Envoyer le code",
+    "activate": "Activer",
+    "verifyCode": "Vérifier le code",
+    "signIn": "Se connecter"
+  },
+  "aria": {
+    "home": "Accueil TrustPay",
+    "languageSelector": "Sélectionner la langue"
+  },
+  "status": {
+    "loadingDashboard": "Chargement de votre tableau de bord..."
+  }
+}

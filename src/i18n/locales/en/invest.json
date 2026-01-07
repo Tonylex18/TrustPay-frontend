@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "title": "Investing & Wealth Management | TrustPay",
+    "description": "Advisory-led investing, wealth planning, and lending solutions inspired by leading corporate investment banks."
+  },
+  "hero": {
+    "eyebrow": "Investing & Wealth",
+    "title": "A wealth platform with capital markets DNA",
+    "description": "Portfolios, planning, and lending that blend the rigor of institutional desks with the care of a dedicated wealth team.",
+    "ctaPrimary": { "label": "Start planning", "path": "/registration" },
+    "ctaSecondary": { "label": "Talk to an advisor", "path": "/commercial-banking" },
+    "strategies": [
+      { "title": "Research-driven perspective", "detail": "Investment committees monitoring macro, sector moves, and factor tilts to adapt quickly.", "icon": "BarChart3", "highlight": "Weekly market calls" },
+      { "title": "Risk managed by design", "detail": "Scenario analysis, drawdown limits, and hedging overlays for concentrated positions.", "icon": "ShieldCheck", "highlight": "Downside guardrails" },
+      { "title": "Advisory + Digital", "detail": "Dedicated advisors with intuitive digital views so you can act anywhere.", "icon": "Smartphone", "highlight": "Human + app" }
+    ]
+  },
+  "offerings": {
+    "eyebrow": "Offerings",
+    "title": "Tailored wealth strategies",
+    "description": "Inspired by leading institutional platforms, delivered through personal relationships and intuitive tools.",
+    "items": [
+      { "title": "Personalized Portfolios", "description": "Curated allocations across public markets, alts, and cash with direct indexing options.", "icon": "PieChart", "metrics": ["Direct indexing", "Tax-aware", "Multi-asset"] },
+      { "title": "Goals-Based Planning", "description": "Retirement, education, and liquidity planning with scenario analysis and stress tests.", "icon": "Target", "metrics": ["Retirement", "Education", "Liquidity"] },
+      { "title": "Trust & Estate", "description": "Trust structures, philanthropy, and intergenerational strategies guided by specialists.", "icon": "Gem", "metrics": ["Wealth transfer", "Philanthropy", "Trusts"] },
+      { "title": "Liquidity & Lending", "description": "Securities-backed lines, tailored mortgages, and strategic cash management.", "icon": "Banknote", "metrics": ["Credit lines", "Mortgages", "Cash"] }
+    ]
+  },
+  "insights": {
+    "eyebrow": "Insights & Research",
+    "title": "Stay ahead with our point of view",
+    "description": "Weekly research, market notes, and planning prompts so you can take action with confidence.",
+    "cta": { "label": "See how we think", "path": "/about-trustpay" },
+    "items": [
+      { "title": "2024 Market Playbook", "summary": "How we are positioning across quality equities, short-duration credit, and real assets.", "category": "Market View" },
+      { "title": "Planning for Liquidity Events", "summary": "Pre-transaction planning, QSBS considerations, and charitable timing strategies.", "category": "Wealth Strategy" },
+      { "title": "Navigating Higher Rates", "summary": "Laddering cash, refinancing opportunities, and hedging rate exposure on debt.", "category": "Insights" }
+    ],
+    "readMore": "Read more"
+  },
+  "advisors": {
+    "eyebrow": "Dedicated Advisors",
+    "title": "A team aligned to your goals",
+    "description": "Work with seasoned advisors backed by planning, lending, and investment specialists.",
+    "people": [
+      { "name": "Evelyn Carter", "focus": "Families & Founders", "credential": "CFA, CFP" },
+      { "name": "Marcus Reid", "focus": "Executives & Equity Comp", "credential": "CRPC, CEP" },
+      { "name": "Sophia Lee", "focus": "Liquidity & Lending", "credential": "Wealth Specialist" }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Ready when you are",
+    "title": "Let's design your plan",
+    "description": "We'll align on goals, risk, liquidity needs, and build a roadmap you can track in the app.",
+    "primary": { "label": "Connect with us", "path": "/business" },
+    "secondary": { "label": "View portfolios", "path": "/dashboard" }
+  }
+}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Icon from '../../../components/AppIcon';
-
+import { useTranslation } from 'react-i18next';
 
 interface AmountInputProps {
   value: string;
@@ -10,15 +10,26 @@ interface AmountInputProps {
   maxAmount: number;
   remainingDaily: number;
   currency: string;
+  locale?: string;
 }
 
-const AmountInput = ({ value, onChange, balance, error, maxAmount, remainingDaily, currency }: AmountInputProps) => {
+const AmountInput = ({
+  value,
+  onChange,
+  balance,
+  error,
+  maxAmount,
+  remainingDaily,
+  currency,
+  locale = 'en-US'
+}: AmountInputProps) => {
+  const { t } = useTranslation('transfer');
   const [isFocused, setIsFocused] = useState(false);
 
   const formatCurrency = (amount: string): string => {
     const num = parseFloat(amount.replace(/,/g, ''));
     if (isNaN(num)) return '';
-    return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return num.toLocaleString(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,11 +45,13 @@ const AmountInput = ({ value, onChange, balance, error, maxAmount, remainingDail
   };
 
   const quickAmounts = [100, 500, 1000, 5000];
+  const formatCurrencyValue = (amount: number) =>
+    new Intl.NumberFormat(locale, { style: 'currency', currency: currency.toUpperCase() }).format(amount);
 
   return (
     <div>
       <label className="block text-sm font-medium text-foreground mb-2">
-        Transfer Amount <span className="text-error">*</span>
+        {t('amountInput.label')} <span className="text-error">*</span>
       </label>
 
       <div className="relative">
@@ -57,7 +70,7 @@ const AmountInput = ({ value, onChange, balance, error, maxAmount, remainingDail
             onBlur={() => setIsFocused(false)}
             placeholder="0.00"
             className="flex-1 text-2xl font-semibold text-foreground bg-transparent outline-none"
-            aria-label="Transfer amount in dollars"
+            aria-label={t('amountInput.ariaLabel')}
             aria-invalid={!!error}
             aria-describedby={error ? 'amount-error' : undefined}
           />
@@ -90,22 +103,22 @@ const AmountInput = ({ value, onChange, balance, error, maxAmount, remainingDail
                 : 'bg-secondary text-secondary-foreground hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-ring'
             }`}
           >
-            ${amount.toLocaleString()}
+            {formatCurrencyValue(amount)}
           </button>
         ))}
       </div>
 
       <div className="mt-4 p-3 bg-muted/50 rounded-lg">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">Available Balance:</span>
+          <span className="text-muted-foreground">{t('amountInput.available')}</span>
           <span className="font-semibold text-foreground">
-            ${balance.toLocaleString('en-US', { minimumFractionDigits: 2 })} {currency.toUpperCase()}
+            {formatCurrencyValue(balance)}
           </span>
         </div>
         <div className="flex items-center justify-between text-sm mt-2">
-          <span className="text-muted-foreground">Daily Limit Remaining:</span>
+          <span className="text-muted-foreground">{t('amountInput.remaining')}</span>
           <span className="font-semibold text-foreground">
-            ${remainingDaily.toLocaleString('en-US', { minimumFractionDigits: 2 })} {currency.toUpperCase()}
+            {formatCurrencyValue(remainingDaily)}
           </span>
         </div>
       </div>

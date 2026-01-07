@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "title": "Investimentos e gestão de patrimônio | TrustPay",
+    "description": "Investimentos orientados por consultoria, planejamento patrimonial e soluções de crédito inspiradas em bancos de investimento."
+  },
+  "hero": {
+    "eyebrow": "Investimentos & Patrimônio",
+    "title": "Plataforma de patrimônio com DNA de mercados de capitais",
+    "description": "Portfólios, planejamento e crédito que unem a disciplina institucional ao cuidado de uma equipe dedicada.",
+    "ctaPrimary": { "label": "Começar a planejar", "path": "/registration" },
+    "ctaSecondary": { "label": "Falar com um assessor", "path": "/commercial-banking" },
+    "strategies": [
+      { "title": "Visão guiada por pesquisa", "detail": "Comitês de investimento monitorando macro, setores e fatores para reagir rápido.", "icon": "BarChart3", "highlight": "Chamadas semanais" },
+      { "title": "Risco gerido por design", "detail": "Análises de cenários, limites de drawdown e hedge para posições concentradas.", "icon": "ShieldCheck", "highlight": "Proteção de queda" },
+      { "title": "Assessoria + Digital", "detail": "Assessores dedicados com visões digitais intuitivas para agir de qualquer lugar.", "icon": "Smartphone", "highlight": "Humano + app" }
+    ]
+  },
+  "offerings": {
+    "eyebrow": "Soluções",
+    "title": "Estratégias patrimoniais sob medida",
+    "description": "Inspiradas em plataformas institucionais líderes, entregues com relacionamento e ferramentas intuitivas.",
+    "items": [
+      { "title": "Portfólios personalizados", "description": "Alocações em mercados públicos, alternativos e caixa com opções de indexação direta.", "icon": "PieChart", "metrics": ["Indexação direta", "Eficiente em impostos", "Multiativos"] },
+      { "title": "Planejamento por objetivos", "description": "Planejamento de aposentadoria, educação e liquidez com cenários e stress tests.", "icon": "Target", "metrics": ["Aposentadoria", "Educação", "Liquidez"] },
+      { "title": "Trust & Sucessão", "description": "Estruturas de trust, filantropia e estratégias intergeracionais com especialistas.", "icon": "Gem", "metrics": ["Transferência de patrimônio", "Filantropia", "Trusts"] },
+      { "title": "Liquidez & crédito", "description": "Linhas lastreadas em títulos, hipotecas sob medida e gestão estratégica de caixa.", "icon": "Banknote", "metrics": ["Linhas de crédito", "Hipotecas", "Caixa"] }
+    ]
+  },
+  "insights": {
+    "eyebrow": "Insights e pesquisa",
+    "title": "Fique à frente com nossa visão",
+    "description": "Pesquisa semanal, notas de mercado e ideias de planejamento para agir com confiança.",
+    "cta": { "label": "Veja como pensamos", "path": "/about-trustpay" },
+    "items": [
+      { "title": "Playbook de mercado 2024", "summary": "Nosso posicionamento em ações quality, crédito de curta duração e ativos reais.", "category": "Visão de mercado" },
+      { "title": "Planejando eventos de liquidez", "summary": "Planejamento pré-transação, QSBS e estratégias de doação.", "category": "Estratégia patrimonial" },
+      { "title": "Navegando juros mais altos", "summary": "Escalonar caixa, oportunidades de refinanciamento e hedge de risco de juros.", "category": "Insights" }
+    ],
+    "readMore": "Ler mais"
+  },
+  "advisors": {
+    "eyebrow": "Assessores dedicados",
+    "title": "Equipe alinhada aos seus objetivos",
+    "description": "Trabalhe com assessores experientes apoiados por especialistas em planejamento, crédito e investimentos.",
+    "people": [
+      { "name": "Evelyn Carter", "focus": "Famílias e fundadores", "credential": "CFA, CFP" },
+      { "name": "Marcus Reid", "focus": "Executivos e remuneração em ações", "credential": "CRPC, CEP" },
+      { "name": "Sophia Lee", "focus": "Liquidez e crédito", "credential": "Especialista em patrimônio" }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Prontos quando você estiver",
+    "title": "Vamos desenhar seu plano",
+    "description": "Vamos alinhar objetivos, risco e liquidez e construir um roteiro que você acompanha no app.",
+    "primary": { "label": "Converse conosco", "path": "/business" },
+    "secondary": { "label": "Ver portfólios", "path": "/dashboard" }
+  }
+}

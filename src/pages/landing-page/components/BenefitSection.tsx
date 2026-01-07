@@ -4,19 +4,21 @@ import { Benefit } from '../types';
 
 interface BenefitSectionProps {
   benefits: Benefit[];
+  title: string;
+  subtitle: string;
 }
 
-const BenefitSection = ({ benefits }: BenefitSectionProps) => {
+const BenefitSection = ({ benefits, title, subtitle }: BenefitSectionProps) => {
   return (
     <section className="bg-muted/30 py-16 lg:py-24">
       <div className="px-nav-margin">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              Why Choose TrustPay?
+              {title}
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Experience banking with enterprise-grade security and user-friendly features designed for modern financial management
+              {subtitle}
             </p>
           </div>
 

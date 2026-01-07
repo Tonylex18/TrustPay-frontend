@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Icon from '../../../components/AppIcon';
 import { Transaction, TransactionTableProps, SortableTransactionField } from '../types';
 
@@ -9,22 +10,21 @@ const TransactionTable = ({
   onRowClick,
   expandedRow
 }: TransactionTableProps) => {
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+  const { t, i18n } = useTranslation('transaction');
+  const formatCurrency = (amount: number, currency: string = 'USD') =>
+    new Intl.NumberFormat(i18n.language || 'en-US', {
       style: 'currency',
-      currency: 'USD'
+      currency: currency.toUpperCase()
     }).format(Math.abs(amount));
-  };
 
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
+  const formatDate = (date: Date) =>
+    new Intl.DateTimeFormat(i18n.language || 'en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
     }).format(date);
-  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -64,7 +64,7 @@ const TransactionTable = ({
                 onClick={() => onSort('date')}
                 className="flex items-center gap-2 font-semibold text-sm text-foreground hover:text-primary transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring rounded-md"
               >
-                Date
+                {t('table.date')}
                 {renderSortIcon('date')}
               </button>
             </th>
@@ -73,7 +73,7 @@ const TransactionTable = ({
                 onClick={() => onSort('description')}
                 className="flex items-center gap-2 font-semibold text-sm text-foreground hover:text-primary transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring rounded-md"
               >
-                Description
+                {t('table.description')}
                 {renderSortIcon('description')}
               </button>
             </th>
@@ -91,7 +91,7 @@ const TransactionTable = ({
                 onClick={() => onSort('status')}
                 className="flex items-center gap-2 font-semibold text-sm text-foreground hover:text-primary transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring rounded-md"
               >
-                Status
+                {t('table.status')}
                 {renderSortIcon('status')}
               </button>
             </th>
@@ -100,7 +100,7 @@ const TransactionTable = ({
                 onClick={() => onSort('amount')}
                 className="flex items-center gap-2 font-semibold text-sm text-foreground hover:text-primary transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring rounded-md ml-auto"
               >
-                Amount
+                {t('table.amount')}
                 {renderSortIcon('amount')}
               </button>
             </th>
@@ -130,17 +130,17 @@ const TransactionTable = ({
                 </td>
                 <td className="p-4">
                   <span
-                    className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium capitalize ${getStatusColor(
+                   className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium capitalize ${getStatusColor(
                       transaction.status
                     )}`}
                   >
-                    {transaction.status}
+                    {t(`filters.statusOptions.${transaction.status}`, { defaultValue: transaction.status })}
                   </span>
                 </td>
                 <td className="p-4 text-right">
                   <span className={`text-sm font-semibold ${getTypeColor(transaction.type)}`}>
                     {transaction.type === 'credit' ? '+' : '-'}
-                    {formatCurrency(transaction.amount)}
+                    {formatCurrency(transaction.amount, transaction.currency || 'USD')}
                   </span>
                 </td>
               </tr>
@@ -150,6 +150,7 @@ const TransactionTable = ({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                       <div>
                         <span className="text-muted-foreground">Reference Number:</span>
+                        <span className="text-muted-foreground">{t('table.reference')}:</span>
                         <span className="ml-2 text-foreground font-medium">
                           {transaction.referenceNumber}
                         </span>
@@ -157,19 +158,19 @@ const TransactionTable = ({
                       {transaction.merchantDetails && (
                         <>
                           <div>
-                            <span className="text-muted-foreground">Merchant:</span>
+                            <span className="text-muted-foreground">{t('table.merchant')}:</span>
                             <span className="ml-2 text-foreground font-medium">
                               {transaction.merchantDetails.name}
                             </span>
                           </div>
                           <div>
-                            <span className="text-muted-foreground">Location:</span>
+                            <span className="text-muted-foreground">{t('table.location')}:</span>
                             <span className="ml-2 text-foreground font-medium">
                               {transaction.merchantDetails.location}
                             </span>
                           </div>
                           <div>
-                            <span className="text-muted-foreground">Contact:</span>
+                            <span className="text-muted-foreground">{t('table.contact')}:</span>
                             <span className="ml-2 text-foreground font-medium">
                               {transaction.merchantDetails.contact}
                             </span>

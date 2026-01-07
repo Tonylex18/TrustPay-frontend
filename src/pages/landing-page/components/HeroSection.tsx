@@ -26,7 +26,7 @@ const HeroSection = ({ content }: HeroSectionProps) => {
                             <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full">
                                 <span className="w-2 h-2 bg-success rounded-full animate-pulse" aria-hidden="true" />
                                 <span className="text-sm font-medium text-primary">
-                                    {content.headline}
+                                    {content.badge || content.headline}
                                 </span>
                             </div>
 
@@ -63,17 +63,17 @@ const HeroSection = ({ content }: HeroSectionProps) => {
                                             aria-hidden="true">
 
                                             <span className="text-xs font-semibold text-primary">
-                                                {i}K+
+                                                {i}{content.avatarSuffix || 'K+'}
                                             </span>
                                         </div>
                                     )}
                                 </div>
                                 <div>
                                     <p className="text-sm font-semibold text-foreground">
-                                        50,000+ Active Users
+                                        {content.avatarsLabel}
                                     </p>
                                     <p className="text-xs text-muted-foreground">
-                                        Join our growing community
+                                        {content.avatarsSubcopy}
                                     </p>
                                 </div>
                             </div>
@@ -90,10 +90,10 @@ const HeroSection = ({ content }: HeroSectionProps) => {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" aria-hidden="true" />
                                 <div className="absolute bottom-8 left-8 right-8 text-white">
                                     <p className="text-2xl font-bold mb-2">
-                                        Banking Made Simple
+                                        {content.overlayTitle}
                                     </p>
                                     <p className="text-sm opacity-90">
-                                        Manage your finances anytime, anywhere
+                                        {content.overlaySubtitle}
                                     </p>
                                 </div>
                             </div>

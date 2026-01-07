@@ -4,9 +4,11 @@ import { Feature } from '../types';
 
 interface FeatureCardProps {
   feature: Feature;
+  ctaLabel: string;
+  ctaAria: string;
 }
 
-const FeatureCard = ({ feature }: FeatureCardProps) => {
+const FeatureCard = ({ feature, ctaLabel, ctaAria }: FeatureCardProps) => {
   return (
     <div className="group bg-card rounded-xl border border-border p-6 hover:shadow-lg hover:border-primary/50 transition-all duration-300">
       <div className="flex flex-col items-start gap-4">
@@ -29,9 +31,9 @@ const FeatureCard = ({ feature }: FeatureCardProps) => {
 
         <button
           className="flex items-center gap-2 text-sm font-medium text-primary hover:gap-3 transition-all duration-300"
-          aria-label={`Learn more about ${feature.title}`}
+          aria-label={ctaAria}
         >
-          <span>Learn more</span>
+          <span>{ctaLabel}</span>
           <Icon name="ArrowRight" size={16} />
         </button>
       </div>

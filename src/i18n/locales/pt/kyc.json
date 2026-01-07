@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "title": "Verificação KYC - TrustPay",
+    "description": "Conclua seu KYC para habilitar os recursos bancários."
+  },
+  "breadcrumb": {
+    "dashboard": "Dashboard",
+    "kyc": "KYC"
+  },
+  "hero": {
+    "title": "Verifique sua identidade",
+    "subtitle": "Informe seus dados e imagens dos documentos para concluir o KYC."
+  },
+  "form": {
+    "firstName": "Nome",
+    "lastName": "Sobrenome",
+    "dob": {
+      "day": "Dia",
+      "month": "Mês",
+      "year": "Ano"
+    },
+    "country": {
+      "label": "País",
+      "placeholder": "Selecione um país"
+    },
+    "addressLine1": "Endereço linha 1",
+    "addressLine2": "Endereço linha 2 (opcional)",
+    "state": {
+      "label": "Estado / Província",
+      "placeholder": "Selecione um estado",
+      "placeholderDisabled": "Selecione o país primeiro"
+    },
+    "city": {
+      "label": "Cidade",
+      "placeholder": "Selecione uma cidade",
+      "placeholderDisabled": "Selecione o estado primeiro"
+    },
+    "postalCode": "CEP",
+    "documentType": {
+      "label": "Tipo de documento",
+      "options": {
+        "passport": "Passaporte",
+        "national_id": "Documento nacional",
+        "driver_license": "Carteira de motorista"
+      }
+    },
+    "documentNumber": "Número do documento",
+    "documentImageFront": "Imagem do documento (frente)",
+    "documentImageBack": "Imagem do documento (verso, opcional)",
+    "selfieImage": "Selfie (opcional)",
+    "cancel": "Cancelar",
+    "submit": "Enviar KYC"
+  },
+  "messages": {
+    "error": {
+      "documentImageRequired": "A imagem do documento é obrigatória.",
+      "dobIncomplete": "Complete a data de nascimento.",
+      "locationRequired": "País, estado e cidade são obrigatórios.",
+      "submitFailed": "Não foi possível enviar o KYC."
+    },
+    "success": "KYC enviado. Status: pendente."
+  }
+}

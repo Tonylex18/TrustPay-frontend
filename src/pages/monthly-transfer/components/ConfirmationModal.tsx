@@ -1,6 +1,7 @@
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 import { TransferSummary, VerifiedAccount } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ interface ConfirmationModalProps {
   isProcessing: boolean;
   errorMessage?: string | null;
   currency?: string;
+  locale?: string;
 }
 
 const ConfirmationModal = ({
@@ -27,9 +29,13 @@ const ConfirmationModal = ({
   summary,
   isProcessing,
   errorMessage,
-  currency = 'USD'
+  currency = 'USD',
+  locale = 'en-US'
 }: ConfirmationModalProps) => {
+  const { t } = useTranslation('transfer');
   if (!isOpen) return null;
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat(locale, { style: 'currency', currency: currency.toUpperCase() }).format(value);
 
   return (
     <div
@@ -45,7 +51,7 @@ const ConfirmationModal = ({
       >
         <div className="sticky top-0 bg-card border-b border-border px-6 py-4 flex items-center justify-between">
           <h2 id="confirmation-title" className="text-lg font-semibold text-foreground">
-            Confirm Transfer
+            {t('confirmation.title')}
           </h2>
           <button
             onClick={onClose}
@@ -68,9 +74,9 @@ const ConfirmationModal = ({
               <Icon name="Send" size={32} color="var(--color-primary)" />
             </div>
             <p className="text-3xl font-bold text-foreground mb-1">
-              ${parseFloat(amount).toLocaleString('en-US', { minimumFractionDigits: 2 })} {currency.toUpperCase()}
+              {formatCurrency(parseFloat(amount))}
             </p>
-            <p className="text-sm text-muted-foreground">Transfer Amount</p>
+            <p className="text-sm text-muted-foreground">{t('confirmation.amount')}</p>
           </div>
 
           <div className="bg-muted/50 rounded-lg p-4">
@@ -86,7 +92,7 @@ const ConfirmationModal = ({
 
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Account Number</span>
+                <span className="text-muted-foreground">{t('confirmation.accountNumber')}</span>
                 <span className="font-medium text-foreground">{beneficiary.accountNumber}</span>
               </div>
             </div>
@@ -94,25 +100,27 @@ const ConfirmationModal = ({
 
           <div className="space-y-2 text-sm">
             <div className="flex justify-between py-2">
-              <span className="text-muted-foreground">Transfer Type</span>
-              <span className="font-medium text-foreground capitalize">{transferType}</span>
+              <span className="text-muted-foreground">{t('confirmation.transferType')}</span>
+              <span className="font-medium text-foreground capitalize">
+                {t(`transferType.options.${transferType}.title`)}
+              </span>
             </div>
             {memo && (
               <div className="flex justify-between py-2">
-                <span className="text-muted-foreground">Memo</span>
+                <span className="text-muted-foreground">{t('confirmation.memo')}</span>
                 <span className="font-medium text-foreground text-right max-w-[60%]">{memo}</span>
               </div>
             )}
             <div className="flex justify-between py-2">
-              <span className="text-muted-foreground">Processing Fee</span>
+              <span className="text-muted-foreground">{t('confirmation.fee')}</span>
               <span className="font-medium text-foreground">
-                ${summary.fee.toLocaleString('en-US', { minimumFractionDigits: 2 })} {currency.toUpperCase()}
+                {formatCurrency(summary.fee)}
               </span>
             </div>
             <div className="flex justify-between py-2 border-t border-border">
-              <span className="font-semibold text-foreground">Total Debit</span>
+              <span className="font-semibold text-foreground">{t('confirmation.total')}</span>
               <span className="font-bold text-primary">
-                ${summary.total.toLocaleString('en-US', { minimumFractionDigits: 2 })} {currency.toUpperCase()}
+                {formatCurrency(summary.total)}
               </span>
             </div>
           </div>
@@ -121,7 +129,7 @@ const ConfirmationModal = ({
             <div className="flex items-start gap-2">
               <Icon name="AlertTriangle" size={16} color="var(--color-warning)" className="mt-0.5 flex-shrink-0" />
               <p className="text-xs text-warning-foreground">
-                Please verify all details carefully. This transaction cannot be reversed once confirmed.
+                {t('confirmation.warning')}
               </p>
             </div>
           </div>
@@ -134,7 +142,7 @@ const ConfirmationModal = ({
             disabled={isProcessing}
             fullWidth
           >
-            Cancel
+            {t('confirmation.cancel')}
           </Button>
           <Button
             variant="default"
@@ -144,7 +152,7 @@ const ConfirmationModal = ({
             iconPosition="left"
             fullWidth
           >
-            {isProcessing ? 'Processing...' : 'Confirm Transfer'}
+            {isProcessing ? t('confirmation.processing') : t('confirmation.confirm')}
           </Button>
         </div>
       </div>

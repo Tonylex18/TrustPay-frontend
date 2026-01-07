@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { PasswordStrength } from "../types";
 
 interface PasswordStrengthIndicatorProps {
@@ -5,10 +6,11 @@ interface PasswordStrengthIndicatorProps {
 }
 
 const PasswordStrengthIndicator = ({ strength }: PasswordStrengthIndicatorProps) => {
+  const { t } = useTranslation('registration');
   return (
     <div className="mt-3 space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-sm text-muted-foreground">Password Strength</span>
+        <span className="text-sm text-muted-foreground">{t('password.strengthTitle')}</span>
         <span className={`text-sm font-medium ${strength.color}`}>
           {strength.label}
         </span>

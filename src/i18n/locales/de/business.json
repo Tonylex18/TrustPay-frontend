@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "title": "Firmenbanking | TrustPay",
+    "description": "Firmenbanking mit Treasury, Payments und Branchenspezialisten, damit du sicher operierst."
+  },
+  "hero": {
+    "eyebrow": "Firmenbanking",
+    "title": "Kapital, Liquidität und Zahlungen für Operatoren",
+    "description": "Ein dediziertes Team plus moderne Rails (RTP, Überweisungen, ACH, Acquiring) und Treasury-Kontrollen, die zu deinen Abläufen passen.",
+    "chips": ["Treasury", "Zahlungen", "Advisory", "Sicherheit"],
+    "ctaPrimary": { "label": "Konto eröffnen", "path": "/registration" },
+    "ctaSecondary": { "label": "Mit Berater sprechen", "path": "/commercial-banking" },
+    "highlights": [
+      { "label": "Verfügbarkeit", "value": "Taggleich", "description": "RTP- und Überweisungsrails mit klaren Cutoffs und proaktiven Alerts." },
+      { "label": "Plattform-Uptime", "value": "99,95%", "description": "Redundante Architektur und Dual-Control auf kritischen Zahlungswegen." },
+      { "label": "Fraud-Monitoring", "value": "24/7", "description": "Verhaltensanalysen und Step-up-Auth, wenn Risiko steigt." }
+    ]
+  },
+  "solutions": {
+    "eyebrow": "Kernlösungen",
+    "title": "Alles zum Betreiben und Skalieren",
+    "subtitle": "Aus Corporate-Banking-Playbooks inspiriert, mit moderner Digital Experience, damit du Geld sicher bewegst.",
+    "cta": { "label": "Cash-Position sehen", "path": "/dashboard" },
+    "items": [
+      {
+        "title": "Working Capital & Treasury",
+        "description": "Liquidität optimieren mit smarten Sweeps, sicheren Einlagen und präziser Cash-Steuerung.",
+        "icon": "Banknote",
+        "tags": ["Liquidität", "Treasury", "RTP & Überweisungen"]
+      },
+      {
+        "title": "Payments & Receivables",
+        "description": "STP für ACH, Überweisungen, RTP und Lockbox, damit du schneller und mit weniger Ausnahmen kassierst.",
+        "icon": "Send",
+        "tags": ["ACH & RTP", "Lockbox", "Billing"]
+      },
+      {
+        "title": "Handel & E-Commerce",
+        "description": "Omnichannel-Acquiring mit Echtzeit-Fraudkontrollen und klaren Settlement-Files.",
+        "icon": "ShoppingBag",
+        "tags": ["Karte", "Checkout", "Fraud"]
+      },
+      {
+        "title": "Payroll & Auszahlungen",
+        "description": "Zahle Teams und Lieferanten überall mit kontrollierten Freigaben, Audit-Trail und FX-fähigen Rails.",
+        "icon": "Wallet",
+        "tags": ["Payroll", "AP-Automation", "Global-ready"]
+      }
+    ]
+  },
+  "advisory": {
+    "eyebrow": "Beratungsansatz",
+    "title": "Partner, der dein Operating-Modell versteht",
+    "description": "Wir kombinieren globale Commercial-Banking-Playbooks mit der Geschwindigkeit eines Digital-Teams. Wir mappen deine Flows und reduzieren Reibung.",
+    "capabilities": [
+      {
+        "title": "Wachstumskapital",
+        "description": "Kreditlinien, Equipment-Finance und SBA-freundliche Optionen passend zu deinem Cash-Zyklus.",
+        "icon": "Handshake",
+        "items": [
+          "Flexible Revolving- und Term-Strukturen",
+          "Sektorbezogene Pricing/Covenants",
+          "Szenario-Modelling mit deinem Banker"
+        ]
+      },
+      {
+        "title": "Cash Management",
+        "description": "Salden zentralisieren, Abgleiche automatisieren und saubere Freigaben bei Skalierung.",
+        "icon": "Layers",
+        "items": [
+          "Controlled Disbursement & Smart Sweeps",
+          "Positive Pay mit Dual Approval",
+          "APIs und Files für ERP-Anbindung"
+        ]
+      },
+      {
+        "title": "Advisory & Onboarding",
+        "description": "Branchenspezialisten, die Flows mappen, Systeme verbinden und Teams schnell produktiv machen.",
+        "icon": "Users",
+        "items": [
+          "Playbooks für hohes Payables-Volumen",
+          "Guides für SFTP, APIs, Portale",
+          "Training und Change Management"
+        ]
+      }
+    ]
+  },
+  "service": {
+    "pillars": [
+      {
+        "title": "Branchentiefe",
+        "description": "Dedizierte Coverage für Industrie, Logistik, Gesundheit, Tech und Public Sector.",
+        "icon": "BarChart3",
+        "emphasis": "Sektor-Spezialisten"
+      },
+      {
+        "title": "Kontrolle & Compliance",
+        "description": "Rollenbasierter Zugriff, auditfeste Freigaben und Data-Retention nach SOC 2.",
+        "icon": "ShieldCheck",
+        "emphasis": "Eingebaute Governance"
+      },
+      {
+        "title": "Support Mensch + Digital",
+        "description": "Relationship-Teams plus 24/7 Service Desk und geführte digitale Workflows.",
+        "icon": "Headset",
+        "emphasis": "Antwort 24/7"
+      }
+    ],
+    "cta": {
+      "eyebrow": "Lass uns sprechen",
+      "title": "Bau mit uns deinen Operating-Account-Plan",
+      "description": "Wir mappen Zahlungsflüsse, Treasury-Bedarf und Branchenbesonderheiten in einen umsetzbaren Plan.",
+      "primary": { "label": "Deinen Banker treffen", "path": "/commercial-banking#cib" },
+      "secondary": { "label": "Warum TrustPay", "path": "/about-trustpay" }
+    }
+  }
+}

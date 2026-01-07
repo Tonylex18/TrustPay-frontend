@@ -23,3 +23,44 @@ export interface Advisor {
   specialty: string;
   icon: string;
 }
+
+export interface CommercialContent {
+  meta: {
+    title: string;
+    description: string;
+  };
+  hero: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    ctaPrimary: { label: string; path: string };
+    ctaSecondary: { label: string; path: string };
+    priorities: { label: string; value: string; description: string }[];
+  };
+  offerings: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    items: Offering[];
+  };
+  industries: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    items: Industry[];
+  };
+  execution: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    insights: Insight[];
+    coverage: {
+      eyebrow: string;
+      title: string;
+      description: string;
+      advisors: Advisor[];
+      ctaPrimary: { label: string; path: string };
+      ctaSecondary: { label: string; path: string };
+    };
+  };
+}

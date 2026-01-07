@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "title": "Déposer des fonds - TrustPay",
+    "description": "Ajoutez des fonds sur votre compte TrustPay via des rails sécurisés."
+  },
+  "breadcrumb": {
+    "dashboard": "Tableau de bord",
+    "deposit": "Déposer des fonds"
+  },
+  "page": {
+    "title": "Dépôt de chèque mobile",
+    "subtitle": "Téléchargez les faces avant et arrière de votre chèque. Les fonds restent en attente jusqu’à validation par un admin."
+  },
+  "form": {
+    "amountLabel": "Montant du dépôt",
+    "amountPlaceholder": "Saisissez un montant",
+    "amountDescription": "Dépôt minimum 1 $",
+    "accountNameLabel": "Nom du compte",
+    "accountNumberLabel": "Numéro de compte",
+    "bankNameLabel": "Nom de la banque",
+    "bankNameValue": "TrustPay Bank",
+    "checkImagesLabel": "Images du chèque",
+    "frontLabel": "Face avant du chèque",
+    "backLabel": "Face arrière du chèque",
+    "tapToUpload": "Appuyez pour téléverser",
+    "uploadNote": "Téléversez des photos claires du chèque signé. Le dépôt reste en attente jusqu’à approbation.",
+    "submit": "Soumettre le dépôt mobile"
+  },
+  "previewModal": {
+    "title": "Confirmer le dépôt",
+    "depositAmount": "Montant du dépôt",
+    "selectedAccount": "Compte sélectionné",
+    "accountNumber": "Numéro de compte",
+    "processingFee": "Frais de traitement",
+    "totalDeposit": "Dépôt total",
+    "warning": "Vérifiez soigneusement les informations. Le dépôt peut rester en attente jusqu’au contrôle d’un admin.",
+    "cancel": "Annuler",
+    "confirm": "Confirmer le dépôt",
+    "submitting": "Envoi..."
+  },
+  "submittedModal": {
+    "title": "Dépôt envoyé",
+    "depositAmount": "Montant du dépôt",
+    "status": "Statut",
+    "account": "Compte",
+    "accountNumber": "Numéro de compte",
+    "reference": "Référence",
+    "pendingReference": "Attribution en attente",
+    "note": "Nous avons reçu votre dépôt mobile. Il peut rester en attente jusqu’à revue. Les fonds ne sont pas disponibles avant approbation.",
+    "close": "Fermer",
+    "makeAnother": "Faire un autre dépôt"
+  },
+  "messages": {
+    "error": {
+      "amount": "Saisissez un montant de dépôt valide.",
+      "account": "Sélectionnez un compte à alimenter.",
+      "images": "Téléversez les faces avant et arrière du chèque.",
+      "completeForm": "Complétez le formulaire de dépôt avant de soumettre.",
+      "submitFailed": "Impossible de soumettre le dépôt mobile.",
+      "processFailed": "Impossible de traiter le dépôt mobile pour le moment."
+    },
+    "success": "Dépôt envoyé pour revue."
+  }
+}

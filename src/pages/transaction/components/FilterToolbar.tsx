@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import Icon from '../../../components/AppIcon';
 import Input from '../../../components/ui/Input';
 import Select from '../../../components/ui/Select';
@@ -12,19 +13,20 @@ const FilterToolbar = ({
   resultsCount,
   onExport
 }: FilterToolbarProps) => {
+  const { t } = useTranslation('transaction');
   const [showFilters, setShowFilters] = useState(false);
 
   const transactionTypes = [
-    { value: 'all', label: 'All Types' },
-    { value: 'credit', label: 'Credit' },
-    { value: 'debit', label: 'Debit' }
+    { value: 'all', label: t('filters.types.all') },
+    { value: 'credit', label: t('filters.types.credit') },
+    { value: 'debit', label: t('filters.types.debit') }
   ];
 
   const statusOptions = [
-    { value: 'all', label: 'All Status' },
-    { value: 'completed', label: 'Completed' },
-    { value: 'pending', label: 'Pending' },
-    { value: 'failed', label: 'Failed' }
+    { value: 'all', label: t('filters.statusOptions.all') },
+    { value: 'completed', label: t('filters.statusOptions.completed') },
+    { value: 'pending', label: t('filters.statusOptions.pending') },
+    { value: 'failed', label: t('filters.statusOptions.failed') }
   ];
 
   const handleDateChange = (field: 'start' | 'end', value: string) => {
@@ -44,7 +46,7 @@ const FilterToolbar = ({
       searchQuery: '',
       status: 'all'
     });
-    toast.info('Filters cleared.');
+    toast.info(t('filters.clearedToast'));
   };
 
   const formatDateForInput = (date: Date | null) => {
@@ -65,7 +67,7 @@ const FilterToolbar = ({
             />
             <Input
               type="search"
-              placeholder="Search by description or amount..."
+              placeholder={t('filters.searchPlaceholder')}
               value={filters.searchQuery}
               onChange={(e) =>
                 onFilterChange({ ...filters, searchQuery: e.target.value })
@@ -81,13 +83,13 @@ const FilterToolbar = ({
             onClick={() => setShowFilters(!showFilters)}
             className="lg:hidden"
           >
-            Filters
+            {t('filters.filters')}
           </Button>
         </div>
 
         <div className="hidden lg:flex items-center gap-3">
           <span className="text-sm text-muted-foreground whitespace-nowrap">
-            {resultsCount} {resultsCount === 1 ? 'result' : 'results'}
+            {t('filters.results', { count: resultsCount })}
           </span>
           <Button
             variant="outline"
@@ -95,7 +97,7 @@ const FilterToolbar = ({
             iconPosition="left"
             onClick={onExport}
           >
-            Export
+            {t('filters.export')}
           </Button>
         </div>
       </div>
@@ -108,27 +110,27 @@ const FilterToolbar = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Input
             type="date"
-            label="Start Date"
+            label={t('filters.startDate')}
             value={formatDateForInput(filters.dateRange.start)}
             onChange={(e) => handleDateChange('start', e.target.value)}
           />
 
           <Input
             type="date"
-            label="End Date"
+            label={t('filters.endDate')}
             value={formatDateForInput(filters.dateRange.end)}
             onChange={(e) => handleDateChange('end', e.target.value)}
           />
 
           <Select
-            label="Transaction Type"
+            label={t('filters.type')}
             options={transactionTypes}
             value={filters.type}
             onChange={(value) => onFilterChange({ ...filters, type: value as string })}
           />
 
           <Select
-            label="Status"
+            label={t('filters.status')}
             options={statusOptions}
             value={filters.status}
             onChange={(value) => onFilterChange({ ...filters, status: value as string })}
@@ -137,7 +139,7 @@ const FilterToolbar = ({
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4">
           <span className="text-sm text-muted-foreground lg:hidden">
-            {resultsCount} {resultsCount === 1 ? 'result' : 'results'}
+            {t('filters.results', { count: resultsCount })}
           </span>
           <div className="flex gap-2 w-full sm:w-auto">
             <Button
@@ -147,7 +149,7 @@ const FilterToolbar = ({
               onClick={handleClearFilters}
               className="flex-1 sm:flex-none"
             >
-              Clear Filters
+              {t('filters.clear')}
             </Button>
             <Button
               variant="outline"
@@ -156,7 +158,7 @@ const FilterToolbar = ({
               onClick={onExport}
               className="flex-1 sm:flex-none lg:hidden"
             >
-              Export
+              {t('filters.export')}
             </Button>
           </div>
         </div>

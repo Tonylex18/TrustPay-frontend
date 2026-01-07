@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "virtualCard": "Virtual Card",
+    "linkedAccount": "Linked account:",
+    "activation": "Activation:"
+  },
+  "actions": {
+    "showDetails": "Show card details",
+    "hideDetails": "Hide card details",
+    "sendCode": "Send code",
+    "activate": "Activate"
+  },
+  "details": {
+    "digitalAccess": "Digital Access",
+    "securedByStripe": "Secured by Stripe Issuing",
+    "validThruPlaceholder": "Valid Thru — — / — —",
+    "cvcPlaceholder": "CVV — — —",
+    "sensitiveHeading": "Sensitive details",
+    "sensitiveSubheading": "Do not share",
+    "numberLabel": "Number",
+    "expiryLabel": "Expiry",
+    "cvcLabel": "CVC"
+  },
+  "activation": {
+    "title": "Activate your card",
+    "description": "Send a 6-digit code to your email and enter it below to activate this virtual card.",
+    "placeholder": "Enter activation code",
+    "messageLabel": "Activation message",
+    "loadingDetails": "Loading secure details…",
+    "secureNote": "Card numbers and CVC are rendered by Stripe and never touch TrustPay servers or local state."
+  },
+  "messages": {
+    "emailRequired": "Email required to send activation code.",
+    "sendFailed": "Unable to send activation code.",
+    "sendError": "Unable to send activation code right now.",
+    "sendSuccess": "Activation code sent to your email.",
+    "codeRequired": "Enter the activation code we emailed you.",
+    "activateFailed": "Activation failed. Check your code and try again.",
+    "activated": "Card activated.",
+    "activateError": "Unable to activate card right now.",
+    "stripeMissing": "Stripe publishable key is missing.",
+    "stripeInitFailed": "Stripe failed to initialize.",
+    "cardRefMissing": "Card reference missing for secure details.",
+    "authError": "Unable to authorize secure card access.",
+    "loadFailed": "Unable to load card details."
+  }
+}

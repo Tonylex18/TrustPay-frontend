@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import NavigationBar from "../../components/ui/NavigationBar";
 import BreadcrumbTrail from "../../components/ui/BreadcrumbTrail";
@@ -59,13 +60,6 @@ const initialFormState: FormState = {
 	sourceAccount: null,
 };
 
-const steps: StepDefinition[] = [
-	{ id: "category", title: "Category", description: "Choose the bill type" },
-	{ id: "biller", title: "Biller", description: "Select who you are paying" },
-	{ id: "details", title: "Details", description: "Reference, amount, account" },
-	{ id: "review", title: "Review", description: "Confirm & submit" },
-];
-
 const categoryIcons: Record<string, string> = {
 	electricity: "Zap",
 	water: "Droplets",
@@ -75,24 +69,18 @@ const categoryIcons: Record<string, string> = {
 	insurance: "Shield",
 };
 
-const statusHelp: Record<string, string> = {
-	SUBMITTED: "Waiting for admin approval. Funds may stay in available balance until posted.",
-	PAID: "Posted to your account and settled to the biller.",
-	REJECTED: "Not processed. Any holds are released.",
-	FAILED: "Attempted but failed. Review and resubmit.",
-};
-
-const friendlyError = (message: string) => {
+const friendlyError = (message: string, t: (key: string) => string) => {
 	const text = (message || "").toLowerCase();
-	if (text.includes("kyc")) return "Complete KYC before submitting bill payments.";
-	if (text.includes("disabled")) return "Your profile is disabled. Contact support for help.";
-	if (text.includes("insufficient")) return "Insufficient available balance for this payment.";
-	if (text.includes("active")) return "Select an active source account.";
-	return message || "Unable to process request.";
+	if (text.includes("kyc")) return t("friendly.kyc");
+	if (text.includes("disabled")) return t("friendly.disabled");
+	if (text.includes("insufficient")) return t("friendly.insufficient");
+	if (text.includes("active")) return t("friendly.active");
+	return message || t("friendly.fallback");
 };
 
 const BillsPage: React.FC = () => {
 	const navigate = useNavigate();
+	const { t, i18n } = useTranslation("bills");
 	const [categories, setCategories] = useState<BillCategory[]>([]);
 	const [payments, setPayments] = useState<BillPayment[]>([]);
 	const [activeStep, setActiveStep] = useState<string>("category");
@@ -104,6 +92,15 @@ const BillsPage: React.FC = () => {
 	const [stepError, setStepError] = useState<string | null>(null);
 	const [submitError, setSubmitError] = useState<string | null>(null);
 	const [userState, setUserState] = useState<UserState>({ disabled: false, kycStatus: null });
+	const steps: StepDefinition[] = useMemo(
+		() => [
+			{ id: "category", title: t("steps.category.title"), description: t("steps.category.description") },
+			{ id: "biller", title: t("steps.biller.title"), description: t("steps.biller.description") },
+			{ id: "details", title: t("steps.details.title"), description: t("steps.details.description") },
+			{ id: "review", title: t("steps.review.title"), description: t("steps.review.description") },
+		],
+		[t]
+	);
 
 	const selectedCategory = useMemo(
 		() => categories.find((c) => c.id === form.categoryId),
@@ -135,11 +132,11 @@ const BillsPage: React.FC = () => {
 			description: p.description,
 		}));
 
-	const fetchAll = useCallback(
-		async (signal?: AbortSignal) => {
-			const token = getStoredToken();
-			if (!token) {
-				navigate("/login");
+const fetchAll = useCallback(
+	async (signal?: AbortSignal) => {
+		const token = getStoredToken();
+		if (!token) {
+			navigate("/login");
 				return;
 			}
 			setIsLoading(true);
@@ -173,7 +170,7 @@ const BillsPage: React.FC = () => {
 				]);
 
 				if (!catRes.ok) {
-					const msg = catPayload?.errors || catPayload?.message || "Unable to load bill categories.";
+					const msg = catPayload?.errors || catPayload?.message || t("errors.loadCategories");
 					setLoadError(msg);
 					toast.error(msg);
 					return;
@@ -181,7 +178,7 @@ const BillsPage: React.FC = () => {
 				setCategories(Array.isArray(catPayload) ? catPayload : []);
 
 				if (!payRes.ok) {
-					const msg = payPayload?.errors || payPayload?.message || "Unable to load bill payments.";
+					const msg = payPayload?.errors || payPayload?.message || t("errors.loadPayments");
 					setLoadError(msg);
 					toast.error(msg);
 				} else {
@@ -197,7 +194,7 @@ const BillsPage: React.FC = () => {
 				}
 			} catch (error) {
 				if ((error as Error).name !== "AbortError") {
-					const msg = "Unable to load bills data right now.";
+					const msg = t("errors.loadPayments");
 					setLoadError(msg);
 					toast.error(msg);
 				}
@@ -205,7 +202,7 @@ const BillsPage: React.FC = () => {
 				setIsLoading(false);
 			}
 		},
-		[navigate]
+		[navigate, t]
 	);
 
 	const refreshPayments = useCallback(async () => {
@@ -221,19 +218,19 @@ const BillsPage: React.FC = () => {
 			});
 			const payload = await res.json().catch(() => null);
 			if (!res.ok) {
-				const msg = payload?.errors || payload?.message || "Unable to refresh bill payments.";
+				const msg = payload?.errors || payload?.message || t("errors.refreshPayments");
 				toast.error(msg);
 				return;
 			}
 			setPayments(mapPayments(Array.isArray(payload) ? payload : []));
 		} catch (error) {
 			if ((error as Error).name !== "AbortError") {
-				toast.error("Unable to refresh bill payments.");
+				toast.error(t("errors.refreshPayments"));
 			}
 		} finally {
 			setListLoading(false);
 		}
-	}, [navigate]);
+	}, [navigate, t]);
 
 	useEffect(() => {
 		const controller = new AbortController();
@@ -268,37 +265,37 @@ const BillsPage: React.FC = () => {
 		setSubmitError(null);
 	};
 
-	const handleNext = () => {
-		setStepError(null);
-		if (activeStep === "category") {
-			if (!form.categoryId) {
-				setStepError("Select a bill category to continue.");
-				return;
-			}
-			setActiveStep("biller");
-		} else if (activeStep === "biller") {
-			if (!form.billerId && !form.customBillerName.trim()) {
-				setStepError("Choose a biller or enter a custom name.");
-				return;
-			}
-			setActiveStep("details");
-		} else if (activeStep === "details") {
-			const amountValue = Number(form.amount);
-			if (!form.referenceNumber.trim()) {
-				setStepError("Add the reference or account number on your bill.");
-				return;
-			}
-			if (!Number.isFinite(amountValue) || amountValue <= 0) {
-				setStepError("Enter a valid amount greater than $0.00.");
-				return;
-			}
-			if (!form.sourceAccountId) {
-				setStepError("Select the account to fund this payment.");
-				return;
-			}
-			setActiveStep("review");
+const handleNext = () => {
+	setStepError(null);
+	if (activeStep === "category") {
+		if (!form.categoryId) {
+			setStepError(t("errors.selectCategory"));
+			return;
 		}
-	};
+		setActiveStep("biller");
+	} else if (activeStep === "biller") {
+		if (!form.billerId && !form.customBillerName.trim()) {
+			setStepError(t("errors.selectBiller"));
+			return;
+		}
+		setActiveStep("details");
+	} else if (activeStep === "details") {
+		const amountValue = Number(form.amount);
+		if (!form.referenceNumber.trim()) {
+			setStepError(t("errors.referenceRequired"));
+			return;
+		}
+		if (!Number.isFinite(amountValue) || amountValue <= 0) {
+			setStepError(t("errors.amountInvalid"));
+			return;
+		}
+		if (!form.sourceAccountId) {
+			setStepError(t("errors.accountRequired"));
+			return;
+		}
+		setActiveStep("review");
+	}
+};
 
 	const handleBack = () => {
 		if (activeStep === "review") setActiveStep("details");
@@ -312,14 +309,14 @@ const BillsPage: React.FC = () => {
 		setSubmitError(null);
 		const amountValue = Number(form.amount);
 
-		if (submissionBlocked) {
-			const msg = !kycApproved
-				? "KYC approval is required before submitting bill payments."
-				: "Your account is disabled. Contact support for assistance.";
-			setSubmitError(msg);
-			toast.error(msg);
-			return;
-		}
+	if (submissionBlocked) {
+		const msg = !kycApproved
+			? t("errors.kycRequired")
+			: t("errors.disabledProfile");
+		setSubmitError(msg);
+		toast.error(msg);
+		return;
+	}
 
 		if (
 			!form.categoryId ||
@@ -329,7 +326,7 @@ const BillsPage: React.FC = () => {
 			amountValue <= 0 ||
 			!form.sourceAccountId
 		) {
-			setSubmitError("Complete all required fields before submitting.");
+			setSubmitError(t("errors.completeFields"));
 			return;
 		}
 
@@ -360,19 +357,19 @@ const BillsPage: React.FC = () => {
 
 			const payload = await res.json().catch(() => null);
 			if (!res.ok) {
-				const message = friendlyError(payload?.errors || payload?.message);
+				const message = friendlyError(payload?.errors || payload?.message, t);
 				setSubmitError(message);
 				toast.error(message);
 				return;
 			}
 
-			toast.success("Bill payment submitted for admin approval.");
+			toast.success(t("success.submitted"));
 			setForm(initialFormState);
 			setActiveStep("category");
 			await refreshPayments();
 		} catch (error) {
 			if ((error as Error).name !== "AbortError") {
-				const message = "Unable to submit bill payment right now.";
+				const message = t("errors.submitFailed");
 				setSubmitError(message);
 				toast.error(message);
 			}
@@ -381,7 +378,7 @@ const BillsPage: React.FC = () => {
 		}
 	};
 
-	const statusLegend = Object.entries(statusHelp).map(([status, help]) => (
+	const statusLegend = Object.entries(t("statusHelp", { returnObjects: true }) as Record<string, string>).map(([status, help]) => (
 		<div key={status} className="flex items-center gap-3">
 			<StatusBadge status={status} size="sm" />
 			<p className="text-xs text-muted-foreground">{help}</p>
@@ -393,10 +390,8 @@ const BillsPage: React.FC = () => {
 			return (
 				<div className="space-y-6">
 					<div>
-						<h3 className="text-lg font-semibold text-foreground">Select a bill category</h3>
-						<p className="text-sm text-muted-foreground">
-							Choose the bill type to load the right billers and review requirements.
-						</p>
+						<h3 className="text-lg font-semibold text-foreground">{t("steps.selectCategoryTitle")}</h3>
+						<p className="text-sm text-muted-foreground">{t("steps.selectCategorySubtitle")}</p>
 					</div>
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						{categories.map((category) => {
@@ -423,7 +418,7 @@ const BillsPage: React.FC = () => {
 												{category.name}
 											</p>
 											<p className="text-xs text-muted-foreground">
-												{category.billers.length} billers available
+												{t("steps.billersAvailable", { count: category.billers.length })}
 											</p>
 										</div>
 									</div>
@@ -437,7 +432,7 @@ const BillsPage: React.FC = () => {
 						})}
 						{categories.length === 0 && (
 							<div className="col-span-full text-sm text-muted-foreground">
-								{isLoading ? "Loading categories..." : "No bill categories available yet."}
+								{isLoading ? t("steps.loadingCategories") : t("steps.noCategories")}
 							</div>
 						)}
 					</div>
@@ -448,7 +443,7 @@ const BillsPage: React.FC = () => {
 					)}
 					<div className="flex justify-end">
 						<Button variant="default" onClick={handleNext} disabled={isLoading}>
-							Continue
+							{t("steps.continue")}
 						</Button>
 					</div>
 				</div>
@@ -460,13 +455,11 @@ const BillsPage: React.FC = () => {
 				<div className="space-y-5">
 					<div className="flex items-start justify-between gap-3">
 						<div>
-							<h3 className="text-lg font-semibold text-foreground">Select the biller</h3>
-							<p className="text-sm text-muted-foreground">
-								Pick a listed biller or add the name exactly as it appears on your bill.
-							</p>
+							<h3 className="text-lg font-semibold text-foreground">{t("steps.selectBillerTitle")}</h3>
+							<p className="text-sm text-muted-foreground">{t("steps.selectBillerSubtitle")}</p>
 						</div>
 						<Button variant="ghost" size="sm" onClick={() => goToStep("category")}>
-							Change category
+							{t("steps.changeCategory")}
 						</Button>
 					</div>
 
@@ -487,7 +480,7 @@ const BillsPage: React.FC = () => {
 									>
 										<div>
 											<p className="font-semibold text-foreground">{biller.name}</p>
-											<p className="text-xs text-muted-foreground">Listed biller</p>
+											<p className="text-xs text-muted-foreground">{t("steps.listedBiller")}</p>
 										</div>
 										{selected && <Icon name="Check" size={18} className="text-primary" />}
 									</button>
@@ -495,15 +488,15 @@ const BillsPage: React.FC = () => {
 							})
 						) : (
 							<div className="text-sm text-muted-foreground border border-dashed border-border rounded-lg p-4">
-								No billers are listed for this category yet. You can enter a custom biller name.
+								{t("steps.noBillers")}
 							</div>
 						)}
 					</div>
 
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						<Input
-							label="Custom biller name"
-							placeholder="e.g., Lakeside Apartments"
+							label={t("steps.customBiller")}
+							placeholder={t("steps.customBillerPlaceholder")}
 							value={form.customBillerName}
 							onChange={(e) => {
 								setForm((prev) => ({
@@ -515,10 +508,8 @@ const BillsPage: React.FC = () => {
 							}}
 						/>
 						<div className="space-y-2">
-							<label className="text-sm font-medium text-foreground">Billers</label>
-							<p className="text-xs text-muted-foreground">
-								If you enter a custom biller, we will use that name for this payment only.
-							</p>
+							<label className="text-sm font-medium text-foreground">{t("steps.billersLabel")}</label>
+							<p className="text-xs text-muted-foreground">{t("steps.customBillerInfo")}</p>
 						</div>
 					</div>
 
@@ -530,10 +521,10 @@ const BillsPage: React.FC = () => {
 
 					<div className="flex justify-between">
 						<Button variant="outline" onClick={handleBack}>
-							Back
+							{t("steps.back")}
 						</Button>
 						<Button variant="default" onClick={handleNext}>
-							Continue
+							{t("steps.continue")}
 						</Button>
 					</div>
 				</div>
@@ -544,23 +535,20 @@ const BillsPage: React.FC = () => {
 			return (
 				<div className="space-y-6">
 					<div className="space-y-2">
-						<h3 className="text-lg font-semibold text-foreground">Payment details</h3>
-						<p className="text-sm text-muted-foreground">
-							Use the reference/account number printed on your bill. Pending payments do not reduce
-							available balance until approved.
-						</p>
+						<h3 className="text-lg font-semibold text-foreground">{t("steps.detailsIntroTitle")}</h3>
+						<p className="text-sm text-muted-foreground">{t("steps.detailsIntroBody")}</p>
 					</div>
 
 					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 						<Input
-							label="Reference / Account number"
-							placeholder="Enter the account or reference number"
+							label={t("steps.referenceLabel")}
+							placeholder={t("steps.referencePlaceholder")}
 							value={form.referenceNumber}
 							onChange={(e) => setForm((prev) => ({ ...prev, referenceNumber: e.target.value }))}
 							required
 						/>
 						<Input
-							label="Amount"
+							label={t("steps.amountLabel")}
 							type="number"
 							placeholder="0.00"
 							value={form.amount}
@@ -572,10 +560,10 @@ const BillsPage: React.FC = () => {
 					</div>
 
 					<div className="space-y-2">
-						<label className="text-sm font-medium text-foreground">Payment description (optional)</label>
+						<label className="text-sm font-medium text-foreground">{t("steps.paymentDescriptionLabel")}</label>
 						<textarea
 							className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-							placeholder="Visible to you and admins for audit (e.g., 'July rent, unit 12B')."
+							placeholder={t("steps.paymentDescriptionPlaceholder")}
 							value={form.note}
 							onChange={(e) => setForm((prev) => ({ ...prev, note: e.target.value }))}
 							rows={3}
@@ -595,11 +583,8 @@ const BillsPage: React.FC = () => {
 					<div className="p-3 rounded-lg border border-warning/30 bg-warning/10 text-sm text-warning-foreground flex gap-3">
 						<Icon name="Shield" size={16} className="mt-0.5 flex-shrink-0" />
 						<div>
-							<p className="font-semibold text-foreground">Admin approval required</p>
-							<p className="text-muted-foreground">
-								Submitted ≠ paid. Admins review and post the debit before funds leave your account.
-								Pending items do not reduce available balance unless a hold is applied by the backend.
-							</p>
+							<p className="font-semibold text-foreground">{t("steps.adminApprovalTitle")}</p>
+							<p className="text-muted-foreground">{t("steps.adminApprovalBody")}</p>
 						</div>
 					</div>
 
@@ -611,10 +596,10 @@ const BillsPage: React.FC = () => {
 
 					<div className="flex justify-between">
 						<Button variant="outline" onClick={handleBack}>
-							Back
+							{t("steps.back")}
 						</Button>
 						<Button variant="default" onClick={handleNext}>
-							Continue
+							{t("steps.continue")}
 						</Button>
 					</div>
 				</div>
@@ -624,21 +609,20 @@ const BillsPage: React.FC = () => {
 		const amountValue = Number(form.amount || 0);
 		const accountNumber = form.sourceAccount?.account_number || form.sourceAccount?.accountNumber || "";
 		const accountLast4 = accountNumber ? accountNumber.slice(-4) : "";
+		const summaryCurrency = form.sourceAccount?.currency || "USD";
 		const summaryItems = [
-			{ label: "Amount", value: formatCurrency(amountValue || 0) },
-			{ label: "Biller", value: form.customBillerName || "—" },
-			{ label: "Category", value: form.categoryName || selectedCategory?.name || "—" },
-			{ label: "Source account", value: accountLast4 ? `•••• ${accountLast4}` : "—" },
-			{ label: "Reference", value: form.referenceNumber || "—" },
+			{ label: t("labels.amount"), value: formatCurrency(amountValue || 0, summaryCurrency, i18n.language) },
+			{ label: t("labels.biller"), value: form.customBillerName || "—" },
+			{ label: t("labels.category"), value: form.categoryName || selectedCategory?.name || "—" },
+			{ label: t("labels.sourceAccount"), value: accountLast4 ? `•••• ${accountLast4}` : "—" },
+			{ label: t("labels.reference"), value: form.referenceNumber || "—" },
 		];
 
 		return (
 			<div className="space-y-6">
 				<div className="space-y-2">
-					<h3 className="text-lg font-semibold text-foreground">Review & submit</h3>
-					<p className="text-sm text-muted-foreground">
-						Confirm the bill payment details. This payment will be submitted for admin approval.
-					</p>
+					<h3 className="text-lg font-semibold text-foreground">{t("review.summaryTitle")}</h3>
+					<p className="text-sm text-muted-foreground">{t("review.summarySubtitle")}</p>
 				</div>
 
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -652,7 +636,7 @@ const BillsPage: React.FC = () => {
 
 				{form.note && (
 					<div className="p-4 rounded-lg border border-border bg-muted/20">
-						<p className="text-xs text-muted-foreground mb-1">Description</p>
+						<p className="text-xs text-muted-foreground mb-1">{t("labels.description")}</p>
 						<p className="text-sm text-foreground">{form.note}</p>
 					</div>
 				)}
@@ -660,11 +644,8 @@ const BillsPage: React.FC = () => {
 				<div className="p-3 rounded-lg border border-primary/30 bg-primary/5 text-sm flex gap-3">
 					<Icon name="Info" size={16} className="mt-0.5 text-primary flex-shrink-0" />
 					<div>
-						<p className="font-semibold text-foreground">Submission notice</p>
-						<p className="text-muted-foreground">
-							Payments remain pending until an admin approves and posts the ledger entry. You will see
-							the status update below once processed.
-						</p>
+						<p className="font-semibold text-foreground">{t("review.noticeTitle")}</p>
+						<p className="text-muted-foreground">{t("review.noticeBody")}</p>
 					</div>
 				</div>
 
@@ -676,7 +657,7 @@ const BillsPage: React.FC = () => {
 
 				<div className="flex justify-between">
 					<Button variant="outline" onClick={handleBack} disabled={isSubmitting}>
-						Back
+						{t("steps.back")}
 					</Button>
 					<Button
 						variant="default"
@@ -686,7 +667,7 @@ const BillsPage: React.FC = () => {
 						iconName="ShieldCheck"
 						iconPosition="left"
 					>
-						Submit for approval
+						{t("review.submitCta")}
 					</Button>
 				</div>
 			</div>
@@ -694,18 +675,15 @@ const BillsPage: React.FC = () => {
 	};
 
 	const breadcrumbItems = [
-		{ label: "Dashboard", path: "/dashboard" },
-		{ label: "Bills" },
+		{ label: t("breadcrumb.dashboard"), path: "/dashboard" },
+		{ label: t("breadcrumb.bills") },
 	];
 
 	return (
 		<>
 			<Helmet>
-				<title>Bills - TrustPay</title>
-				<meta
-					name="description"
-					content="Manage and submit bill payments with admin approval and clear status tracking."
-				/>
+				<title>{t("meta.title")}</title>
+				<meta name="description" content={t("meta.description")} />
 			</Helmet>
 
 			<div className="min-h-screen bg-background">
@@ -718,23 +696,18 @@ const BillsPage: React.FC = () => {
 							<header className="space-y-3">
 								<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 									<div>
-										<h1 className="text-3xl font-bold text-foreground">Bills</h1>
-										<p className="text-muted-foreground">
-											Submit bill payments with clear approval states and audit-friendly details.
-										</p>
+										<h1 className="text-3xl font-bold text-foreground">{t("page.title")}</h1>
+										<p className="text-muted-foreground">{t("page.subtitle")}</p>
 									</div>
 									<Button variant="ghost" size="sm" onClick={refreshPayments} loading={listLoading}>
-										Refresh
+										{t("page.refresh")}
 									</Button>
 								</div>
 								<div className="p-4 rounded-xl border border-warning/30 bg-warning/10 flex gap-3">
 									<Icon name="AlertCircle" size={18} className="text-warning-foreground mt-0.5" />
 									<div className="space-y-1">
-										<p className="text-sm font-semibold text-foreground">Status awareness</p>
-										<p className="text-sm text-muted-foreground">
-											Submitted ≠ paid. Pending payments stay in review until an admin posts the debit.
-											Your available balance is not reduced until posting or a hold is applied.
-										</p>
+										<p className="text-sm font-semibold text-foreground">{t("page.statusLegendTitle")}</p>
+										<p className="text-sm text-muted-foreground">{t("page.statusLegendBody")}</p>
 									</div>
 								</div>
 								<div className="grid grid-cols-1 md:grid-cols-2 gap-3">{statusLegend}</div>
@@ -749,17 +722,15 @@ const BillsPage: React.FC = () => {
 								<section className="space-y-4">
 									<div className="flex items-center justify-between">
 										<div>
-											<h2 className="text-xl font-semibold text-foreground">Recent bill payments</h2>
-											<p className="text-sm text-muted-foreground">
-												View submitted, approved, rejected, or failed payments.
-											</p>
+											<h2 className="text-xl font-semibold text-foreground">{t("list.title")}</h2>
+											<p className="text-sm text-muted-foreground">{t("list.subtitle")}</p>
 										</div>
 									</div>
 
 									<div className="space-y-3">
 										{payments.length === 0 && !isLoading ? (
 											<div className="text-sm text-muted-foreground border border-dashed border-border rounded-lg p-4">
-												No bill payments yet. Submit your first bill on the right to see it here.
+												{t("list.empty")}
 											</div>
 										) : (
 											payments.map((bill) => (
@@ -771,7 +742,7 @@ const BillsPage: React.FC = () => {
 											))
 										)}
 										{isLoading && (
-											<div className="text-sm text-muted-foreground">Loading bills...</div>
+											<div className="text-sm text-muted-foreground">{t("list.loading")}</div>
 										)}
 									</div>
 								</section>
@@ -795,16 +766,16 @@ const BillsPage: React.FC = () => {
 
 							{payments.length > 0 && (
 								<section className="space-y-3">
-									<h3 className="text-sm font-semibold text-foreground">Audit tips</h3>
+									<h3 className="text-sm font-semibold text-foreground">{t("list.auditTitle")}</h3>
 									<ul className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm text-muted-foreground">
 										<li className="p-3 rounded-lg border border-border bg-muted/30">
-											Status chips show if a payment is pending approval, paid, rejected, or failed.
+											{t("list.audit1")}
 										</li>
 										<li className="p-3 rounded-lg border border-border bg-muted/30">
-											Click any bill to view reference numbers, review timestamps, and rejection reasons.
+											{t("list.audit2")}
 										</li>
 										<li className="p-3 rounded-lg border border-border bg-muted/30">
-											Refreshing pulls the latest state from the backend—no client-side balance edits.
+											{t("list.audit3")}
 										</li>
 									</ul>
 								</section>

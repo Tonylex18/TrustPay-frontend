@@ -1,0 +1,174 @@
+{
+  "meta": {
+    "title": "Money Transfer - TrustPay",
+    "description": "Send money securely between your accounts or to external beneficiaries."
+  },
+  "breadcrumb": {
+    "dashboard": "Dashboard",
+    "transfer": "Money Transfer"
+  },
+  "page": {
+    "title": "Money Transfer",
+    "subtitle": "Send money securely to your beneficiaries",
+    "loading": "Loading account details..."
+  },
+  "form": {
+    "fromAccount": "From Account",
+    "destinationInternal": "Destination (your account)",
+    "destinationPlaceholder": "Select destination",
+    "destinationWarning": "You need another account to transfer internally.",
+    "accountHolderName": "Account Holder Name",
+    "accountHolderPlaceholder": "Jane Doe",
+    "routingNumber": "Routing number",
+    "routingPlaceholder": "Routing number",
+    "bankName": "Bank",
+    "bankPlaceholder": "Bank",
+    "accountNumberLabel": "Account Number",
+    "accountNumberPlaceholder": "Enter 10-digit account number",
+    "accountTypeLabel": "Account Type",
+    "accountTypePlaceholder": "Select account type",
+    "accountTypeOptions": {
+      "checking": "Checking",
+      "savings": "Savings"
+    },
+    "memoLabel": "Memo (Optional)",
+    "memoPlaceholder": "Add a note for this transfer",
+    "memoDescription": "Maximum 100 characters",
+    "reviewButton": "Review Transfer"
+  },
+  "status": {
+    "verifyingAccount": "Verifying account...",
+    "verifiedAccount": "Verified: {{name}}",
+    "bankIdentified": "Bank identified"
+  },
+  "amountInput": {
+    "label": "Transfer Amount",
+    "ariaLabel": "Transfer amount in dollars",
+    "available": "Available Balance:",
+    "remaining": "Daily Limit Remaining:"
+  },
+  "transferType": {
+    "label": "Transfer Type",
+    "options": {
+      "internal": {
+        "title": "Internal Transfer",
+        "description": "Transfer between your own accounts",
+        "time": "Instant"
+      },
+      "external": {
+        "title": "External Transfer",
+        "description": "Transfer to other bank accounts",
+        "time": "1-2 business days"
+      }
+    }
+  },
+  "processing": {
+    "instant": "Instant",
+    "external": "1-2 business days"
+  },
+  "summary": {
+    "title": "Transfer Summary",
+    "amount": "Transfer Amount",
+    "fee": "Processing Fee",
+    "total": "Total Amount",
+    "processingTime": "Processing Time",
+    "externalNotice": "External transfers may take 1-2 business days to complete. Ensure recipient details are correct."
+  },
+  "confirmation": {
+    "title": "Confirm Transfer",
+    "amount": "Transfer Amount",
+    "accountNumber": "Account Number",
+    "transferType": "Transfer Type",
+    "memo": "Memo",
+    "fee": "Processing Fee",
+    "total": "Total Debit",
+    "warning": "Please verify all details carefully. This transaction cannot be reversed once confirmed.",
+    "cancel": "Cancel",
+    "confirm": "Confirm Transfer",
+    "processing": "Processing..."
+  },
+  "info": {
+    "title": "Important Information",
+    "items": [
+      "Internal transfers are processed instantly",
+      "External transfers may take 1-2 business days",
+      "Verify beneficiary details before confirming",
+      "Transaction cannot be reversed once confirmed"
+    ]
+  },
+  "pinEntry": {
+    "title": "Enter transfer PIN",
+    "description": "Enter your 4–6 digit transfer PIN to authorize this transfer.",
+    "label": "PIN",
+    "cancel": "Cancel",
+    "confirm": "Confirm Transfer",
+    "invalid": "Enter your 4–6 digit transfer PIN."
+  },
+  "pinSetup": {
+    "title": "Set your transfer PIN",
+    "description": "Create a 4–6 digit PIN to authorize transfers and withdrawals. Do not share this PIN.",
+    "newPin": "New PIN",
+    "confirmPin": "Confirm PIN",
+    "currentPin": "Current PIN (if updating)",
+    "cancel": "Cancel",
+    "save": "Save PIN",
+    "invalid": "Enter matching 4–6 digit PINs."
+  },
+  "security": {
+    "title": "Security & Limits",
+    "dailyLimit": "Daily Transfer Limit",
+    "perTransaction": "Per Transaction Limit",
+    "remainingToday": "{{amount}} remaining today",
+    "items": {
+      "secureTitle": "Secure Transfer",
+      "secureDescription": "All transfers are encrypted and protected",
+      "notificationsTitle": "Instant Notifications",
+      "notificationsDescription": "Get notified for every transaction",
+      "historyTitle": "Transaction History",
+      "historyDescription": "Track all your transfers anytime"
+    }
+  },
+  "labels": {
+    "internalBank": "TrustPay (internal)",
+    "yourAccount": "Your account"
+  },
+  "messages": {
+    "error": {
+      "routingRequired": "Enter a routing number",
+      "routingInvalid": "Routing number must be 9 digits",
+      "accountHolderRequired": "Account holder name is required",
+      "bankNameRequired": "Bank name is required",
+      "bankLookupFirst": "Lookup bank first with holder name and routing number",
+      "accountNumberRequired": "Enter a destination account number",
+      "accountNumberVerify": "Please verify the account number before proceeding",
+      "accountTypeRequired": "Select account type",
+      "fromAccountRequired": "Select a source account.",
+      "toAccountRequired": "Select a destination account.",
+      "toAccountDifferent": "Choose a different destination account.",
+      "amountRequired": "Please enter transfer amount",
+      "amountPositive": "Amount must be greater than zero",
+      "insufficientBalance": "Insufficient balance",
+      "perTransactionLimit": "Amount exceeds per transaction limit of {{limit}}",
+      "dailyLimit": "Amount exceeds daily remaining limit of {{limit}}",
+      "pinRequired": "Set your transfer PIN before sending money.",
+      "destinationRequired": "Select a destination account.",
+      "routingMissing": "Missing routing number for destination account.",
+      "pinLocked": "PIN locked, try later.",
+      "transferFailed": "Unable to complete transfer.",
+      "verifyAccountMissing": "Enter account number and bank name.",
+      "bankNotFound": "Bank not found. Please double-check the routing number.",
+      "bankLookupUnavailable": "Lookup unavailable. You can retry or enter the bank name manually.",
+      "pinSaveFailed": "Unable to save PIN.",
+      "pinSaveUnavailable": "Unable to save PIN right now."
+    },
+    "success": {
+      "transferSubmitted": "Transfer submitted. It will complete shortly.",
+      "pinSet": "Transfer PIN set."
+    },
+    "info": {
+      "stepUp": "Transfer submitted. Additional verification may be required."
+    },
+    "defaultMemoInternal": "Transfer to your account",
+    "defaultMemoExternal": "Transfer to beneficiary"
+  }
+}

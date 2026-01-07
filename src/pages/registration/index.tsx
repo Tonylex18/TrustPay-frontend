@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import Icon from '../../components/AppIcon';
 import Button from '../../components/ui/Button';
 import RegistrationHeader from './components/RegistrationHeader';
@@ -12,6 +13,7 @@ import { API_BASE_URL, setStoredToken } from '../../utils/api';
 
 const Registration = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation('registration');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [awaitingOtp, setAwaitingOtp] = useState(false);
   const [otpCode, setOtpCode] = useState('');
@@ -27,29 +29,29 @@ const Registration = () => {
 
   const calculatePasswordStrength = (password: string): PasswordStrength => {
     const requirements = [
-      { label: 'At least 8 characters', met: password.length >= 8 },
-      { label: 'Contains uppercase letter', met: /[A-Z]/.test(password) },
-      { label: 'Contains lowercase letter', met: /[a-z]/.test(password) },
-      { label: 'Contains number', met: /\d/.test(password) },
-      { label: 'Contains special character', met: /[!@#$%^&*(),.?":{}|<>]/.test(password) }
+      { label: t('password.requirements.length'), met: password.length >= 8 },
+      { label: t('password.requirements.uppercase'), met: /[A-Z]/.test(password) },
+      { label: t('password.requirements.lowercase'), met: /[a-z]/.test(password) },
+      { label: t('password.requirements.number'), met: /\d/.test(password) },
+      { label: t('password.requirements.special'), met: /[!@#$%^&*(),.?":{}|<>]/.test(password) }
     ];
 
     const score = requirements.filter(req => req.met).length;
 
-    let label = 'Weak';
+    let label = t('password.strengthLabel.weak');
     let color = 'text-error';
 
     if (score >= 5) {
-      label = 'Very Strong';
+      label = t('password.strengthLabel.veryStrong');
       color = 'text-success';
     } else if (score >= 4) {
-      label = 'Strong';
+      label = t('password.strengthLabel.strong');
       color = 'text-success';
     } else if (score >= 3) {
-      label = 'Medium';
+      label = t('password.strengthLabel.medium');
       color = 'text-warning';
     } else if (score >= 2) {
-      label = 'Fair';
+      label = t('password.strengthLabel.fair');
       color = 'text-warning';
     }
 
@@ -61,7 +63,7 @@ const Registration = () => {
 
     if (awaitingOtp) {
       if (!otpCode || otpCode.trim().length !== 6) {
-        newErrors.otp = 'Enter the 6-digit code sent to your email';
+        newErrors.otp = t('messages.errors.otpRequired');
       }
       setErrors(newErrors);
       return Object.keys(newErrors).length === 0;
@@ -69,32 +71,32 @@ const Registration = () => {
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = t('messages.errors.emailRequired');
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = t('messages.errors.emailInvalid');
     }
 
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = t('messages.errors.passwordRequired');
     } else {
       const strength = calculatePasswordStrength(formData.password);
       if (strength.score < 3) {
-        newErrors.password = 'Password is too weak. Please meet at least 3 requirements';
+        newErrors.password = t('password.tooWeak');
       }
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
+      newErrors.confirmPassword = t('messages.errors.confirmPasswordRequired');
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = t('messages.errors.passwordsMismatch');
     }
 
     if (!formData.agreeToTerms) {
-      newErrors.agreeToTerms = 'You must agree to the Terms of Service';
+      newErrors.agreeToTerms = t('messages.errors.termsRequired');
     }
 
     if (!formData.agreeToPrivacy) {
-      newErrors.agreeToPrivacy = 'You must agree to the Privacy Policy';
+      newErrors.agreeToPrivacy = t('messages.errors.privacyRequired');
     }
 
     setErrors(newErrors);
@@ -136,7 +138,7 @@ const Registration = () => {
 
       const payload = await response.json().catch(() => null);
       if (!response.ok) {
-        const message = payload?.errors || payload?.message || 'Registration failed. Please try again.';
+        const message = payload?.errors || payload?.message || t('messages.errors.registrationFailed');
         setFormError(message);
         toast.error(message);
         return;
@@ -144,7 +146,7 @@ const Registration = () => {
 
       if (!awaitingOtp) {
         if (payload?.otpRequired) {
-          const message = payload?.message || 'Enter the code sent to your email to activate your account.';
+          const message = payload?.message || t('messages.info.otpPrompt');
           setFormError(null);
           setAwaitingOtp(true);
           setOtpCode('');
@@ -153,7 +155,7 @@ const Registration = () => {
         }
 
         if (payload?.emailVerificationRequired) {
-          const message = payload?.message || 'Check your email to verify your account before signing in.';
+          const message = payload?.message || t('messages.info.emailVerification');
           setFormError(null);
           toast.info(message);
           navigate('/login', { state: { email: formData.email, notice: message } });
@@ -164,19 +166,19 @@ const Registration = () => {
       const token = payload?.token;
       const user = payload?.user;
       if (!token || !user) {
-        const message = 'Registration response was incomplete. Please try again.';
+        const message = t('messages.errors.incompleteResponse');
         setFormError(message);
         toast.error(message);
         return;
       }
 
       setStoredToken(token, true);
-      toast.success('Account created successfully.');
+      toast.success(t('messages.success.accountCreated'));
 
       navigate('/dashboard');
     } catch (error) {
       setErrors({
-        email: 'Registration failed. Please try again.'
+        email: t('messages.errors.registrationFailed')
       });
     } finally {
       setIsSubmitting(false);
@@ -188,8 +190,8 @@ const Registration = () => {
   return (
     <>
       <Helmet>
-        <title>Create Account - TrustPay</title>
-        <meta name="description" content="Create your TrustPay account and start banking securely online" />
+        <title>{t('meta.title')}</title>
+        <meta name="description" content={t('meta.description')} />
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-[#d1202f]/10 via-background to-[#f6c33d]/10 flex items-center justify-center px-4 py-10">
@@ -200,25 +202,18 @@ const Registration = () => {
                 <Icon name="Landmark" size={24} color="white" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.25em] text-white/80">TrustPay</p>
-                <p className="text-xl font-semibold leading-tight">Open an account</p>
+                <p className="text-xs uppercase tracking-[0.25em] text-white/80">{t('hero.eyebrow')}</p>
+                <p className="text-xl font-semibold leading-tight">{t('hero.openAccount')}</p>
               </div>
             </div>
 
             <div className="space-y-3">
-              <h1 className="text-3xl font-bold leading-tight">Start banking with TrustPay</h1>
-              <p className="text-white/85">
-                Guided onboarding with bank-grade security, so you can move money and manage treasury with confidence.
-              </p>
+              <h1 className="text-3xl font-bold leading-tight">{t('hero.title')}</h1>
+              <p className="text-white/85">{t('hero.subtitle')}</p>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-3">
-              {[
-                { icon: 'ShieldCheck', title: 'Secure by design', text: 'Encryption, device checks, and proactive monitoring.' },
-                { icon: 'Rocket', title: 'Fast setup', text: 'Finish sign up in minutes and start transacting.' },
-                { icon: 'Headset', title: '24/7 support', text: 'Specialists ready to help whenever you need.' },
-                { icon: 'Sparkles', title: 'Modern tools', text: 'Payments, treasury, and wealth in one experience.' }
-              ].map((item) => (
+              {(t('hero.features', { returnObjects: true }) as Array<{ icon: string; title: string; text: string }>).map((item) => (
                 <div key={item.title} className="bg-white/10 border border-white/20 rounded-xl p-3">
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center">
@@ -237,13 +232,13 @@ const Registration = () => {
                 className="border-white/70 text-white hover:bg-white/10"
                 onClick={() => navigate('/login')}
               >
-                Already have an account?
+                {t('hero.ctaLogin')}
               </Button>
               <Button
                 className="bg-white text-[#8b1b24] hover:bg-white/90 border-none"
                 onClick={() => navigate('/about-trustpay')}
               >
-                Learn about TrustPay
+                {t('hero.ctaAbout')}
               </Button>
             </div>
           </div>
@@ -269,7 +264,7 @@ const Registration = () => {
             ) : (
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <p className="text-sm text-muted-foreground">
-                  Enter the 6-digit code we emailed to <strong>{formData.email}</strong> to activate your account.
+                  {t('form.otpInstruction', { email: formData.email })}
                 </p>
                 <input
                   className="w-full rounded-lg border border-input bg-background px-3 py-2 text-center text-2xl tracking-[0.4em]"
@@ -281,7 +276,7 @@ const Registration = () => {
                 />
                 {errors.otp && <p className="text-xs text-error">{errors.otp}</p>}
                 <Button type="submit" size="lg" className="w-full" loading={isSubmitting}>
-                  Verify code
+                  {t('form.verifyCode')}
                 </Button>
                 <Button
                   type="button"
@@ -293,7 +288,7 @@ const Registration = () => {
                     setFormError(null);
                   }}
                 >
-                  Edit email or password
+                  {t('form.editCredentials')}
                 </Button>
               </form>
             )}
@@ -302,7 +297,7 @@ const Registration = () => {
 
             <div className="text-center mt-6">
               <p className="text-xs text-muted-foreground">
-                By creating an account, you agree to our data protection and security policies
+                {t('form.footerNote')}
               </p>
             </div>
           </div>

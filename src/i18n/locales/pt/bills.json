@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "title": "Contas - TrustPay",
+    "description": "Envie e acompanhe pagamentos de contas com aprovações e visibilidade de status."
+  },
+  "breadcrumb": {
+    "dashboard": "Dashboard",
+    "bills": "Contas",
+    "details": "Detalhes do pagamento"
+  },
+  "page": {
+    "title": "Contas e pagamentos",
+    "subtitle": "Envie pagamentos de contas com status claros e detalhes prontos para auditoria.",
+    "loading": "Carregando dados de contas...",
+    "statusLegendTitle": "Consciência de status",
+    "statusLegendBody": "Enviado ≠ pago. Pendentes ficam em análise até um admin lançar o débito. O saldo disponível não é reduzido até o lançamento ou um bloqueio do backend.",
+    "refresh": "Atualizar"
+  },
+  "list": {
+    "title": "Pagamentos de contas recentes",
+    "subtitle": "Veja pagamentos enviados, aprovados, rejeitados ou com falha.",
+    "empty": "Ainda não há pagamentos de contas. Envie o primeiro à direita para vê-lo aqui.",
+    "loading": "Carregando contas...",
+    "auditTitle": "Dicas de auditoria",
+    "audit1": "Os chips de status mostram se o pagamento está pendente, pago, rejeitado ou falhou.",
+    "audit2": "Clique em qualquer conta para ver referências, horários de revisão e motivos de rejeição.",
+    "audit3": "Atualizar puxa o estado mais recente do backend — sem edições locais de saldo."
+  },
+  "steps": {
+    "category": { "title": "Categoria", "description": "Escolha o tipo de conta" },
+    "biller": { "title": "Fornecedor", "description": "Quem você vai pagar" },
+    "details": { "title": "Detalhes", "description": "Referência, valor, conta" },
+    "review": { "title": "Revisão", "description": "Confirmar e enviar" },
+    "selectCategoryTitle": "Selecione uma categoria",
+    "selectCategorySubtitle": "Escolha o tipo de conta para carregar os fornecedores certos.",
+    "billersAvailable": "{{count}} fornecedores disponíveis",
+    "noCategories": "Nenhuma categoria de conta disponível ainda.",
+    "loadingCategories": "Carregando categorias...",
+    "continue": "Continuar",
+    "selectBillerTitle": "Selecione o fornecedor",
+    "selectBillerSubtitle": "Escolha um fornecedor listado ou digite o nome exatamente como está na conta.",
+    "changeCategory": "Mudar categoria",
+    "listedBiller": "Fornecedor listado",
+    "noBillers": "Nenhum fornecedor listado para esta categoria. Você pode inserir um nome personalizado.",
+    "customBiller": "Nome de fornecedor personalizado",
+    "customBillerPlaceholder": "ex.: Condomínio Lago Azul",
+    "billersLabel": "Fornecedores",
+    "customBillerInfo": "Se inserir um fornecedor personalizado, usaremos esse nome apenas para este pagamento.",
+    "referenceLabel": "Número de referência ou conta",
+    "referencePlaceholder": "Digite o número de referência da conta",
+    "amountLabel": "Valor",
+    "noteLabel": "Observação (opcional)",
+    "notePlaceholder": "Adicione uma observação para este pagamento",
+    "sourceAccountLabel": "Conta de origem",
+    "detailsIntroTitle": "Detalhes do pagamento",
+    "detailsIntroBody": "Use o número de referência/conta impresso na conta. Pagamentos pendentes não reduzem o saldo disponível até serem aprovados.",
+    "paymentDescriptionLabel": "Descrição do pagamento (opcional)",
+    "paymentDescriptionPlaceholder": "Visível para você e admins (ex.: \"Aluguel de julho, apto 12B\").",
+    "adminApprovalTitle": "Aprovação do admin necessária",
+    "adminApprovalBody": "Enviado ≠ pago. Admins revisam e lançam o débito antes de sair da conta. Pendentes não reduzem o saldo salvo bloqueio do backend.",
+    "back": "Voltar"
+  },
+  "statusHelp": {
+    "SUBMITTED": "Aguardando aprovação do admin. O saldo pode permanecer disponível até o lançamento.",
+    "PAID": "Lançado e liquidado com o fornecedor.",
+    "REJECTED": "Não processado. Bloqueios são liberados.",
+    "FAILED": "Falhou. Revise e reenvie."
+  },
+  "labels": {
+    "biller": "Fornecedor",
+    "category": "Categoria",
+    "reference": "Referência",
+    "amount": "Valor",
+    "note": "Observação",
+    "account": "Conta",
+    "sourceAccount": "Conta de origem",
+    "description": "Descrição",
+    "created": "Criado"
+  },
+  "table": {
+    "status": "Status"
+  },
+  "errors": {
+    "selectCategory": "Selecione uma categoria para continuar.",
+    "selectBiller": "Escolha um fornecedor ou insira um nome personalizado.",
+    "referenceRequired": "Adicione a referência ou número de conta da sua conta.",
+    "amountInvalid": "Digite um valor válido maior que 0.",
+    "accountRequired": "Selecione a conta que financiará este pagamento.",
+    "kycRequired": "A aprovação de KYC é obrigatória antes de enviar pagamentos de contas.",
+    "disabledProfile": "Sua conta está desativada. Contate o suporte.",
+    "completeFields": "Complete todos os campos obrigatórios antes de enviar.",
+    "loadCategories": "Não foi possível carregar categorias de contas.",
+    "loadPayments": "Não foi possível carregar pagamentos de contas.",
+    "refreshPayments": "Não foi possível atualizar pagamentos de contas.",
+    "submitFailed": "Não foi possível enviar o pagamento agora.",
+    "billNotFound": "Pagamento de conta não encontrado.",
+    "loadPayment": "Não foi possível carregar o pagamento."
+  },
+  "success": {
+    "submitted": "Pagamento de conta enviado para aprovação do admin."
+  },
+  "friendly": {
+    "kyc": "Conclua o KYC antes de enviar pagamentos de contas.",
+    "disabled": "Seu perfil está desativado. Contate o suporte.",
+    "insufficient": "Saldo disponível insuficiente para este pagamento.",
+    "active": "Selecione uma conta de origem ativa.",
+    "fallback": "Não foi possível processar a solicitação."
+  },
+  "statusBadge": {
+    "SUBMITTED": "Aguardando aprovação",
+    "APPROVED": "Aprovado",
+    "PAID": "Pago",
+    "REJECTED": "Rejeitado",
+    "FAILED": "Falhou",
+    "DRAFT": "Rascunho",
+    "UNKNOWN": "Desconhecido"
+  },
+  "cards": {
+    "defaultCategory": "Pagamento de conta",
+    "defaultBiller": "Fornecedor",
+    "ref": "Ref {{ref}}"
+  },
+  "review": {
+    "summaryTitle": "Revisar e enviar",
+    "summarySubtitle": "Confirme os detalhes do pagamento. Ele será enviado para aprovação do admin.",
+    "noticeTitle": "Aviso de envio",
+    "noticeBody": "Pagamentos permanecem pendentes até um admin aprovar e lançar. Você verá a atualização de status ao processar.",
+    "submitCta": "Enviar para aprovação"
+  },
+  "detailsPage": {
+    "metaTitle": "Detalhes do pagamento de conta - TrustPay",
+    "metaDescription": "Veja status e dados de auditoria da sua pagamento de conta.",
+    "title": "Pagamento de conta",
+    "subtitle": "Veja status, referência, horários de revisão e motivos de rejeição.",
+    "back": "Voltar para contas",
+    "refresh": "Atualizar",
+    "statusTitle": "Consciência de status",
+    "statusBody": "Enviado ≠ pago. A aprovação do admin lança o débito. Pendentes não reduzem o saldo salvo bloqueio do backend.",
+    "loading": "Carregando pagamento de conta...",
+    "amount": "Valor",
+    "adminReviewDate": "Data de revisão do admin",
+    "pending": "Pendente",
+    "paymentDescription": "Descrição do pagamento",
+    "rejectionReason": "Motivo da rejeição"
+  }
+}

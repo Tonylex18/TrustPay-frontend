@@ -1,0 +1,174 @@
+{
+  "meta": {
+    "title": "Transferencia de dinero - TrustPay",
+    "description": "Envía dinero de forma segura entre tus cuentas o a beneficiarios externos."
+  },
+  "breadcrumb": {
+    "dashboard": "Panel",
+    "transfer": "Transferencia"
+  },
+  "page": {
+    "title": "Transferencia de dinero",
+    "subtitle": "Envía dinero de forma segura a tus beneficiarios",
+    "loading": "Cargando detalles de la cuenta..."
+  },
+  "form": {
+    "fromAccount": "Cuenta origen",
+    "destinationInternal": "Destino (tu cuenta)",
+    "destinationPlaceholder": "Selecciona destino",
+    "destinationWarning": "Necesitas otra cuenta para transferir internamente.",
+    "accountHolderName": "Nombre del titular",
+    "accountHolderPlaceholder": "Jane Doe",
+    "routingNumber": "Número de ruta",
+    "routingPlaceholder": "Número de ruta",
+    "bankName": "Banco",
+    "bankPlaceholder": "Banco",
+    "accountNumberLabel": "Número de cuenta",
+    "accountNumberPlaceholder": "Ingresa el número de cuenta de 10 dígitos",
+    "accountTypeLabel": "Tipo de cuenta",
+    "accountTypePlaceholder": "Selecciona el tipo de cuenta",
+    "accountTypeOptions": {
+      "checking": "Cuenta corriente",
+      "savings": "Cuenta de ahorros"
+    },
+    "memoLabel": "Nota (opcional)",
+    "memoPlaceholder": "Agrega una nota para esta transferencia",
+    "memoDescription": "Máximo 100 caracteres",
+    "reviewButton": "Revisar transferencia"
+  },
+  "status": {
+    "verifyingAccount": "Verificando cuenta...",
+    "verifiedAccount": "Verificado: {{name}}",
+    "bankIdentified": "Banco identificado"
+  },
+  "amountInput": {
+    "label": "Monto a transferir",
+    "ariaLabel": "Monto de la transferencia en dólares",
+    "available": "Saldo disponible:",
+    "remaining": "Límite diario restante:"
+  },
+  "transferType": {
+    "label": "Tipo de transferencia",
+    "options": {
+      "internal": {
+        "title": "Transferencia interna",
+        "description": "Entre tus propias cuentas",
+        "time": "Instantánea"
+      },
+      "external": {
+        "title": "Transferencia externa",
+        "description": "A cuentas de otros bancos",
+        "time": "1-2 días hábiles"
+      }
+    }
+  },
+  "processing": {
+    "instant": "Instantánea",
+    "external": "1-2 días hábiles"
+  },
+  "summary": {
+    "title": "Resumen de la transferencia",
+    "amount": "Monto de la transferencia",
+    "fee": "Cargo por procesamiento",
+    "total": "Monto total",
+    "processingTime": "Tiempo de procesamiento",
+    "externalNotice": "Las transferencias externas pueden tardar 1-2 días hábiles. Verifica los datos del beneficiario."
+  },
+  "confirmation": {
+    "title": "Confirmar transferencia",
+    "amount": "Monto de la transferencia",
+    "accountNumber": "Número de cuenta",
+    "transferType": "Tipo de transferencia",
+    "memo": "Nota",
+    "fee": "Cargo por procesamiento",
+    "total": "Débito total",
+    "warning": "Verifica todos los datos. La transacción no puede revertirse una vez confirmada.",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar transferencia",
+    "processing": "Procesando..."
+  },
+  "info": {
+    "title": "Información importante",
+    "items": [
+      "Las transferencias internas se procesan al instante",
+      "Las transferencias externas pueden tardar 1-2 días hábiles",
+      "Verifica los datos del beneficiario antes de confirmar",
+      "La transacción no puede revertirse después de confirmar"
+    ]
+  },
+  "pinEntry": {
+    "title": "Ingresa el PIN de transferencia",
+    "description": "Ingresa tu PIN de 4–6 dígitos para autorizar esta transferencia.",
+    "label": "PIN",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar transferencia",
+    "invalid": "Ingresa tu PIN de 4–6 dígitos."
+  },
+  "pinSetup": {
+    "title": "Configura tu PIN de transferencia",
+    "description": "Crea un PIN de 4–6 dígitos para autorizar transferencias y retiros. No lo compartas.",
+    "newPin": "Nuevo PIN",
+    "confirmPin": "Confirma el PIN",
+    "currentPin": "PIN actual (si actualizas)",
+    "cancel": "Cancelar",
+    "save": "Guardar PIN",
+    "invalid": "Ingresa PIN coincidentes de 4–6 dígitos."
+  },
+  "security": {
+    "title": "Seguridad y límites",
+    "dailyLimit": "Límite diario de transferencia",
+    "perTransaction": "Límite por transacción",
+    "remainingToday": "{{amount}} restante hoy",
+    "items": {
+      "secureTitle": "Transferencia segura",
+      "secureDescription": "Todas las transferencias están cifradas y protegidas",
+      "notificationsTitle": "Notificaciones instantáneas",
+      "notificationsDescription": "Recibe alertas por cada transacción",
+      "historyTitle": "Historial de transacciones",
+      "historyDescription": "Sigue todas tus transferencias en cualquier momento"
+    }
+  },
+  "labels": {
+    "internalBank": "TrustPay (interna)",
+    "yourAccount": "Tu cuenta"
+  },
+  "messages": {
+    "error": {
+      "routingRequired": "Ingresa un número de ruta",
+      "routingInvalid": "El número de ruta debe tener 9 dígitos",
+      "accountHolderRequired": "El nombre del titular es obligatorio",
+      "bankNameRequired": "El nombre del banco es obligatorio",
+      "bankLookupFirst": "Busca el banco primero con titular y número de ruta",
+      "accountNumberRequired": "Ingresa un número de cuenta destino",
+      "accountNumberVerify": "Verifica el número de cuenta antes de continuar",
+      "accountTypeRequired": "Selecciona el tipo de cuenta",
+      "fromAccountRequired": "Selecciona una cuenta origen.",
+      "toAccountRequired": "Selecciona una cuenta destino.",
+      "toAccountDifferent": "Elige otra cuenta destino.",
+      "amountRequired": "Ingresa el monto a transferir",
+      "amountPositive": "El monto debe ser mayor que cero",
+      "insufficientBalance": "Saldo insuficiente",
+      "perTransactionLimit": "El monto supera el límite por transacción de {{limit}}",
+      "dailyLimit": "El monto supera el límite diario restante de {{limit}}",
+      "pinRequired": "Configura tu PIN de transferencia antes de enviar dinero.",
+      "destinationRequired": "Selecciona una cuenta destino.",
+      "routingMissing": "Falta el número de ruta del destino.",
+      "pinLocked": "PIN bloqueado, inténtalo más tarde.",
+      "transferFailed": "No se pudo completar la transferencia.",
+      "verifyAccountMissing": "Ingresa el número de cuenta y el banco.",
+      "bankNotFound": "Banco no encontrado. Verifica el número de ruta.",
+      "bankLookupUnavailable": "Búsqueda no disponible. Intenta de nuevo o ingresa el banco manualmente.",
+      "pinSaveFailed": "No se pudo guardar el PIN.",
+      "pinSaveUnavailable": "No se puede guardar el PIN en este momento."
+    },
+    "success": {
+      "transferSubmitted": "Transferencia enviada. Se completará en breve.",
+      "pinSet": "PIN de transferencia guardado."
+    },
+    "info": {
+      "stepUp": "Transferencia enviada. Puede requerirse verificación adicional."
+    },
+    "defaultMemoInternal": "Transferencia a tu cuenta",
+    "defaultMemoExternal": "Transferencia a beneficiario"
+  }
+}

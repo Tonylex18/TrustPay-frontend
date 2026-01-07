@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "title": "Commercial & Investment Banking | TrustPay",
+    "description": "Sektororientiertes Commercial Banking mit Kapitalmarktzugang, Treasury-Expertise und kontinuierlichem Risk-Management."
+  },
+  "hero": {
+    "eyebrow": "Commercial Banking",
+    "title": "Banken mit dem Vertrauen eines Capital-Markets-Partners",
+    "description": "Basierend auf Best Practices aus Corporate & Investment Banking liefert TrustPay Coverage, Produkttiefe und digitale Rails, um in jedem Markt schnell zu handeln.",
+    "ctaPrimary": { "label": "Jetzt starten", "path": "/registration" },
+    "ctaSecondary": { "label": "CIB-Coverage ansehen", "path": "/commercial-banking#cib" },
+    "priorities": [
+      { "label": "Priorität", "value": "Kapital", "description": "Board-fertige Reports, Freigaben und Execution-Pfade." },
+      { "label": "Priorität", "value": "Liquidität", "description": "Board-fertige Reports, Freigaben und Execution-Pfade." },
+      { "label": "Priorität", "value": "Risiko", "description": "Board-fertige Reports, Freigaben und Execution-Pfade." }
+    ]
+  },
+  "offerings": {
+    "eyebrow": "Corporate & Investment Banking",
+    "title": "Advisory-Teams mit Produkttiefe",
+    "description": "Kapitalmarktzugang, Treasury-Exzellenz und permanente Überwachung – geliefert von Industriespezialisten als ein Team.",
+    "items": [
+      {
+        "title": "Capital Markets & Advisory",
+        "description": "Debt-, Equity- und M&A-Beratung mit Execution-Teams, die die Board-Agenda kennen.",
+        "icon": "LineChart",
+        "badges": ["Capital Markets", "M&A", "Private Placements"]
+      },
+      {
+        "title": "Treasury & Payments",
+        "description": "Globales Cash-Management mit RTP, Überweisungen, Controlled Disbursement und automatisierten Forderungen.",
+        "icon": "Banknote",
+        "badges": ["Treasury", "Payment Rails", "AP/AR"]
+      },
+      {
+        "title": "Risiko & Liquidität",
+        "description": "FX-, Zins- und Commodity-Strategien, damit du Margen beim Skalieren schützt.",
+        "icon": "Shield",
+        "badges": ["FX", "Zinsen", "Hedging"]
+      },
+      {
+        "title": "Sektor-Coverage",
+        "description": "Coverage-Banker und Produktspezialisten mit tiefer Sektorkenntnis und Marktintelligenz.",
+        "icon": "Briefcase",
+        "badges": ["Board-ready Insights", "Playbooks", "Benchmarking"]
+      }
+    ]
+  },
+  "industries": {
+    "eyebrow": "Sektor-Coverage",
+    "title": "Teams rund um deinen Sektor",
+    "description": "Von Tech bis Public Sector bringen wir Coverage-Modelle, spezialisierte Underwriting-Ansätze und Payment-Flows, die zu deinen Kunden passen.",
+    "items": [
+      { "name": "Technology & Media", "focus": "Usage-basierte Billing, Plattform-Payouts und Abo-Cash-Cycles.", "icon": "Cpu" },
+      { "name": "Healthcare & Life Sciences", "focus": "Erstattungen, Forschungsfinanzierung und Clinical-Trial-Auszahlungen.", "icon": "HeartPulse" },
+      { "name": "Industrial & Manufacturing", "focus": "Capex-Planung, Lagerfinanzierung und globale Supply-Chain-Flows.", "icon": "Factory" },
+      { "name": "Energy & Renewables", "focus": "Project Finance, PPA und Commodity-Hedging.", "icon": "Sun" },
+      { "name": "Public Sector & Education", "focus": "Bond-Issuance, Escrow und transparente Auszahlungen.", "icon": "GraduationCap" },
+      { "name": "Real Estate & Hospitality", "focus": "Bauauszahlungen, Deposits und kontaktlose Gästeerlebnisse.", "icon": "Building2" }
+    ]
+  },
+  "execution": {
+    "eyebrow": "Execution Support",
+    "title": "Was du mit TrustPay bekommst",
+    "description": "Wir verbinden Produkttiefe mit responsivem Service, damit du dich auf den nächsten Meilenstein fokussierst.",
+    "insights": [
+      { "title": "Execution-ready Teams", "detail": "Leads für Deals, Treasury und Kredit, ausgerichtet auf deine Wachstums- und Liquiditätspläne.", "icon": "Users" },
+      { "title": "Connectivity by Design", "detail": "APIs und sichere File-Transfers zu ERP, TMS und Data Warehouse.", "icon": "Globe2" },
+      { "title": "Risiko in Echtzeit gemanagt", "detail": "Pre-Transaction-Checks, Dual Approval und Überwachung zur Reduktion operativer Risiken.", "icon": "ShieldCheck" }
+    ],
+    "coverage": {
+      "eyebrow": "Coverage",
+      "title": "Sprich mit einem Lead Banker",
+      "description": "Wähle den Korridor und die Spezialisierung, die zu deiner Roadmap passen.",
+      "advisors": [
+        { "name": "Amelia Grant", "region": "Nationale Coverage", "specialty": "CIB - Industrie & Services", "icon": "User" },
+        { "name": "Victor Lin", "region": "West & APAC", "specialty": "Technologie, Plattformen, Cross-Border", "icon": "User" },
+        { "name": "Priya Desai", "region": "Ost & LATAM", "specialty": "Energiewende, Consumer, Fintech", "icon": "User" }
+      ],
+      "ctaPrimary": { "label": "Operative Konten ansehen", "path": "/business" },
+      "ctaSecondary": { "label": "Mehr über TrustPay", "path": "/about-trustpay" }
+    }
+  }
+}

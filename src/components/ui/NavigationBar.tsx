@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Icon from '../AppIcon';
 import UserMenu from './UserMenu';
+import LanguageSelector from '../LanguageSelector';
 import { API_BASE_URL, getStoredToken } from '../../utils/api';
 
 interface NavigationBarProps {
@@ -14,15 +16,16 @@ interface NavigationBarProps {
 }
 
 interface NavItem {
-  label: string;
+  labelKey: string;
   path: string;
   icon: string;
-  tooltip: string;
+  tooltipKey: string;
 }
 
 const NavigationBar = ({ user, onNavigate }: NavigationBarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation('common');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [resolvedUser, setResolvedUser] = useState(user);
@@ -40,28 +43,28 @@ const NavigationBar = ({ user, onNavigate }: NavigationBarProps) => {
 
   const navItems: NavItem[] = [
     {
-      label: 'Dashboard',
+      labelKey: 'navigation.dashboard',
       path: '/dashboard',
       icon: 'Home',
-      tooltip: 'View account overview and quick actions'
+      tooltipKey: 'tooltips.dashboard'
     },
     {
-      label: 'Transactions',
+      labelKey: 'navigation.transactions',
       path: '/transactions',
       icon: 'List',
-      tooltip: 'View transaction history and details'
+      tooltipKey: 'tooltips.transactions'
     },
     {
-      label: 'Transfer',
+      labelKey: 'navigation.transfer',
       path: '/money-transfer',
       icon: 'Send',
-      tooltip: 'Send money to accounts'
+      tooltipKey: 'tooltips.transfer'
     },
     {
-      label: 'Profile',
+      labelKey: 'navigation.profile',
       path: '/user-profile',
       icon: 'User',
-      tooltip: 'Manage account settings'
+      tooltipKey: 'tooltips.profile'
     }
   ];
 
@@ -129,13 +132,13 @@ const NavigationBar = ({ user, onNavigate }: NavigationBarProps) => {
     <button
       onClick={() => handleNavigation('/dashboard')}
       className="flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-ring rounded-md transition-all duration-200"
-      aria-label="MobileBankPro Home"
+      aria-label={t('aria.home')}
     >
       <div className="flex items-center justify-center w-10 h-10 bg-primary rounded-lg">
         <Icon name="Landmark" size={24} color="white" />
       </div>
       <span className="text-xl font-semibold text-foreground hidden sm:block">
-        TrustPay
+        {t('brand.name')}
       </span>
     </button>
   );
@@ -166,20 +169,23 @@ const NavigationBar = ({ user, onNavigate }: NavigationBarProps) => {
                     }
                   `}
                   aria-current={isActive(item.path) ? 'page' : undefined}
-                  title={item.tooltip}
+                  title={t(item.tooltipKey)}
                 >
                   <Icon
                     name={item.icon}
                     size={20}
                     color={isActive(item.path) ? 'var(--color-primary)' : 'currentColor'}
                   />
-                  <span>{item.label}</span>
+                  <span>{t(item.labelKey)}</span>
                 </button>
               ))}
             </div>
           )}
 
           <div className="flex items-center gap-4 ml-auto">
+            {!isMobile && (
+              <LanguageSelector variant="neutral" className="hidden md:inline-flex" />
+            )}
             {!isMobile && resolvedUser && <UserMenu user={resolvedUser} />}
             
             {isMobile && (
@@ -228,9 +234,13 @@ const NavigationBar = ({ user, onNavigate }: NavigationBarProps) => {
                       size={20}
                       color={isActive(item.path) ? 'var(--color-primary)' : 'currentColor'}
                     />
-                    <span>{item.label}</span>
+                    <span>{t(item.labelKey)}</span>
                   </button>
                 ))}
+              </div>
+
+              <div className="px-6 pb-3">
+                <LanguageSelector variant="neutral" className="w-full" />
               </div>
 
               {resolvedUser && (

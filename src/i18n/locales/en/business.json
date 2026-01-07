@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "title": "Business Banking | TrustPay",
+    "description": "Business banking with treasury, payments, and industry specialists so you can run with confidence."
+  },
+  "hero": {
+    "eyebrow": "Business Banking",
+    "title": "Capital, cash, and payments built for operators",
+    "description": "Pair a dedicated relationship team with modern rails: RTP, wires, ACH, merchant acquiring, and treasury controls that mirror how your business actually runs.",
+    "chips": ["Treasury", "Payments", "Advisory", "Security"],
+    "ctaPrimary": { "label": "Open an account", "path": "/registration" },
+    "ctaSecondary": { "label": "Talk to an advisor", "path": "/commercial-banking" },
+    "highlights": [
+      { "label": "Funds availability", "value": "Same-day", "description": "RTP and wire rails with clear cutoff windows and proactive alerts." },
+      { "label": "Platform uptime", "value": "99.95%", "description": "Redundant architecture and dual controls for critical payment paths." },
+      { "label": "Fraud monitoring", "value": "24/7", "description": "Behavioral analytics with step-up authentication when risk spikes." }
+    ]
+  },
+  "solutions": {
+    "eyebrow": "Core Solutions",
+    "title": "Everything you need to run and scale",
+    "subtitle": "Inspired by leading corporate banking playbooks, we combine deep expertise with modern digital experiences so you can move money securely without slowing operations.",
+    "cta": { "label": "View cash position", "path": "/dashboard" },
+    "items": [
+      {
+        "title": "Working Capital & Treasury",
+        "description": "Optimize liquidity with smart sweeps, secure deposits, and precise cash positioning built for operators.",
+        "icon": "Banknote",
+        "tags": ["Liquidity", "Treasury", "RTP & Wires"]
+      },
+      {
+        "title": "Payments & Receivables",
+        "description": "Straight-through processing for ACH, wires, RTP, and lockbox imaging so you get paid faster with fewer exceptions.",
+        "icon": "Send",
+        "tags": ["ACH & RTP", "Lockbox", "Billing"]
+      },
+      {
+        "title": "Merchant & Ecommerce",
+        "description": "Omnichannel acquiring with real-time fraud controls and clear settlement files for your finance stack.",
+        "icon": "ShoppingBag",
+        "tags": ["Card", "Checkout", "Fraud"]
+      },
+      {
+        "title": "Payroll & Disbursements",
+        "description": "Pay teams and suppliers anywhere with controlled approvals, audit trails, and FX-ready rails.",
+        "icon": "Wallet",
+        "tags": ["Payroll", "AP automation", "Global-ready"]
+      }
+    ]
+  },
+  "advisory": {
+    "eyebrow": "Advisory-led approach",
+    "title": "A partner who understands your operating model",
+    "description": "Borrow from the best parts of global commercial banking playbooks with the responsiveness of a digital-first team. We map your flows, reduce friction, and keep controls tight.",
+    "capabilities": [
+      {
+        "title": "Growth Capital",
+        "description": "Credit lines, equipment finance, and SBA-friendly options aligned to your working capital cycle.",
+        "icon": "Handshake",
+        "items": [
+          "Flexible revolving and term structures",
+          "Sector-aware pricing and covenants",
+          "Scenario modeling with your relationship lead"
+        ]
+      },
+      {
+        "title": "Cash Management",
+        "description": "Centralize balances, automate reconciliations, and keep approvals clean as you scale entities.",
+        "icon": "Layers",
+        "items": [
+          "Controlled disbursement and smart sweeps",
+          "Positive pay with dual approvals",
+          "APIs and file transfers for ERP connectivity"
+        ]
+      },
+      {
+        "title": "Advisory & Onboarding",
+        "description": "Industry specialists who map your flows, connect systems, and get teams production-ready fast.",
+        "icon": "Users",
+        "items": [
+          "Playbooks for high-volume payables",
+          "Connectivity guides for SFTP, APIs, and portals",
+          "Training and change management for your staff"
+        ]
+      }
+    ]
+  },
+  "service": {
+    "pillars": [
+      {
+        "title": "Industry Depth",
+        "description": "Dedicated coverage for manufacturing, logistics, healthcare, tech, and public sector.",
+        "icon": "BarChart3",
+        "emphasis": "Sector specialists"
+      },
+      {
+        "title": "Control & Compliance",
+        "description": "Role-based access, audit-grade approvals, and data retention aligned with SOC 2 controls.",
+        "icon": "ShieldCheck",
+        "emphasis": "Built-in governance"
+      },
+      {
+        "title": "Human + Digital Support",
+        "description": "Relationship teams plus 24/7 service desk and guided digital workflows.",
+        "icon": "Headset",
+        "emphasis": "24/7 response"
+      }
+    ],
+    "cta": {
+      "eyebrow": "Let's talk",
+      "title": "Build your operating account plan with us",
+      "description": "We'll map your payment flows, treasury needs, and industry nuances into a plan you can execute.",
+      "primary": { "label": "Meet your banker", "path": "/commercial-banking#cib" },
+      "secondary": { "label": "Why TrustPay", "path": "/about-trustpay" }
+    }
+  }
+}

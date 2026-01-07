@@ -1,0 +1,117 @@
+{
+  "meta": {
+    "title": "Banque entreprises | TrustPay",
+    "description": "Banque entreprise avec trésorerie, paiements et spécialistes sectoriels pour opérer en confiance."
+  },
+  "hero": {
+    "eyebrow": "Banque entreprises",
+    "title": "Capital, trésorerie et paiements conçus pour les opérateurs",
+    "description": "Associez une équipe dédiée à des rails modernes (RTP, virements, ACH, acquisition) et des contrôles de trésorerie adaptés à vos opérations.",
+    "chips": ["Trésorerie", "Paiements", "Conseil", "Sécurité"],
+    "ctaPrimary": { "label": "Ouvrir un compte", "path": "/registration" },
+    "ctaSecondary": { "label": "Parler à un conseiller", "path": "/commercial-banking" },
+    "highlights": [
+      { "label": "Disponibilité des fonds", "value": "J+0", "description": "Rails RTP et virements avec horaires clairs et alertes proactives." },
+      { "label": "Disponibilité plateforme", "value": "99,95%", "description": "Architecture redondante et doubles contrôles sur les flux critiques." },
+      { "label": "Surveillance fraude", "value": "24/7", "description": "Analytique comportementale et authentification renforcée en cas de risque." }
+    ]
+  },
+  "solutions": {
+    "eyebrow": "Solutions clés",
+    "title": "Tout pour opérer et scaler",
+    "subtitle": "Inspiré des meilleures pratiques de banque corporate, avec une expérience digitale moderne pour déplacer les fonds en sécurité.",
+    "cta": { "label": "Voir la trésorerie", "path": "/dashboard" },
+    "items": [
+      {
+        "title": "Fonds de roulement & trésorerie",
+        "description": "Optimisez la liquidité avec balayages intelligents, dépôts sécurisés et positionnement précis du cash.",
+        "icon": "Banknote",
+        "tags": ["Liquidité", "Trésorerie", "RTP & virements"]
+      },
+      {
+        "title": "Paiements & encaissements",
+        "description": "Traitement straight-through pour ACH, virements, RTP et lockbox pour être payé plus vite.",
+        "icon": "Send",
+        "tags": ["ACH & RTP", "Lockbox", "Facturation"]
+      },
+      {
+        "title": "Marchands & e-commerce",
+        "description": "Acquisition omnicanale avec contrôles fraude temps réel et fichiers de règlement clairs.",
+        "icon": "ShoppingBag",
+        "tags": ["Cartes", "Checkout", "Fraude"]
+      },
+      {
+        "title": "Paie & décaissements",
+        "description": "Payez équipes et fournisseurs partout avec validations maîtrisées, audit trail et rails prêts FX.",
+        "icon": "Wallet",
+        "tags": ["Paie", "Automatisation AP", "Prêt pour l'international"]
+      }
+    ]
+  },
+  "advisory": {
+    "eyebrow": "Approche conseil",
+    "title": "Un partenaire qui comprend votre modèle",
+    "description": "On combine playbooks de banque commerciale globale et réactivité d'une équipe digitale. On cartographie vos flux et réduit les frictions.",
+    "capabilities": [
+      {
+        "title": "Capital de croissance",
+        "description": "Lignes de crédit, financement d'équipement et options SBA alignées à votre cycle de cash.",
+        "icon": "Handshake",
+        "items": [
+          "Structures revolving et terme flexibles",
+          "Tarification et covenants adaptés au secteur",
+          "Modélisation de scénarios avec votre banquier"
+        ]
+      },
+      {
+        "title": "Cash management",
+        "description": "Centralisez les soldes, automatisez les rapprochements et gardez des validations nettes en multi-entités.",
+        "icon": "Layers",
+        "items": [
+          "Décaissement contrôlé et balayages",
+          "Positive pay avec double validation",
+          "APIs et transferts fichiers pour l'ERP"
+        ]
+      },
+      {
+        "title": "Conseil & onboarding",
+        "description": "Spécialistes secteur qui mappent vos flux, connectent les systèmes et forment les équipes.",
+        "icon": "Users",
+        "items": [
+          "Playbooks pour volumes payables élevés",
+          "Guides de connexion SFTP, APIs, portails",
+          "Formation et conduite du changement"
+        ]
+      }
+    ]
+  },
+  "service": {
+    "pillars": [
+      {
+        "title": "Profondeur sectorielle",
+        "description": "Couverture dédiée industrie, logistique, santé, tech et secteur public.",
+        "icon": "BarChart3",
+        "emphasis": "Spécialistes secteur"
+      },
+      {
+        "title": "Contrôle & conformité",
+        "description": "Accès par rôles, validations auditables et rétention data alignée SOC 2.",
+        "icon": "ShieldCheck",
+        "emphasis": "Gouvernance intégrée"
+      },
+      {
+        "title": "Support humain + digital",
+        "description": "Équipes relation et support 24/7 avec workflows digitaux guidés.",
+        "icon": "Headset",
+        "emphasis": "Réponse 24/7"
+      }
+    ],
+    "cta": {
+      "eyebrow": "Parlons-en",
+      "title": "Construisez votre plan de compte opérant avec nous",
+      "description": "Nous mapperons flux, besoins de trésorerie et spécificités sectorielles en un plan exécutable.",
+      "primary": { "label": "Rencontrer votre banquier", "path": "/commercial-banking#cib" },
+      "secondary": { "label": "Pourquoi TrustPay", "path": "/about-trustpay" }
+    }
+  }
+}

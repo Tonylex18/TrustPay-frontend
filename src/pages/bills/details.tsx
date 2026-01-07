@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 import NavigationBar from "../../components/ui/NavigationBar";
 import BreadcrumbTrail from "../../components/ui/BreadcrumbTrail";
 import Button from "../../components/ui/Button";
@@ -28,6 +29,7 @@ type BillPaymentDetail = {
 const BillPaymentDetailsPage: React.FC = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
+	const { t, i18n } = useTranslation("bills");
 	const [bill, setBill] = useState<BillPaymentDetail | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
@@ -70,7 +72,7 @@ const BillPaymentDetailsPage: React.FC = () => {
 			}
 			const payload = await res.json().catch(() => null);
 			if (!res.ok) {
-				const msg = payload?.errors || payload?.message || "Unable to load bill payment.";
+				const msg = payload?.errors || payload?.message || t("errors.loadPayment");
 				setLoadError(msg);
 				toast.error(msg);
 				return;
@@ -78,48 +80,48 @@ const BillPaymentDetailsPage: React.FC = () => {
 			const list = Array.isArray(payload) ? payload : [];
 			const found = list.find((p) => p.id === id);
 			if (!found) {
-				setLoadError("Bill payment not found.");
+				setLoadError(t("errors.billNotFound"));
 				return;
 			}
 			setBill(mapPayment(found));
 		} catch (error) {
 			if ((error as Error).name !== "AbortError") {
-				const msg = "Unable to load bill payment.";
+				const msg = t("errors.loadPayment");
 				setLoadError(msg);
 				toast.error(msg);
 			}
 		} finally {
 			setIsLoading(false);
 		}
-	}, [id, navigate]);
+	}, [id, navigate, t]);
 
 	useEffect(() => {
 		fetchPayment();
 	}, [fetchPayment]);
 
 	const breadcrumbItems = [
-		{ label: "Dashboard", path: "/dashboard" },
-		{ label: "Bills", path: "/bills" },
-		{ label: "Payment details" },
+		{ label: t("breadcrumb.dashboard"), path: "/dashboard" },
+		{ label: t("breadcrumb.bills"), path: "/bills" },
+		{ label: t("breadcrumb.details") },
 	];
 
 	const details: { label: string; value: React.ReactNode }[] = [
-		{ label: "Category", value: bill?.category || "—" },
-		{ label: "Biller", value: bill?.biller || "—" },
-		{ label: "Reference number", value: bill?.referenceNumber || "—" },
-		{ label: "Created", value: formatDate(bill?.createdAt) },
+		{ label: t("labels.category"), value: bill?.category || "—" },
+		{ label: t("labels.biller"), value: bill?.biller || "—" },
+		{ label: t("labels.reference"), value: bill?.referenceNumber || "—" },
+		{ label: t("labels.created"), value: formatDate(bill?.createdAt, i18n.language) },
 		{
-			label: "Admin review date",
-			value: bill?.adminReviewedAt ? formatDate(bill.adminReviewedAt) : "Pending",
+			label: t("detailsPage.adminReviewDate"),
+			value: bill?.adminReviewedAt ? formatDate(bill.adminReviewedAt, i18n.language) : t("detailsPage.pending"),
 		},
-		{ label: "Status", value: bill?.status ? <StatusBadge status={bill.status} /> : "—" },
+		{ label: t("table.status"), value: bill?.status ? <StatusBadge status={bill.status} /> : "—" },
 	];
 
 	return (
 		<>
 			<Helmet>
-				<title>Bill Payment Details - TrustPay</title>
-				<meta name="description" content="View detailed status and audit data for your bill payment." />
+				<title>{t("detailsPage.metaTitle")}</title>
+				<meta name="description" content={t("detailsPage.metaDescription")} />
 			</Helmet>
 			<div className="min-h-screen bg-background">
 				<NavigationBar onNavigate={(path) => navigate(path)} />
@@ -130,17 +132,17 @@ const BillPaymentDetailsPage: React.FC = () => {
 
 							<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 								<div>
-									<h1 className="text-3xl font-bold text-foreground">Bill payment</h1>
+									<h1 className="text-3xl font-bold text-foreground">{t("detailsPage.title")}</h1>
 									<p className="text-muted-foreground">
-										View bill status, reference number, review timestamps, and rejection reasons.
+										{t("detailsPage.subtitle")}
 									</p>
 								</div>
 								<div className="flex gap-2">
 									<Button variant="outline" onClick={() => navigate("/bills")}>
-										Back to bills
+										{t("detailsPage.back")}
 									</Button>
 									<Button variant="ghost" size="sm" onClick={fetchPayment} loading={isLoading}>
-										Refresh
+										{t("detailsPage.refresh")}
 									</Button>
 								</div>
 							</div>
@@ -148,10 +150,9 @@ const BillPaymentDetailsPage: React.FC = () => {
 							<div className="p-4 rounded-xl border border-warning/30 bg-warning/10 flex gap-3">
 								<Icon name="ShieldAlert" size={18} className="text-warning-foreground mt-0.5" />
 								<div className="space-y-1">
-									<p className="text-sm font-semibold text-foreground">Status awareness</p>
+									<p className="text-sm font-semibold text-foreground">{t("detailsPage.statusTitle")}</p>
 									<p className="text-sm text-muted-foreground">
-										Submitted ≠ paid. Admin approval posts the debit. Pending items do not reduce
-										available balance unless held by the backend.
+										{t("detailsPage.statusBody")}
 									</p>
 								</div>
 							</div>
@@ -162,16 +163,16 @@ const BillPaymentDetailsPage: React.FC = () => {
 								</div>
 							)}
 
-							{isLoading && <div className="text-sm text-muted-foreground">Loading bill payment...</div>}
+							{isLoading && <div className="text-sm text-muted-foreground">{t("detailsPage.loading")}</div>}
 
 							{!isLoading && bill && (
 								<div className="space-y-6">
 									<div className="bg-card border border-border rounded-xl shadow-card p-5 flex flex-col gap-4">
 										<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 											<div>
-												<p className="text-sm text-muted-foreground">Amount</p>
+												<p className="text-sm text-muted-foreground">{t("detailsPage.amount")}</p>
 												<p className="text-3xl font-bold text-foreground">
-													{formatCurrency(bill.amountCents / 100, bill.currency || "USD")}
+													{formatCurrency(bill.amountCents / 100, bill.currency || "USD", i18n.language)}
 												</p>
 											</div>
 											{bill.status && <StatusBadge status={bill.status} />}
@@ -192,14 +193,14 @@ const BillPaymentDetailsPage: React.FC = () => {
 
 									{bill.description && (
 										<div className="bg-card border border-border rounded-xl shadow-card p-4">
-											<p className="text-xs text-muted-foreground mb-2">Payment description</p>
+											<p className="text-xs text-muted-foreground mb-2">{t("detailsPage.paymentDescription")}</p>
 											<p className="text-sm text-foreground">{bill.description}</p>
 										</div>
 									)}
 
 									{bill.rejectionReason && (
 										<div className="bg-error/5 border border-error/30 rounded-xl p-4">
-											<p className="text-sm font-semibold text-error">Rejection reason</p>
+											<p className="text-sm font-semibold text-error">{t("detailsPage.rejectionReason")}</p>
 											<p className="text-sm text-error mt-1">{bill.rejectionReason}</p>
 										</div>
 									)}

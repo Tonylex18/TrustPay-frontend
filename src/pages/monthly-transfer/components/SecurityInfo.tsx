@@ -1,28 +1,33 @@
 import Icon from '../../../components/AppIcon';
 import { TransferLimits } from '../types';
+import { useTranslation } from 'react-i18next';
 
 interface SecurityInfoProps {
   limits: TransferLimits;
+  locale?: string;
 }
 
-const SecurityInfo = ({ limits }: SecurityInfoProps) => {
+const SecurityInfo = ({ limits, locale = 'en-US' }: SecurityInfoProps) => {
+  const { t } = useTranslation('transfer');
   const percentageUsed = limits.dailyLimit
     ? ((limits.dailyLimit - limits.remainingToday) / limits.dailyLimit) * 100
     : 0;
+  const formatCurrency = (value: number) =>
+    new Intl.NumberFormat(locale, { style: 'currency', currency: limits.currency.toUpperCase() }).format(value);
 
   return (
     <div className="bg-card border border-border rounded-lg p-6 shadow-card">
       <div className="flex items-center gap-2 mb-4">
         <Icon name="Shield" size={20} color="var(--color-primary)" />
-        <h3 className="text-lg font-semibold text-foreground">Security & Limits</h3>
+        <h3 className="text-lg font-semibold text-foreground">{t('security.title')}</h3>
       </div>
 
       <div className="space-y-4">
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-muted-foreground">Daily Transfer Limit</span>
+            <span className="text-sm text-muted-foreground">{t('security.dailyLimit')}</span>
             <span className="text-sm font-semibold text-foreground">
-              ${limits.dailyLimit.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+              {formatCurrency(limits.dailyLimit)}
             </span>
           </div>
           <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
@@ -33,19 +38,19 @@ const SecurityInfo = ({ limits }: SecurityInfoProps) => {
               aria-valuenow={percentageUsed}
               aria-valuemin={0}
               aria-valuemax={100}
-              aria-label="Daily limit usage"
+              aria-label={t('security.dailyLimit')}
             />
           </div>
           <p className="text-xs text-muted-foreground mt-1">
-            ${limits.remainingToday.toLocaleString('en-US', { minimumFractionDigits: 2 })} remaining today
+            {t('security.remainingToday', { amount: formatCurrency(limits.remainingToday) })}
           </p>
         </div>
 
         <div className="pt-4 border-t border-border">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-muted-foreground">Per Transaction Limit</span>
+            <span className="text-sm text-muted-foreground">{t('security.perTransaction')}</span>
             <span className="text-sm font-semibold text-foreground">
-              ${limits.perTransactionLimit.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+              {formatCurrency(limits.perTransactionLimit)}
             </span>
           </div>
         </div>
@@ -54,9 +59,9 @@ const SecurityInfo = ({ limits }: SecurityInfoProps) => {
           <div className="flex items-start gap-2">
             <Icon name="Lock" size={16} color="var(--color-success)" className="mt-0.5 flex-shrink-0" />
             <div>
-              <p className="text-xs font-medium text-foreground">Secure Transfer</p>
+              <p className="text-xs font-medium text-foreground">{t('security.items.secureTitle')}</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                All transfers are encrypted and protected
+                {t('security.items.secureDescription')}
               </p>
             </div>
           </div>
@@ -64,9 +69,9 @@ const SecurityInfo = ({ limits }: SecurityInfoProps) => {
           <div className="flex items-start gap-2">
             <Icon name="Bell" size={16} color="var(--color-success)" className="mt-0.5 flex-shrink-0" />
             <div>
-              <p className="text-xs font-medium text-foreground">Instant Notifications</p>
+              <p className="text-xs font-medium text-foreground">{t('security.items.notificationsTitle')}</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Get notified for every transaction
+                {t('security.items.notificationsDescription')}
               </p>
             </div>
           </div>
@@ -74,9 +79,9 @@ const SecurityInfo = ({ limits }: SecurityInfoProps) => {
           <div className="flex items-start gap-2">
             <Icon name="History" size={16} color="var(--color-success)" className="mt-0.5 flex-shrink-0" />
             <div>
-              <p className="text-xs font-medium text-foreground">Transaction History</p>
+              <p className="text-xs font-medium text-foreground">{t('security.items.historyTitle')}</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                Track all your transfers anytime
+                {t('security.items.historyDescription')}
               </p>
             </div>
           </div>

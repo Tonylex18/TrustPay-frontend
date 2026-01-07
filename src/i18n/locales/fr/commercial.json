@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "title": "Banque commerciale & d’investissement | TrustPay",
+    "description": "Banque commerciale orientée secteur avec accès marchés, expertise trésorerie et gestion du risque en continu."
+  },
+  "hero": {
+    "eyebrow": "Banque commerciale",
+    "title": "La confiance d’un partenaire marchés de capitaux",
+    "description": "Inspirée des meilleures pratiques de banque corporate et d’investissement, TrustPay apporte couverture, profondeur produit et rails digitaux pour agir vite.",
+    "ctaPrimary": { "label": "Commencer", "path": "/registration" },
+    "ctaSecondary": { "label": "Découvrir la couverture CIB", "path": "/commercial-banking#cib" },
+    "priorities": [
+      { "label": "Priorité", "value": "Capital", "description": "Reporting board-ready, validations et parcours d’exécution." },
+      { "label": "Priorité", "value": "Liquidité", "description": "Reporting board-ready, validations et parcours d’exécution." },
+      { "label": "Priorité", "value": "Risque", "description": "Reporting board-ready, validations et parcours d’exécution." }
+    ]
+  },
+  "offerings": {
+    "eyebrow": "Corporate & Investment Banking",
+    "title": "Des équipes conseil avec profondeur produit",
+    "description": "Accès marchés de capitaux, excellence trésorerie et surveillance continue — livrés par des spécialistes sectoriels unifiés.",
+    "items": [
+      {
+        "title": "Marchés de capitaux & conseil",
+        "description": "Dette, equity et M&A avec des équipes d’exécution alignées sur l’agenda du board.",
+        "icon": "LineChart",
+        "badges": ["Capital Markets", "M&A", "Private placements"]
+      },
+      {
+        "title": "Trésorerie & paiements",
+        "description": "Cash management global avec RTP, virements, controlled disbursement et automatisation des encaissements.",
+        "icon": "Banknote",
+        "badges": ["Trésorerie", "Rails de paiement", "AP/AR"]
+      },
+      {
+        "title": "Risque & liquidité",
+        "description": "Stratégies FX, taux et commodities pour protéger la marge pendant la croissance.",
+        "icon": "Shield",
+        "badges": ["FX", "Taux", "Couverture"]
+      },
+      {
+        "title": "Couverture sectorielle",
+        "description": "Bankers et spécialistes produits avec forte maîtrise sectorielle et intelligence marché.",
+        "icon": "Briefcase",
+        "badges": ["Insights board-ready", "Playbooks", "Benchmarking"]
+      }
+    ]
+  },
+  "industries": {
+    "eyebrow": "Couverture sectorielle",
+    "title": "Des équipes construites autour de votre secteur",
+    "description": "De la tech au secteur public, nous apportons modèles de couverture, souscription spécialisée et flux adaptés à vos clients.",
+    "items": [
+      { "name": "Technologie & média", "focus": "Facturation à l’usage, payouts plateforme, cycles d’abonnement.", "icon": "Cpu" },
+      { "name": "Santé & sciences de la vie", "focus": "Remboursements, financements de recherche, décaissements essais cliniques.", "icon": "HeartPulse" },
+      { "name": "Industrie & manufacturing", "focus": "Planification capex, financement inventaire, supply chain globale.", "icon": "Factory" },
+      { "name": "Énergie & renouvelables", "focus": "Project finance, PPA et couverture matières premières.", "icon": "Sun" },
+      { "name": "Secteur public & éducation", "focus": "Émissions obligataires, escrow et décaissements transparents.", "icon": "GraduationCap" },
+      { "name": "Immobilier & hôtellerie", "focus": "Appels de fonds chantier, dépôts et expérience sans contact.", "icon": "Building2" }
+    ]
+  },
+  "execution": {
+    "eyebrow": "Support d’exécution",
+    "title": "Ce que vous obtenez avec TrustPay",
+    "description": "Nous combinons profondeur produit et réactivité pour que vous restiez concentré sur votre prochaine étape.",
+    "insights": [
+      { "title": "Équipes prêtes à exécuter", "detail": "Responsables deal, trésorerie et crédit alignés sur votre croissance et liquidité.", "icon": "Users" },
+      { "title": "Connectivité native", "detail": "APIs et transferts sécurisés vers ERP, TMS et data warehouse.", "icon": "Globe2" },
+      { "title": "Risque géré en temps réel", "detail": "Contrôles pré-transaction, doubles validations et surveillance pour réduire le risque opérationnel.", "icon": "ShieldCheck" }
+    ],
+    "coverage": {
+      "eyebrow": "Coverage",
+      "title": "Échanger avec un lead banker",
+      "description": "Choisissez le corridor et la spécialité adaptés à votre roadmap.",
+      "advisors": [
+        { "name": "Amelia Grant", "region": "Couverture nationale", "specialty": "CIB - Industrie & services", "icon": "User" },
+        { "name": "Victor Lin", "region": "Ouest & APAC", "specialty": "Tech, plateformes, cross-border", "icon": "User" },
+        { "name": "Priya Desai", "region": "Est & LATAM", "specialty": "Transition énergétique, consumer, fintech", "icon": "User" }
+      ],
+      "ctaPrimary": { "label": "Voir les comptes opérationnels", "path": "/business" },
+      "ctaSecondary": { "label": "Découvrir TrustPay", "path": "/about-trustpay" }
+    }
+  }
+}

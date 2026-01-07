@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "title": "Depositar dinheiro - TrustPay",
+    "description": "Adicione fundos à sua conta TrustPay com trilhos seguros."
+  },
+  "breadcrumb": {
+    "dashboard": "Dashboard",
+    "deposit": "Depositar dinheiro"
+  },
+  "page": {
+    "title": "Depósito de cheque pelo celular",
+    "subtitle": "Envie as imagens frente e verso do cheque. Os fundos ficam pendentes até um admin aprovar."
+  },
+  "form": {
+    "amountLabel": "Valor do depósito",
+    "amountPlaceholder": "Digite o valor",
+    "amountDescription": "Depósito mínimo de US$ 1",
+    "accountNameLabel": "Nome da conta",
+    "accountNumberLabel": "Número da conta",
+    "bankNameLabel": "Banco",
+    "bankNameValue": "TrustPay Bank",
+    "checkImagesLabel": "Imagens do cheque",
+    "frontLabel": "Frente do cheque",
+    "backLabel": "Verso do cheque",
+    "tapToUpload": "Toque para enviar",
+    "uploadNote": "Envie fotos nítidas do cheque assinado. O depósito fica pendente até aprovação.",
+    "submit": "Enviar depósito móvel"
+  },
+  "previewModal": {
+    "title": "Confirmar depósito",
+    "depositAmount": "Valor do depósito",
+    "selectedAccount": "Conta selecionada",
+    "accountNumber": "Número da conta",
+    "processingFee": "Taxa de processamento",
+    "totalDeposit": "Depósito total",
+    "warning": "Confira todos os detalhes com cuidado. O depósito pode ficar pendente até revisão de um admin.",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar depósito",
+    "submitting": "Enviando..."
+  },
+  "submittedModal": {
+    "title": "Depósito enviado",
+    "depositAmount": "Valor do depósito",
+    "status": "Status",
+    "account": "Conta",
+    "accountNumber": "Número da conta",
+    "reference": "Referência",
+    "pendingReference": "Aguardando atribuição",
+    "note": "Recebemos seu depósito móvel. Ele pode ficar pendente até revisão. Os fundos não ficam disponíveis até aprovação.",
+    "close": "Fechar",
+    "makeAnother": "Fazer outro depósito"
+  },
+  "messages": {
+    "error": {
+      "amount": "Informe um valor de depósito válido.",
+      "account": "Selecione uma conta para crédito.",
+      "images": "Envie as imagens frente e verso do cheque.",
+      "completeForm": "Conclua o formulário de depósito antes de enviar.",
+      "submitFailed": "Não foi possível enviar o depósito móvel.",
+      "processFailed": "Não é possível processar o depósito móvel agora."
+    },
+    "success": "Depósito enviado para revisão."
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "title": "TrustPay - Banco digital moderno e simples",
+    "description": "Viva uma experiência bancária digital segura e prática com o TrustPay. Transferências instantâneas, acesso 24/7 e segurança de nível bancário. Junte-se a mais de 50.000 clientes satisfeitos.",
+    "keywords": "banco móvel, banco digital, banco online, banco seguro, transferências instantâneas"
+  },
+  "hero": {
+    "badge": "Confiado por 50.000+ usuários",
+    "headline": "Um banco que trabalha para você",
+    "subheadline": "Um banco que trabalha para você",
+    "description": "Experimente um banco digital sem atritos com segurança de nível empresarial, transferências instantâneas e acesso 24/7. Gerencie suas finanças de forma mais inteligente com o TrustPay.",
+    "buttons": [
+      { "label": "Começar grátis", "variant": "default", "path": "/registration", "icon": "ArrowRight" },
+      { "label": "Entrar", "variant": "outline", "path": "/dashboard" }
+    ],
+    "avatarsLabel": "50.000+ usuários ativos",
+    "avatarsSubcopy": "Junte-se à nossa comunidade em crescimento",
+    "avatarSuffix": "K+",
+    "overlayTitle": "Banco descomplicado",
+    "overlaySubtitle": "Gerencie suas finanças a qualquer hora, em qualquer lugar"
+  },
+  "featuresSection": {
+    "title": "Tudo o que você precisa para um banco mais inteligente",
+    "subtitle": "Recursos poderosos para uma experiência bancária fluida, segura e eficiente",
+    "learnMore": "Saiba mais",
+    "learnMoreAria": "Saiba mais sobre {{title}}",
+    "items": [
+      { "icon": "Zap", "title": "Transferências instantâneas", "description": "Envie e receba dinheiro instantaneamente sem taxas. Transfira para qualquer conta em segundos com nossa plataforma segura." },
+      { "icon": "Shield", "title": "Segurança de nível bancário", "description": "Seus dados são protegidos com criptografia de 256 bits, autenticação de dois fatores e monitoramento antifraude em tempo real." },
+      { "icon": "Smartphone", "title": "Design mobile first", "description": "Acesse suas contas de qualquer lugar. Nossa plataforma responsiva funciona perfeitamente em todos os dispositivos." },
+      { "icon": "CreditCard", "title": "Gestão inteligente de cartões", "description": "Controle seus cartões com congelamento/descongelamento instantâneo, limites de gasto e notificações em tempo real." },
+      { "icon": "PieChart", "title": "Insights financeiros", "description": "Acompanhe gastos, defina orçamentos e receba recomendações financeiras personalizadas com IA." },
+      { "icon": "Headphones", "title": "Suporte 24/7", "description": "Receba ajuda sempre que precisar com suporte 24/7 e uma central de ajuda completa." }
+    ]
+  },
+  "benefitsSection": {
+    "title": "Por que escolher o TrustPay?",
+    "subtitle": "Banco com segurança de nível empresarial e recursos fáceis de usar para a gestão financeira moderna",
+    "items": [
+      { "icon": "Lock", "title": "Segurança avançada", "description": "Segurança em várias camadas com biometria, reconhecimento de dispositivo e detecção de fraude em tempo real para manter seu dinheiro seguro.", "badge": "Verificado" },
+      { "icon": "Zap", "title": "Velocidade relâmpago", "description": "Transações instantâneas, saldo em tempo real e gestão de contas sem fricção com nossa plataforma otimizada.", "badge": "Rápido" },
+      { "icon": "DollarSign", "title": "Sem taxas ocultas", "description": "Preços transparentes sem mensalidade, sem saldo mínimo e transações ilimitadas gratuitas." },
+      { "icon": "Globe", "title": "Acesso global", "description": "Faça operações bancárias de qualquer lugar com suporte multimoeda e transferências internacionais." },
+      { "icon": "TrendingUp", "title": "Poupança inteligente", "description": "Ferramentas automáticas de poupança, taxas competitivas e recomendações de investimento personalizadas para crescer seu patrimônio." },
+      { "icon": "Users", "title": "Banco para a família", "description": "Gerencie várias contas, configure mesadas e compartilhe despesas facilmente com a família." }
+    ]
+  },
+  "trust": {
+    "title": "Segurança de nível bancário",
+    "assurance": "Seguro FDIC",
+    "indicators": [
+      { "icon": "Shield", "label": "Certificação SSL" },
+      { "icon": "CheckCircle", "label": "Conformidade PCI" },
+      { "icon": "Lock", "label": "SOC 2 Tipo II" },
+      { "icon": "Award", "label": "ISO 27001" }
+    ]
+  },
+  "testimonialsSection": {
+    "title": "Confiado por milhares de clientes felizes",
+    "subtitle": "Veja o que nossos usuários dizem sobre a experiência com o TrustPay",
+    "items": [
+      {
+        "name": "Sarah Johnson",
+        "role": "Proprietária de pequena empresa",
+        "avatar": "https://img.rocket.new/generatedImages/rocket_gen_img_10df5a971-1765003957966.png",
+        "alt": "Mulher profissional de cabelos castanhos em traje casual de negócios sorrindo para a câmera em fundo neutro",
+        "rating": 5,
+        "comment": "O TrustPay transformou a gestão financeira do meu negócio. As transferências instantâneas e as análises detalhadas me ajudam a tomar melhores decisões todos os dias."
+      },
+      {
+        "name": "Michael Chen",
+        "role": "Designer freelancer",
+        "avatar": "https://img.rocket.new/generatedImages/rocket_gen_img_11e9982cf-1763295713796.png",
+        "alt": "Homem asiático jovem com óculos e camisa casual sorrindo com confiança em escritório moderno",
+        "rating": 5,
+        "comment": "O app web é muito intuitivo e os recursos de segurança me deixam tranquilo. Posso gerenciar todas as contas em movimento sem problemas."
+      },
+      {
+        "name": "Emily Rodriguez",
+        "role": "Gerente de marketing",
+        "avatar": "https://img.rocket.new/generatedImages/rocket_gen_img_11504e941-1763295994346.png",
+        "alt": "Mulher hispânica com cabelos longos e escuros em blazer profissional sorrindo em ambiente de escritório iluminado",
+        "rating": 5,
+        "comment": "A melhor experiência bancária que já tive. O suporte é excelente e a plataforma é muito fácil de usar. Recomendo a todos!"
+      }
+    ]
+  },
+  "cta": {
+    "badge": "Comece hoje",
+    "title": "Pronto para transformar sua experiência bancária?",
+    "description": "Junte-se a milhares de clientes que confiam no TrustPay para suas finanças. Abra sua conta em minutos e comece a bancar de forma mais inteligente.",
+    "primaryButton": { "label": "Criar conta gratuita", "variant": "secondary", "path": "/registration", "icon": "UserPlus" },
+    "stats": {
+      "usersValue": "50K+",
+      "usersLabel": "Usuários ativos",
+      "transactionsValue": "$2B+",
+      "transactionsLabel": "Transações",
+      "ratingValue": "4,9/5",
+      "ratingLabel": "Avaliação dos usuários"
+    }
+  },
+  "footer": {
+    "description": "Seu parceiro de confiança para soluções bancárias modernas, seguras e práticas. Banco simples, acessível e seguro.",
+    "productTitle": "Produto",
+    "companyTitle": "Empresa",
+    "legalTitle": "Jurídico",
+    "productLinks": [
+      { "label": "Recursos", "href": "#features" },
+      { "label": "Segurança", "href": "#security" },
+      { "label": "Preços", "href": "#pricing" },
+      { "label": "Perguntas frequentes", "href": "#faq" }
+    ],
+    "companyLinks": [
+      { "label": "Sobre nós", "href": "#about" },
+      { "label": "Carreiras", "href": "#careers" },
+      { "label": "Imprensa", "href": "#press" },
+      { "label": "Contato", "href": "#contact" }
+    ],
+    "legalLinks": [
+      { "label": "Política de privacidade", "href": "#privacy" },
+      { "label": "Termos de serviço", "href": "#terms" },
+      { "label": "Política de cookies", "href": "#cookies" },
+      { "label": "Conformidade", "href": "#compliance" }
+    ],
+    "bottom": {
+      "rights": "© {{year}} TrustPay. Todos os direitos reservados.",
+      "encryption": "Criptografia SSL de 256 bits",
+      "insured": "Seguro FDIC"
+    }
+  }
+}

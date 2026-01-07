@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { toast } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
 import NavigationBar from '../../components/ui/NavigationBar';
 import BreadcrumbTrail from '../../components/ui/BreadcrumbTrail';
 import Input from '../../components/ui/Input';
@@ -19,8 +20,8 @@ type DepositReceipt = {
   amount?: number;
 };
 
-const formatCurrency = (value: number, currency: string = 'USD') =>
-  new Intl.NumberFormat('en-US', { style: 'currency', currency: currency.toUpperCase() }).format(value);
+const formatCurrency = (value: number, currency: string = 'USD', locale: string = 'en-US') =>
+  new Intl.NumberFormat(locale, { style: 'currency', currency: currency.toUpperCase() }).format(value);
 
 const maskedAccountNumber = (account: Account | null) => {
   const acctNum = account?.account_number || account?.accountNumber || '';
@@ -49,9 +50,10 @@ const DepositPreviewModal: React.FC<DepositPreviewModalProps> = ({
   isProcessing,
   errorMessage
 }) => {
+  const { t, i18n } = useTranslation('deposit');
   if (!isOpen) return null;
 
-  const amountDisplay = formatCurrency(amount, currency);
+  const amountDisplay = formatCurrency(amount, currency, i18n.language);
 
   return (
     <div
@@ -69,7 +71,7 @@ const DepositPreviewModal: React.FC<DepositPreviewModalProps> = ({
       >
         <div className="sticky top-0 bg-card border-b border-border px-6 py-4 flex items-center justify-between">
           <h2 id="deposit-preview-title" className="text-lg font-semibold text-foreground">
-            Confirm Deposit
+            {t('previewModal.title')}
           </h2>
           <button
             onClick={onClose}
@@ -93,7 +95,7 @@ const DepositPreviewModal: React.FC<DepositPreviewModalProps> = ({
               <Icon name="Send" size={28} color="var(--color-primary)" />
             </div>
             <p className="text-3xl font-bold text-foreground">{amountDisplay}</p>
-            <p className="text-sm text-muted-foreground">Deposit Amount</p>
+            <p className="text-sm text-muted-foreground">{t('previewModal.depositAmount')}</p>
           </div>
 
           <div className="bg-muted/40 rounded-lg p-4 space-y-3">
@@ -102,23 +104,25 @@ const DepositPreviewModal: React.FC<DepositPreviewModalProps> = ({
                 <Icon name="Banknote" size={22} color="var(--color-primary)" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-foreground truncate">{account?.type || 'Selected account'}</p>
+                <p className="text-sm font-semibold text-foreground truncate">
+                  {account?.type || t('previewModal.selectedAccount')}
+                </p>
                 <p className="text-xs text-muted-foreground truncate">{maskedAccountNumber(account)}</p>
               </div>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Account Number</span>
+              <span className="text-muted-foreground">{t('previewModal.accountNumber')}</span>
               <span className="font-medium text-foreground">{maskedAccountNumber(account)}</span>
             </div>
           </div>
 
           <div className="space-y-2 text-sm">
             <div className="flex justify-between py-2">
-              <span className="text-muted-foreground">Processing Fee</span>
-              <span className="font-medium text-foreground">{formatCurrency(0, currency)}</span>
+              <span className="text-muted-foreground">{t('previewModal.processingFee')}</span>
+              <span className="font-medium text-foreground">{formatCurrency(0, currency, i18n.language)}</span>
             </div>
             <div className="flex justify-between py-2 border-t border-border">
-              <span className="font-semibold text-foreground">Total Deposit</span>
+              <span className="font-semibold text-foreground">{t('previewModal.totalDeposit')}</span>
               <span className="font-bold text-primary">{amountDisplay}</span>
             </div>
           </div>
@@ -127,7 +131,7 @@ const DepositPreviewModal: React.FC<DepositPreviewModalProps> = ({
             <div className="flex items-start gap-2">
               <Icon name="AlertTriangle" size={16} color="var(--color-warning)" className="mt-0.5 flex-shrink-0" />
               <p className="text-xs text-warning-foreground">
-                Please verify all details carefully. This deposit may stay pending until an admin reviews it.
+                {t('previewModal.warning')}
               </p>
             </div>
           </div>
@@ -135,7 +139,7 @@ const DepositPreviewModal: React.FC<DepositPreviewModalProps> = ({
 
         <div className="sticky bottom-0 bg-card border-t border-border px-6 py-4 flex gap-3">
           <Button variant="outline" onClick={onClose} disabled={isProcessing} fullWidth>
-            Cancel
+            {t('previewModal.cancel')}
           </Button>
           <Button
             variant="default"
@@ -145,7 +149,7 @@ const DepositPreviewModal: React.FC<DepositPreviewModalProps> = ({
             iconPosition="left"
             fullWidth
           >
-            {isProcessing ? 'Submitting...' : 'Confirm Deposit'}
+            {isProcessing ? t('previewModal.submitting') : t('previewModal.confirm')}
           </Button>
         </div>
       </div>
@@ -166,12 +170,13 @@ const DepositSubmittedModal: React.FC<DepositSubmittedModalProps> = ({
   onClose,
   onMakeAnother
 }) => {
+  const { t, i18n } = useTranslation('deposit');
   if (!isOpen || !deposit) return null;
 
   const currency = deposit.currency || deposit.account?.currency || 'USD';
   const amountValue =
     typeof deposit.amountCents === 'number' ? deposit.amountCents / 100 : deposit.amount || 0;
-  const amountDisplay = formatCurrency(amountValue, currency);
+  const amountDisplay = formatCurrency(amountValue, currency, i18n.language);
 
   return (
     <div
@@ -187,7 +192,7 @@ const DepositSubmittedModal: React.FC<DepositSubmittedModalProps> = ({
       >
         <div className="sticky top-0 bg-card border-b border-border px-6 py-4 flex items-center justify-between">
           <h2 id="deposit-submitted-title" className="text-lg font-semibold text-foreground">
-            Deposit Submitted
+            {t('submittedModal.title')}
           </h2>
           <button
             onClick={onClose}
@@ -204,40 +209,43 @@ const DepositSubmittedModal: React.FC<DepositSubmittedModalProps> = ({
               <Icon name="BadgeCheck" size={28} color="var(--color-success)" />
             </div>
             <p className="text-3xl font-bold text-foreground">{amountDisplay}</p>
-            <p className="text-sm text-muted-foreground">Deposit Amount</p>
+            <p className="text-sm text-muted-foreground">{t('submittedModal.depositAmount')}</p>
           </div>
 
           <div className="bg-muted/40 rounded-lg p-4 space-y-3">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Status</span>
+              <span className="text-muted-foreground">{t('submittedModal.status')}</span>
               <span className="font-semibold text-foreground">{deposit.status || 'PENDING'}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Account</span>
-              <span className="font-medium text-foreground">{deposit.account?.type || 'Account'}</span>
+              <span className="text-muted-foreground">{t('submittedModal.account')}</span>
+              <span className="font-medium text-foreground">
+                {deposit.account?.type || t('previewModal.selectedAccount')}
+              </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Account Number</span>
+              <span className="text-muted-foreground">{t('submittedModal.accountNumber')}</span>
               <span className="font-medium text-foreground">{maskedAccountNumber(deposit.account || null)}</span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Reference</span>
-              <span className="font-medium text-foreground">{deposit.id || 'Pending assignment'}</span>
+              <span className="text-muted-foreground">{t('submittedModal.reference')}</span>
+              <span className="font-medium text-foreground">
+                {deposit.id || t('submittedModal.pendingReference')}
+              </span>
             </div>
           </div>
 
           <div className="p-3 bg-muted/40 border border-border rounded-lg text-xs text-muted-foreground">
-            We received your mobile deposit. It may stay pending until an admin reviews it. Funds are unavailable until
-            approval.
+            {t('submittedModal.note')}
           </div>
         </div>
 
         <div className="sticky bottom-0 bg-card border-t border-border px-6 py-4 flex gap-3">
           <Button variant="outline" onClick={onClose} fullWidth>
-            Close
+            {t('submittedModal.close')}
           </Button>
           <Button variant="default" onClick={onMakeAnother} iconName="RefreshCcw" iconPosition="left" fullWidth>
-            Make Another Deposit
+            {t('submittedModal.makeAnother')}
           </Button>
         </div>
       </div>
@@ -247,6 +255,7 @@ const DepositSubmittedModal: React.FC<DepositSubmittedModalProps> = ({
 
 const DepositForm = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation('deposit');
   const [amount, setAmount] = useState('');
   const [accountId, setAccountId] = useState('');
   const [account, setAccount] = useState<Account | null>(null);
@@ -268,15 +277,15 @@ const DepositForm = () => {
 
     const numericAmount = Number(amount);
     if (!numericAmount || numericAmount <= 0) {
-      setErrorMessage('Enter a valid deposit amount.');
+      setErrorMessage(t('messages.error.amount'));
       return;
     }
     if (!accountId) {
-      setErrorMessage('Select an account to fund.');
+      setErrorMessage(t('messages.error.account'));
       return;
     }
     if (!frontImage || !backImage) {
-      setErrorMessage('Upload front and back images of the check.');
+      setErrorMessage(t('messages.error.images'));
       return;
     }
 
@@ -287,7 +296,7 @@ const DepositForm = () => {
     const numericAmount = Number(amount);
     if (!numericAmount || numericAmount <= 0 || !accountId || !frontImage || !backImage) {
       setIsPreviewOpen(false);
-      setErrorMessage('Please complete the deposit form before submitting.');
+      setErrorMessage(t('messages.error.completeForm'));
       return;
     }
 
@@ -317,7 +326,7 @@ const DepositForm = () => {
 
       const payload = await response.json().catch(() => null);
       if (!response.ok) {
-        const message = payload?.errors || payload?.message || 'Unable to submit mobile deposit.';
+        const message = payload?.errors || payload?.message || t('messages.error.submitFailed');
         setConfirmationError(message);
         toast.error(message);
         return;
@@ -335,9 +344,9 @@ const DepositForm = () => {
       setSubmittedDeposit(depositReceipt);
       setIsPreviewOpen(false);
       setIsSubmittedOpen(true);
-      toast.success('Deposit submitted for review.');
+      toast.success(t('messages.success'));
     } catch (error) {
-      const message = 'Unable to process mobile deposit right now.';
+      const message = t('messages.error.processFailed');
       setConfirmationError(message);
       toast.error(message);
     } finally {
@@ -371,12 +380,12 @@ const DepositForm = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 items-start">
           <div className="w-full">
             <Input
-              label="Deposit Amount"
+              label={t('form.amountLabel')}
               type="number"
-              placeholder="Enter amount"
+              placeholder={t('form.amountPlaceholder')}
               value={amount}
               onChange={(event) => setAmount(event.target.value)}
-              description="Minimum deposit $1"
+              description={t('form.amountDescription')}
               required
               className="w-full"
             />
@@ -392,13 +401,13 @@ const DepositForm = () => {
         </div>
 
         <div className="rounded-lg border border-border bg-muted/30 px-4 py-3 text-sm text-foreground space-y-3">
-          <div className="font-medium">Account name: {account?.type || '—'}</div>
-          <div>Account number: {account?.account_number || account?.accountNumber || '—'}</div>
-          <div>Bank name: TrustPay Bank</div>
+          <div className="font-medium">{t('form.accountNameLabel')}: {account?.type || '—'}</div>
+          <div>{t('form.accountNumberLabel')}: {account?.account_number || account?.accountNumber || '—'}</div>
+          <div>{t('form.bankNameLabel')}: {t('form.bankNameValue')}</div>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Check Images</label>
+          <label className="text-sm font-medium text-foreground">{t('form.checkImagesLabel')}</label>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <label className="flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-border bg-background/60 px-4 py-6 cursor-pointer hover:border-foreground/50 transition min-h-[200px]">
               <input
@@ -408,14 +417,14 @@ const DepositForm = () => {
                 onChange={(e) => setFrontImage(e.target.files?.[0] || null)}
                 required
               />
-              <div className="text-sm font-medium text-foreground mb-1">Front of check</div>
+              <div className="text-sm font-medium text-foreground mb-1">{t('form.frontLabel')}</div>
               {frontPreview ? (
                 <div className="w-full rounded-md border border-border/60 bg-white overflow-hidden">
                   <img src={frontPreview} alt="Front of check preview" className="w-full h-40 object-contain" />
                 </div>
               ) : (
                 <>
-                  <div className="text-xs text-muted-foreground mb-2">Tap to upload</div>
+                  <div className="text-xs text-muted-foreground mb-2">{t('form.tapToUpload')}</div>
                   <div className="text-2xl text-muted-foreground">↑</div>
                 </>
               )}
@@ -428,21 +437,21 @@ const DepositForm = () => {
                 onChange={(e) => setBackImage(e.target.files?.[0] || null)}
                 required
               />
-              <div className="text-sm font-medium text-foreground mb-1">Back of check</div>
+              <div className="text-sm font-medium text-foreground mb-1">{t('form.backLabel')}</div>
               {backPreview ? (
                 <div className="w-full rounded-md border border-border/60 bg-white overflow-hidden">
                   <img src={backPreview} alt="Back of check preview" className="w-full h-40 object-contain" />
                 </div>
               ) : (
                 <>
-                  <div className="text-xs text-muted-foreground mb-2">Tap to upload</div>
+                  <div className="text-xs text-muted-foreground mb-2">{t('form.tapToUpload')}</div>
                   <div className="text-2xl text-muted-foreground">↑</div>
                 </>
               )}
             </label>
           </div>
           <p className="text-xs text-muted-foreground">
-            Upload clear photos of the signed check. Deposits stay pending until an admin approves.
+            {t('form.uploadNote')}
           </p>
         </div>
 
@@ -453,7 +462,7 @@ const DepositForm = () => {
         )}
 
         <Button type="submit" size="lg" className="w-full" loading={isProcessing}>
-          Submit Mobile Deposit
+          {t('form.submit')}
         </Button>
       </form>
 
@@ -495,10 +504,11 @@ const DepositForm = () => {
 
 const DepositPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation('deposit');
 
   const breadcrumbItems = [
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Deposit Money' }
+    { label: t('breadcrumb.dashboard'), path: '/dashboard' },
+    { label: t('breadcrumb.deposit') }
   ];
 
   useEffect(() => {
@@ -510,8 +520,8 @@ const DepositPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Deposit Money - TrustPay</title>
-        <meta name="description" content="Add funds to your TrustPay account using secure Stripe payment rails." />
+        <title>{t('meta.title')}</title>
+        <meta name="description" content={t('meta.description')} />
       </Helmet>
 
       <div className="min-h-screen bg-background">
@@ -521,10 +531,8 @@ const DepositPage: React.FC = () => {
             <div className="max-w-7xl mx-auto space-y-6">
               <BreadcrumbTrail items={breadcrumbItems} />
               <div>
-                <h1 className="text-3xl font-bold text-foreground mb-2">Mobile Check Deposit</h1>
-                <p className="text-muted-foreground">
-                  Upload front and back images of your check. Funds remain pending until an admin reviews and approves.
-                </p>
+                <h1 className="text-3xl font-bold text-foreground mb-2">{t('page.title')}</h1>
+                <p className="text-muted-foreground">{t('page.subtitle')}</p>
               </div>
 
               <DepositForm />

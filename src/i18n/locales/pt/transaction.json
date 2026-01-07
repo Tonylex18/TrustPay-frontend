@@ -1,0 +1,68 @@
+{
+  "meta": { "title": "Transações - TrustPay", "description": "Veja e gerencie seu histórico de transações, filtros e exportações." },
+  "breadcrumb": { "dashboard": "Dashboard", "transactions": "Transações" },
+  "page": {
+    "title": "Histórico de transações",
+    "subtitle": "Veja e gerencie todas as suas operações bancárias",
+    "accountLabel": "Conta",
+    "loading": "Carregando transações...",
+    "noAccounts": "Ainda não há contas. Crie uma para ver transações.",
+    "selectAccount": "Selecione uma conta para ver sua atividade.",
+    "loadingAccounts": "Carregando contas...",
+    "ctaCreate": "Criar uma conta",
+    "emptyTitle": "Nenhuma transação encontrada",
+    "emptySubtitle": "Tente ajustar filtros ou busca"
+  },
+  "quickActions": {
+    "title": "Ações rápidas",
+    "description": "Faça ações rápidas aqui",
+    "transfer": "Transferir dinheiro",
+    "transferDesc": "Envie dinheiro para qualquer conta",
+    "dashboard": "Ver dashboard",
+    "dashboardDesc": "Ir para o dashboard",
+    "profile": "Configurações do perfil",
+    "profileDesc": "Gerencie seu perfil"
+  },
+  "filters": {
+    "searchPlaceholder": "Pesquisar por descrição ou valor...",
+    "filters": "Filtros",
+    "results": "{{count}} {{count, plural, one {resultado} other {resultados}}}",
+    "startDate": "Data inicial",
+    "endDate": "Data final",
+    "type": "Tipo de transação",
+    "status": "Status",
+    "clear": "Limpar filtros",
+    "export": "Exportar",
+    "types": { "all": "Todos os tipos", "credit": "Crédito", "debit": "Débito" },
+    "statusOptions": { "all": "Todos os status", "completed": "Concluído", "pending": "Pendente", "failed": "Falhou" },
+    "clearedToast": "Filtros limpos.",
+    "noExport": "Não há transações para exportar.",
+    "exportSuccess": "Transações exportadas."
+  },
+  "table": {
+    "date": "Data",
+    "description": "Descrição",
+    "status": "Status",
+    "amount": "Valor",
+    "reference": "Referência",
+    "merchant": "Comerciante",
+    "location": "Local",
+    "contact": "Contato"
+  },
+  "card": {
+    "viewDetails": "Ver detalhes",
+    "hideDetails": "Ocultar detalhes",
+    "reference": "Referência",
+    "merchant": "Comerciante",
+    "location": "Local",
+    "contact": "Contato"
+  },
+  "pagination": {
+    "showing": "Mostrando {{start}}-{{end}} de {{total}}",
+    "perPage": { "10": "10 por página", "25": "25 por página", "50": "50 por página", "100": "100 por página" },
+    "pageXofY": "Página {{current}} de {{total}}",
+    "prev": "Página anterior",
+    "next": "Próxima página"
+  },
+  "messages": { "loadAccountsFailed": "Não foi possível carregar as contas.", "loadTransactionsFailed": "Não foi possível carregar as transações." }
+}

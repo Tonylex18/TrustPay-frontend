@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "title": "Investment & Vermögensverwaltung | TrustPay",
+    "description": "Beratungsgeführtes Investieren, Vermögensplanung und Kredite mit dem Anspruch führender Investmentbanken."
+  },
+  "hero": {
+    "eyebrow": "Investing & Wealth",
+    "title": "Eine Vermögensplattform mit Kapitalmarkt-DNA",
+    "description": "Portfolios, Planung und Kreditvergabe, die die Strenge institutioneller Desks mit der Betreuung eines dedizierten Teams verbinden.",
+    "ctaPrimary": { "label": "Planung starten", "path": "/registration" },
+    "ctaSecondary": { "label": "Mit Berater sprechen", "path": "/commercial-banking" },
+    "strategies": [
+      { "title": "Research-getriebene Sicht", "detail": "Investment-Komitees beobachten Makro, Sektoren und Faktoren, um schnell zu reagieren.", "icon": "BarChart3", "highlight": "Wöchentliche Calls" },
+      { "title": "Risikomanagement by Design", "detail": "Szenarien, Drawdown-Limits und Hedges für konzentrierte Positionen.", "icon": "ShieldCheck", "highlight": "Abwärtsschutz" },
+      { "title": "Beratung + Digital", "detail": "Dedizierte Berater mit intuitiven digitalen Ansichten, damit du überall handeln kannst.", "icon": "Smartphone", "highlight": "Mensch + App" }
+    ]
+  },
+  "offerings": {
+    "eyebrow": "Leistungen",
+    "title": "Maßgeschneiderte Vermögensstrategien",
+    "description": "Inspiriert von führenden institutionellen Plattformen, geliefert über persönliche Beziehungen und intuitive Tools.",
+    "items": [
+      { "title": "Personalisierte Portfolios", "description": "Ausgewählte Allokationen in Aktien, Alternativen und Cash mit Direct Indexing.", "icon": "PieChart", "metrics": ["Direct Indexing", "Steueroptimiert", "Multi-Asset"] },
+      { "title": "Zielorientierte Planung", "description": "Rente, Bildung und Liquidität mit Szenarioanalysen und Stresstests.", "icon": "Target", "metrics": ["Rente", "Bildung", "Liquidität"] },
+      { "title": "Trust & Nachfolge", "description": "Trust-Strukturen, Philanthropie und generationsübergreifende Strategien mit Spezialisten.", "icon": "Gem", "metrics": ["Vermögensübergabe", "Philanthropie", "Trusts"] },
+      { "title": "Liquidität & Kredit", "description": "Wertpapierlinien, maßgeschneiderte Hypotheken und strategisches Cash-Management.", "icon": "Banknote", "metrics": ["Kreditlinien", "Hypotheken", "Cash"] }
+    ]
+  },
+  "insights": {
+    "eyebrow": "Insights & Research",
+    "title": "Bleib vorn mit unserer Sicht",
+    "description": "Wöchentliches Research, Marktnotizen und Planungsideen, damit du sicher handeln kannst.",
+    "cta": { "label": "So denken wir", "path": "/about-trustpay" },
+    "items": [
+      { "title": "Markt-Playbook 2024", "summary": "Unser Positionierung in Quality-Aktien, kurz laufendem Kredit und Real Assets.", "category": "Marktsicht" },
+      { "title": "Planung von Liquiditätsereignissen", "summary": "Vor-Transaktionsplanung, QSBS und Timing von Spenden.", "category": "Vermögensstrategie" },
+      { "title": "Höhere Zinsen navigieren", "summary": "Cash-Leitern, Refinanzierungschancen und Absicherung von Zinsrisiken.", "category": "Insights" }
+    ],
+    "readMore": "Mehr lesen"
+  },
+  "advisors": {
+    "eyebrow": "Dedizierte Berater",
+    "title": "Ein Team auf deine Ziele ausgerichtet",
+    "description": "Arbeite mit erfahrenen Beratern, unterstützt von Spezialisten für Planung, Kredit und Investments.",
+    "people": [
+      { "name": "Evelyn Carter", "focus": "Familien & Gründer", "credential": "CFA, CFP" },
+      { "name": "Marcus Reid", "focus": "Executives & Aktienkompensation", "credential": "CRPC, CEP" },
+      { "name": "Sophia Lee", "focus": "Liquidität & Kredit", "credential": "Vermögensspezialistin" }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Bereit, wenn du es bist",
+    "title": "Lass uns deinen Plan gestalten",
+    "description": "Wir stimmen Ziele, Risiko und Liquidität ab und bauen eine Roadmap, die du in der App verfolgst.",
+    "primary": { "label": "Kontakt aufnehmen", "path": "/business" },
+    "secondary": { "label": "Portfolios ansehen", "path": "/dashboard" }
+  }
+}

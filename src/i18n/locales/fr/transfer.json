@@ -1,0 +1,174 @@
+{
+  "meta": {
+    "title": "Virement - TrustPay",
+    "description": "Envoyez de l’argent en toute sécurité entre vos comptes ou vers des bénéficiaires externes."
+  },
+  "breadcrumb": {
+    "dashboard": "Tableau de bord",
+    "transfer": "Virement"
+  },
+  "page": {
+    "title": "Virement",
+    "subtitle": "Envoyez de l’argent en toute sécurité à vos bénéficiaires",
+    "loading": "Chargement des détails du compte..."
+  },
+  "form": {
+    "fromAccount": "Compte source",
+    "destinationInternal": "Destination (votre compte)",
+    "destinationPlaceholder": "Choisissez la destination",
+    "destinationWarning": "Vous avez besoin d’un autre compte pour un virement interne.",
+    "accountHolderName": "Nom du titulaire",
+    "accountHolderPlaceholder": "Jane Doe",
+    "routingNumber": "Numéro de routage",
+    "routingPlaceholder": "Numéro de routage",
+    "bankName": "Banque",
+    "bankPlaceholder": "Banque",
+    "accountNumberLabel": "Numéro de compte",
+    "accountNumberPlaceholder": "Saisissez un numéro de compte à 10 chiffres",
+    "accountTypeLabel": "Type de compte",
+    "accountTypePlaceholder": "Choisissez le type de compte",
+    "accountTypeOptions": {
+      "checking": "Compte chèque",
+      "savings": "Compte épargne"
+    },
+    "memoLabel": "Libellé (optionnel)",
+    "memoPlaceholder": "Ajoutez une note pour ce virement",
+    "memoDescription": "100 caractères maximum",
+    "reviewButton": "Vérifier le virement"
+  },
+  "status": {
+    "verifyingAccount": "Vérification du compte...",
+    "verifiedAccount": "Vérifié : {{name}}",
+    "bankIdentified": "Banque identifiée"
+  },
+  "amountInput": {
+    "label": "Montant du virement",
+    "ariaLabel": "Montant du virement en dollars",
+    "available": "Solde disponible :",
+    "remaining": "Plafond quotidien restant :"
+  },
+  "transferType": {
+    "label": "Type de virement",
+    "options": {
+      "internal": {
+        "title": "Virement interne",
+        "description": "Entre vos propres comptes",
+        "time": "Immédiat"
+      },
+      "external": {
+        "title": "Virement externe",
+        "description": "Vers d’autres banques",
+        "time": "1-2 jours ouvrés"
+      }
+    }
+  },
+  "processing": {
+    "instant": "Immédiat",
+    "external": "1-2 jours ouvrés"
+  },
+  "summary": {
+    "title": "Résumé du virement",
+    "amount": "Montant du virement",
+    "fee": "Frais de traitement",
+    "total": "Montant total",
+    "processingTime": "Délai de traitement",
+    "externalNotice": "Les virements externes peuvent prendre 1 à 2 jours ouvrés. Vérifiez les informations du bénéficiaire."
+  },
+  "confirmation": {
+    "title": "Confirmer le virement",
+    "amount": "Montant du virement",
+    "accountNumber": "Numéro de compte",
+    "transferType": "Type de virement",
+    "memo": "Libellé",
+    "fee": "Frais de traitement",
+    "total": "Débit total",
+    "warning": "Vérifiez attentivement les informations. La transaction ne peut être annulée après confirmation.",
+    "cancel": "Annuler",
+    "confirm": "Confirmer le virement",
+    "processing": "Traitement..."
+  },
+  "info": {
+    "title": "Informations importantes",
+    "items": [
+      "Les virements internes sont traités immédiatement",
+      "Les virements externes peuvent prendre 1 à 2 jours ouvrés",
+      "Vérifiez les informations du bénéficiaire avant de confirmer",
+      "La transaction est irréversible une fois confirmée"
+    ]
+  },
+  "pinEntry": {
+    "title": "Saisissez le code PIN de virement",
+    "description": "Entrez votre code PIN de 4 à 6 chiffres pour autoriser ce virement.",
+    "label": "PIN",
+    "cancel": "Annuler",
+    "confirm": "Confirmer le virement",
+    "invalid": "Saisissez votre code PIN de 4 à 6 chiffres."
+  },
+  "pinSetup": {
+    "title": "Définissez votre code PIN de virement",
+    "description": "Créez un code PIN de 4 à 6 chiffres pour autoriser virements et retraits. Ne partagez pas ce code.",
+    "newPin": "Nouveau PIN",
+    "confirmPin": "Confirmez le PIN",
+    "currentPin": "PIN actuel (si mise à jour)",
+    "cancel": "Annuler",
+    "save": "Enregistrer le PIN",
+    "invalid": "Saisissez deux PIN identiques de 4 à 6 chiffres."
+  },
+  "security": {
+    "title": "Sécurité & plafonds",
+    "dailyLimit": "Plafond quotidien",
+    "perTransaction": "Plafond par transaction",
+    "remainingToday": "{{amount}} restant aujourd’hui",
+    "items": {
+      "secureTitle": "Virement sécurisé",
+      "secureDescription": "Tous les virements sont chiffrés et protégés",
+      "notificationsTitle": "Notifications instantanées",
+      "notificationsDescription": "Recevez une alerte pour chaque transaction",
+      "historyTitle": "Historique des transactions",
+      "historyDescription": "Suivez tous vos virements à tout moment"
+    }
+  },
+  "labels": {
+    "internalBank": "TrustPay (interne)",
+    "yourAccount": "Votre compte"
+  },
+  "messages": {
+    "error": {
+      "routingRequired": "Saisissez un numéro de routage",
+      "routingInvalid": "Le numéro de routage doit comporter 9 chiffres",
+      "accountHolderRequired": "Le nom du titulaire est requis",
+      "bankNameRequired": "Le nom de la banque est requis",
+      "bankLookupFirst": "Identifiez la banque avec le titulaire et le routage d’abord",
+      "accountNumberRequired": "Saisissez un numéro de compte destinataire",
+      "accountNumberVerify": "Vérifiez le numéro de compte avant de poursuivre",
+      "accountTypeRequired": "Choisissez le type de compte",
+      "fromAccountRequired": "Sélectionnez un compte source.",
+      "toAccountRequired": "Sélectionnez un compte destinataire.",
+      "toAccountDifferent": "Choisissez un autre compte destinataire.",
+      "amountRequired": "Saisissez un montant de virement",
+      "amountPositive": "Le montant doit être supérieur à zéro",
+      "insufficientBalance": "Solde insuffisant",
+      "perTransactionLimit": "Le montant dépasse le plafond par transaction de {{limit}}",
+      "dailyLimit": "Le montant dépasse le plafond quotidien restant de {{limit}}",
+      "pinRequired": "Définissez votre code PIN avant d’envoyer de l’argent.",
+      "destinationRequired": "Sélectionnez un compte destinataire.",
+      "routingMissing": "Numéro de routage manquant pour le compte destinataire.",
+      "pinLocked": "PIN bloqué, réessayez plus tard.",
+      "transferFailed": "Impossible d’exécuter le virement.",
+      "verifyAccountMissing": "Saisissez le numéro de compte et le nom de la banque.",
+      "bankNotFound": "Banque introuvable. Vérifiez le numéro de routage.",
+      "bankLookupUnavailable": "Recherche indisponible. Réessayez ou saisissez le nom de la banque.",
+      "pinSaveFailed": "Impossible d’enregistrer le PIN.",
+      "pinSaveUnavailable": "Impossible d’enregistrer le PIN pour le moment."
+    },
+    "success": {
+      "transferSubmitted": "Virement soumis. Il sera traité sous peu.",
+      "pinSet": "Code PIN de virement enregistré."
+    },
+    "info": {
+      "stepUp": "Virement soumis. Une vérification supplémentaire peut être requise."
+    },
+    "defaultMemoInternal": "Virement vers votre compte",
+    "defaultMemoExternal": "Virement vers bénéficiaire"
+  }
+}

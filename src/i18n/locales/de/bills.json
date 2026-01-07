@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "title": "Rechnungen - TrustPay",
+    "description": "Rechnungszahlungen mit Freigaben und Status-Transparenz einreichen und nachverfolgen."
+  },
+  "breadcrumb": {
+    "dashboard": "Dashboard",
+    "bills": "Rechnungen",
+    "details": "Zahlungsdetails"
+  },
+  "page": {
+    "title": "Rechnungen & Zahlungen",
+    "subtitle": "Reichen Sie Rechnungszahlungen mit klaren Freigabestatus und auditfähigen Details ein.",
+    "loading": "Rechnungsdaten werden geladen...",
+    "statusLegendTitle": "Status-Hinweis",
+    "statusLegendBody": "Eingereicht ≠ bezahlt. Offene Zahlungen bleiben in Prüfung, bis ein Admin den Abgang bucht. Das verfügbare Guthaben wird erst bei Buchung oder Backend-Block reduziert.",
+    "refresh": "Aktualisieren"
+  },
+  "list": {
+    "title": "Aktuelle Rechnungszahlungen",
+    "subtitle": "Eingereichte, genehmigte, abgelehnte oder fehlgeschlagene Zahlungen ansehen.",
+    "empty": "Noch keine Rechnungszahlungen. Reichen Sie rechts die erste ein, um sie hier zu sehen.",
+    "loading": "Rechnungen werden geladen...",
+    "auditTitle": "Audit-Tipps",
+    "audit1": "Status-Chips zeigen, ob eine Zahlung in Prüfung, bezahlt, abgelehnt oder fehlgeschlagen ist.",
+    "audit2": "Klicken Sie auf eine Rechnung, um Referenzen, Prüfzeiten und Ablehnungsgründe zu sehen.",
+    "audit3": "Aktualisieren holt den neuesten Stand vom Backend – keine Client-seitigen Saldoanpassungen."
+  },
+  "steps": {
+    "category": { "title": "Kategorie", "description": "Rechnungstyp wählen" },
+    "biller": { "title": "Empfänger", "description": "Wen zahlen Sie?" },
+    "details": { "title": "Details", "description": "Referenz, Betrag, Konto" },
+    "review": { "title": "Prüfen", "description": "Bestätigen & senden" },
+    "selectCategoryTitle": "Rechnungskategorie wählen",
+    "selectCategorySubtitle": "Wählen Sie den Rechnungstyp, um passende Empfänger und Anforderungen zu laden.",
+    "billersAvailable": "{{count}} Empfänger verfügbar",
+    "noCategories": "Noch keine Rechnungskategorien vorhanden.",
+    "loadingCategories": "Kategorien werden geladen...",
+    "continue": "Weiter",
+    "selectBillerTitle": "Empfänger auswählen",
+    "selectBillerSubtitle": "Wählen Sie einen gelisteten Empfänger oder geben Sie den Namen exakt wie auf der Rechnung ein.",
+    "changeCategory": "Kategorie ändern",
+    "listedBiller": "Gelisteter Empfänger",
+    "noBillers": "Für diese Kategorie sind keine Empfänger gelistet. Sie können einen eigenen Namen eingeben.",
+    "customBiller": "Benutzerdefinierter Empfängername",
+    "customBillerPlaceholder": "z. B. Parkallee 10",
+    "billersLabel": "Empfänger",
+    "customBillerInfo": "Bei einem eigenen Empfänger nutzen wir den Namen nur für diese Zahlung.",
+    "referenceLabel": "Referenz- oder Kontonummer",
+    "referencePlaceholder": "Referenz laut Rechnung eingeben",
+    "amountLabel": "Betrag",
+    "noteLabel": "Notiz (optional)",
+    "notePlaceholder": "Notiz zu dieser Zahlung hinzufügen",
+    "sourceAccountLabel": "Quellkonto",
+    "detailsIntroTitle": "Zahlungsdetails",
+    "detailsIntroBody": "Nutzen Sie die Referenz-/Kontonummer Ihrer Rechnung. Offene Zahlungen reduzieren das Guthaben erst nach Freigabe.",
+    "paymentDescriptionLabel": "Zahlungsbeschreibung (optional)",
+    "paymentDescriptionPlaceholder": "Sichtbar für Sie und Admins (z. B. „Miete Juli, Whg 12B“).",
+    "adminApprovalTitle": "Admin-Freigabe erforderlich",
+    "adminApprovalBody": "Eingereicht ≠ bezahlt. Admins prüfen und buchen den Abgang, bevor Geld abgeht. Offene Zahlungen reduzieren das Guthaben nicht, außer bei Backend-Block.",
+    "back": "Zurück"
+  },
+  "statusHelp": {
+    "SUBMITTED": "Wartet auf Admin-Freigabe. Guthaben bleibt verfügbar bis zur Buchung.",
+    "PAID": "Gebucht und an den Empfänger ausgeglichen.",
+    "REJECTED": "Nicht verarbeitet. Sperren werden aufgehoben.",
+    "FAILED": "Versuch fehlgeschlagen. Prüfen und erneut senden."
+  },
+  "labels": {
+    "biller": "Empfänger",
+    "category": "Kategorie",
+    "reference": "Referenz",
+    "amount": "Betrag",
+    "note": "Notiz",
+    "account": "Konto",
+    "sourceAccount": "Quellkonto",
+    "description": "Beschreibung",
+    "created": "Erstellt"
+  },
+  "table": {
+    "status": "Status"
+  },
+  "errors": {
+    "selectCategory": "Bitte wählen Sie eine Kategorie, um fortzufahren.",
+    "selectBiller": "Wählen Sie einen Empfänger oder geben Sie einen eigenen Namen ein.",
+    "referenceRequired": "Fügen Sie die Referenz- oder Kontonummer Ihrer Rechnung hinzu.",
+    "amountInvalid": "Geben Sie einen gültigen Betrag größer 0 ein.",
+    "accountRequired": "Wählen Sie das Konto zur Finanzierung dieser Zahlung.",
+    "kycRequired": "KYC-Freigabe ist vor Rechnungszahlungen erforderlich.",
+    "disabledProfile": "Ihr Konto ist deaktiviert. Bitte Support kontaktieren.",
+    "completeFields": "Füllen Sie alle Pflichtfelder aus, bevor Sie senden.",
+    "loadCategories": "Rechnungskategorien konnten nicht geladen werden.",
+    "loadPayments": "Rechnungszahlungen konnten nicht geladen werden.",
+    "refreshPayments": "Rechnungszahlungen konnten nicht aktualisiert werden.",
+    "submitFailed": "Rechnungszahlung kann derzeit nicht gesendet werden.",
+    "billNotFound": "Rechnungszahlung nicht gefunden.",
+    "loadPayment": "Rechnungszahlung kann nicht geladen werden."
+  },
+  "success": {
+    "submitted": "Rechnungszahlung zur Admin-Freigabe eingereicht."
+  },
+  "friendly": {
+    "kyc": "KYC abschließen, bevor Rechnungszahlungen eingereicht werden.",
+    "disabled": "Ihr Profil ist deaktiviert. Bitte Support kontaktieren.",
+    "insufficient": "Unzureichendes verfügbares Guthaben für diese Zahlung.",
+    "active": "Ein aktives Quellkonto auswählen.",
+    "fallback": "Anfrage kann nicht verarbeitet werden."
+  },
+  "statusBadge": {
+    "SUBMITTED": "Zur Freigabe",
+    "APPROVED": "Genehmigt",
+    "PAID": "Bezahlt",
+    "REJECTED": "Abgelehnt",
+    "FAILED": "Fehlgeschlagen",
+    "DRAFT": "Entwurf",
+    "UNKNOWN": "Unbekannt"
+  },
+  "cards": {
+    "defaultCategory": "Rechnungszahlung",
+    "defaultBiller": "Empfänger",
+    "ref": "Ref {{ref}}"
+  },
+  "review": {
+    "summaryTitle": "Prüfen & senden",
+    "summarySubtitle": "Bestätigen Sie die Rechnungsdetails. Diese Zahlung wird zur Admin-Freigabe eingereicht.",
+    "noticeTitle": "Hinweis zum Versand",
+    "noticeBody": "Zahlungen bleiben offen, bis ein Admin freigibt und bucht. Der Status wird nach Verarbeitung aktualisiert.",
+    "submitCta": "Zur Freigabe senden"
+  },
+  "detailsPage": {
+    "metaTitle": "Details zur Rechnungszahlung - TrustPay",
+    "metaDescription": "Status und Audit-Daten Ihrer Rechnungszahlung anzeigen.",
+    "title": "Rechnungszahlung",
+    "subtitle": "Status, Referenz, Prüfzeiten und Ablehnungsgründe ansehen.",
+    "back": "Zurück zu Rechnungen",
+    "refresh": "Aktualisieren",
+    "statusTitle": "Status-Hinweis",
+    "statusBody": "Eingereicht ≠ bezahlt. Admin-Freigabe bucht den Abgang. Offene Posten reduzieren das Guthaben nicht außer bei Backend-Sperre.",
+    "loading": "Rechnungszahlung wird geladen...",
+    "amount": "Betrag",
+    "adminReviewDate": "Admin-Prüfdatum",
+    "pending": "Ausstehend",
+    "paymentDescription": "Zahlungsbeschreibung",
+    "rejectionReason": "Ablehnungsgrund"
+  }
+}

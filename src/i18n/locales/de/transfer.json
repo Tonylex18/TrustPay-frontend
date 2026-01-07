@@ -1,0 +1,174 @@
+{
+  "meta": {
+    "title": "Geld überweisen - TrustPay",
+    "description": "Senden Sie Geld sicher zwischen Ihren Konten oder an externe Empfänger."
+  },
+  "breadcrumb": {
+    "dashboard": "Dashboard",
+    "transfer": "Überweisung"
+  },
+  "page": {
+    "title": "Geldüberweisung",
+    "subtitle": "Senden Sie Geld sicher an Ihre Empfänger",
+    "loading": "Kontodaten werden geladen..."
+  },
+  "form": {
+    "fromAccount": "Quellkonto",
+    "destinationInternal": "Ziel (eigenes Konto)",
+    "destinationPlaceholder": "Ziel auswählen",
+    "destinationWarning": "Sie benötigen ein weiteres Konto für interne Überweisungen.",
+    "accountHolderName": "Name des Kontoinhabers",
+    "accountHolderPlaceholder": "Max Mustermann",
+    "routingNumber": "Routing-Nummer",
+    "routingPlaceholder": "Routing-Nummer",
+    "bankName": "Bank",
+    "bankPlaceholder": "Bank",
+    "accountNumberLabel": "Kontonummer",
+    "accountNumberPlaceholder": "10-stellige Kontonummer eingeben",
+    "accountTypeLabel": "Kontotyp",
+    "accountTypePlaceholder": "Kontotyp auswählen",
+    "accountTypeOptions": {
+      "checking": "Girokonto",
+      "savings": "Sparkonto"
+    },
+    "memoLabel": "Verwendungszweck (optional)",
+    "memoPlaceholder": "Notiz für diese Überweisung",
+    "memoDescription": "Maximal 100 Zeichen",
+    "reviewButton": "Überweisung prüfen"
+  },
+  "status": {
+    "verifyingAccount": "Konto wird geprüft...",
+    "verifiedAccount": "Verifiziert: {{name}}",
+    "bankIdentified": "Bank identifiziert"
+  },
+  "amountInput": {
+    "label": "Überweisungsbetrag",
+    "ariaLabel": "Überweisungsbetrag in Dollar",
+    "available": "Verfügbarer Saldo:",
+    "remaining": "Täglicher Restbetrag:"
+  },
+  "transferType": {
+    "label": "Überweisungsart",
+    "options": {
+      "internal": {
+        "title": "Interne Überweisung",
+        "description": "Zwischen Ihren eigenen Konten",
+        "time": "Sofort"
+      },
+      "external": {
+        "title": "Externe Überweisung",
+        "description": "Auf Konten anderer Banken",
+        "time": "1-2 Werktage"
+      }
+    }
+  },
+  "processing": {
+    "instant": "Sofort",
+    "external": "1-2 Werktage"
+  },
+  "summary": {
+    "title": "Überweisungsübersicht",
+    "amount": "Überweisungsbetrag",
+    "fee": "Bearbeitungsgebühr",
+    "total": "Gesamtbetrag",
+    "processingTime": "Bearbeitungszeit",
+    "externalNotice": "Externe Überweisungen können 1-2 Werktage dauern. Stellen Sie sicher, dass Empfängerdaten korrekt sind."
+  },
+  "confirmation": {
+    "title": "Überweisung bestätigen",
+    "amount": "Überweisungsbetrag",
+    "accountNumber": "Kontonummer",
+    "transferType": "Überweisungsart",
+    "memo": "Verwendungszweck",
+    "fee": "Bearbeitungsgebühr",
+    "total": "Gesamtbelastung",
+    "warning": "Bitte alle Angaben prüfen. Die Transaktion kann nach Bestätigung nicht rückgängig gemacht werden.",
+    "cancel": "Abbrechen",
+    "confirm": "Überweisung bestätigen",
+    "processing": "Wird verarbeitet..."
+  },
+  "info": {
+    "title": "Wichtige Hinweise",
+    "items": [
+      "Interne Überweisungen werden sofort verarbeitet",
+      "Externe Überweisungen können 1-2 Werktage dauern",
+      "Prüfen Sie die Empfängerdaten vor der Bestätigung",
+      "Die Transaktion kann nach Bestätigung nicht rückgängig gemacht werden"
+    ]
+  },
+  "pinEntry": {
+    "title": "Überweisungs-PIN eingeben",
+    "description": "Geben Sie Ihre 4–6-stellige PIN ein, um diese Überweisung zu autorisieren.",
+    "label": "PIN",
+    "cancel": "Abbrechen",
+    "confirm": "Überweisung bestätigen",
+    "invalid": "Geben Sie Ihre 4–6-stellige PIN ein."
+  },
+  "pinSetup": {
+    "title": "Überweisungs-PIN festlegen",
+    "description": "Erstellen Sie eine 4–6-stellige PIN für Überweisungen und Auszahlungen. Teilen Sie diese PIN nicht.",
+    "newPin": "Neue PIN",
+    "confirmPin": "PIN bestätigen",
+    "currentPin": "Aktuelle PIN (bei Aktualisierung)",
+    "cancel": "Abbrechen",
+    "save": "PIN speichern",
+    "invalid": "Geben Sie übereinstimmende PINs mit 4–6 Ziffern ein."
+  },
+  "security": {
+    "title": "Sicherheit & Limits",
+    "dailyLimit": "Tägliches Überweisungslimit",
+    "perTransaction": "Limit pro Transaktion",
+    "remainingToday": "{{amount}} verbleiben heute",
+    "items": {
+      "secureTitle": "Sichere Überweisung",
+      "secureDescription": "Alle Überweisungen sind verschlüsselt und geschützt",
+      "notificationsTitle": "Sofortige Benachrichtigungen",
+      "notificationsDescription": "Erhalten Sie eine Meldung für jede Transaktion",
+      "historyTitle": "Transaktionshistorie",
+      "historyDescription": "Verfolgen Sie alle Überweisungen jederzeit"
+    }
+  },
+  "labels": {
+    "internalBank": "TrustPay (intern)",
+    "yourAccount": "Ihr Konto"
+  },
+  "messages": {
+    "error": {
+      "routingRequired": "Geben Sie eine Routing-Nummer ein",
+      "routingInvalid": "Die Routing-Nummer muss 9 Ziffern haben",
+      "accountHolderRequired": "Name des Kontoinhabers erforderlich",
+      "bankNameRequired": "Bankname erforderlich",
+      "bankLookupFirst": "Bank zuerst mit Inhaber und Routing ermitteln",
+      "accountNumberRequired": "Geben Sie eine Ziel-Kontonummer ein",
+      "accountNumberVerify": "Bitte Kontonummer vor dem Fortfahren verifizieren",
+      "accountTypeRequired": "Kontotyp auswählen",
+      "fromAccountRequired": "Wählen Sie ein Quellkonto.",
+      "toAccountRequired": "Wählen Sie ein Zielkonto.",
+      "toAccountDifferent": "Wählen Sie ein anderes Zielkonto.",
+      "amountRequired": "Bitte einen Überweisungsbetrag eingeben",
+      "amountPositive": "Der Betrag muss größer als Null sein",
+      "insufficientBalance": "Unzureichendes Guthaben",
+      "perTransactionLimit": "Betrag überschreitet das Limit pro Transaktion von {{limit}}",
+      "dailyLimit": "Betrag überschreitet das tägliche Restlimit von {{limit}}",
+      "pinRequired": "Legen Sie vor dem Senden Ihre Überweisungs-PIN fest.",
+      "destinationRequired": "Wählen Sie ein Zielkonto.",
+      "routingMissing": "Routing-Nummer für das Zielkonto fehlt.",
+      "pinLocked": "PIN gesperrt, später erneut versuchen.",
+      "transferFailed": "Überweisung konnte nicht abgeschlossen werden.",
+      "verifyAccountMissing": "Kontonummer und Bank angeben.",
+      "bankNotFound": "Bank nicht gefunden. Prüfen Sie die Routing-Nummer.",
+      "bankLookupUnavailable": "Abfrage nicht verfügbar. Erneut versuchen oder Banknamen manuell eingeben.",
+      "pinSaveFailed": "PIN konnte nicht gespeichert werden.",
+      "pinSaveUnavailable": "PIN kann derzeit nicht gespeichert werden."
+    },
+    "success": {
+      "transferSubmitted": "Überweisung eingereicht. Sie wird in Kürze abgeschlossen.",
+      "pinSet": "Überweisungs-PIN gespeichert."
+    },
+    "info": {
+      "stepUp": "Überweisung eingereicht. Es kann eine zusätzliche Verifizierung erforderlich sein."
+    },
+    "defaultMemoInternal": "Überweisung auf Ihr Konto",
+    "defaultMemoExternal": "Überweisung an Empfänger"
+  }
+}

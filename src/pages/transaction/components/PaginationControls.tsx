@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { useTranslation } from 'react-i18next';
 import Button from '../../../components/ui/Button';
 import Select from '../../../components/ui/Select';
 import { PaginationControlsProps } from '../types';
@@ -9,13 +9,14 @@ const PaginationControls = ({
   onPageChange,
   onItemsPerPageChange
 }: PaginationControlsProps) => {
+  const { t } = useTranslation('transaction');
   const { currentPage, totalPages, itemsPerPage, totalItems } = pagination;
 
   const itemsPerPageOptions = [
-    { value: 10, label: '10 per page' },
-    { value: 25, label: '25 per page' },
-    { value: 50, label: '50 per page' },
-    { value: 100, label: '100 per page' }
+    { value: 10, label: t('pagination.perPage.10') },
+    { value: 25, label: t('pagination.perPage.25') },
+    { value: 50, label: t('pagination.perPage.50') },
+    { value: 100, label: t('pagination.perPage.100') }
   ];
 
   const startItem = (currentPage - 1) * itemsPerPage + 1;
@@ -56,10 +57,10 @@ const PaginationControls = ({
   return (
     <div className="bg-card rounded-lg border border-border p-4 shadow-card">
       <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-4 w-full lg:w-auto">
-          <span className="text-sm text-muted-foreground whitespace-nowrap">
-            Showing {startItem}-{endItem} of {totalItems}
-          </span>
+      <div className="flex items-center gap-4 w-full lg:w-auto">
+        <span className="text-sm text-muted-foreground whitespace-nowrap">
+          {t('pagination.showing', { start: startItem, end: endItem, total: totalItems })}
+        </span>
 
           <div className="w-full sm:w-40">
             <Select
@@ -77,7 +78,7 @@ const PaginationControls = ({
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
             iconName="ChevronLeft"
-            aria-label="Previous page"
+            aria-label={t('pagination.prev')}
           />
 
           <div className="hidden sm:flex items-center gap-1">
@@ -101,7 +102,7 @@ const PaginationControls = ({
 
           <div className="sm:hidden">
             <span className="px-3 py-2 text-sm text-foreground font-medium">
-              Page {currentPage} of {totalPages}
+              {t('pagination.pageXofY', { current: currentPage, total: totalPages })}
             </span>
           </div>
 
@@ -111,7 +112,7 @@ const PaginationControls = ({
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
             iconName="ChevronRight"
-            aria-label="Next page"
+            aria-label={t('pagination.next')}
           />
         </div>
       </div>

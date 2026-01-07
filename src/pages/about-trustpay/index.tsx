@@ -1,6 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Header from '../landing-page/components/Header';
 import Icon from '../../components/AppIcon';
 import Button from '../../components/ui/Button';
@@ -8,46 +9,17 @@ import { Metric, Milestone, Value } from './types';
 
 const AboutTrustPayPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation('about');
 
-  const metrics: Metric[] = [
-    { label: 'Clients served', value: '50K+', detail: 'From startups to middle-market leaders trusting TrustPay.' },
-    { label: 'Availability', value: '99.95%', detail: 'Redundant, monitored, and built for always-on banking.' },
-    { label: 'Protected transfers', value: '$12B+', detail: 'Processed annually with layered fraud defenses.' }
-  ];
-
-  const values: Value[] = [
-    {
-      title: 'Trust-first Security',
-      description: 'Defense-in-depth, SOC 2 alignment, and role-based controls across every workflow.',
-      icon: 'ShieldCheck'
-    },
-    {
-      title: 'People + Platform',
-      description: 'Dedicated teams plus intuitive experiences so you can move quickly without sacrificing control.',
-      icon: 'Users'
-    },
-    {
-      title: 'Transparency',
-      description: 'Clear pricing, clear settlement times, and proactive communication when things change.',
-      icon: 'Sparkles'
-    }
-  ];
-
-  const milestones: Milestone[] = [
-    { year: '2018', title: 'TrustPay launches', detail: 'Built to make modern treasury and payments accessible to every business.' },
-    { year: '2020', title: 'Real-time rails', detail: 'Introduced RTP and faster onboarding with guided controls.' },
-    { year: '2022', title: 'Commercial banking suite', detail: 'Expanded coverage teams and introduced advanced treasury APIs.' },
-    { year: '2024', title: 'Wealth & advisory', detail: 'Brought capital markets-inspired wealth planning to clients.' }
-  ];
+  const metrics = t('hero.metrics', { returnObjects: true }) as Metric[];
+  const values = t('principles.values', { returnObjects: true }) as Value[];
+  const milestones = t('milestones.items', { returnObjects: true }) as Milestone[];
 
   return (
     <>
       <Helmet>
-        <title>About TrustPay | Who We Are</title>
-        <meta
-          name="description"
-          content="Learn about TrustPay’s mission, security-first approach, and the teams powering modern banking experiences."
-        />
+        <title>{t('meta.title')}</title>
+        <meta name="description" content={t('meta.description')} />
       </Helmet>
 
       <div className="min-h-screen bg-background">
@@ -58,30 +30,29 @@ const AboutTrustPayPage: React.FC = () => {
             <div className="max-w-7xl mx-auto py-16 lg:py-20 grid lg:grid-cols-2 gap-12 items-center">
               <div className="space-y-6">
                 <p className="text-sm uppercase tracking-[0.3em] text-white/80">
-                  About TrustPay
+                  {t('hero.eyebrow')}
                 </p>
                 <h1 className="text-3xl lg:text-5xl font-bold leading-tight">
-                  Banking built on trust, with the rigor of leading corporate banks
+                  {t('hero.title')}
                 </h1>
                 <p className="text-lg text-white/90">
-                  We combine secure infrastructure, human expertise, and transparent service so you can operate with
-                  confidence—whether you are scaling fast or stewarding generations of wealth.
+                  {t('hero.description')}
                 </p>
                 <div className="flex gap-4 flex-wrap">
                   <Button
                     size="lg"
                     className="bg-white text-[#7d1420] hover:bg-white/90 border-none"
-                    onClick={() => navigate('/registration')}
+                    onClick={() => navigate(t('hero.ctaPrimary.path'))}
                   >
-                    Join TrustPay
+                    {t('hero.ctaPrimary.label')}
                   </Button>
                   <Button
                     variant="outline"
                     size="lg"
                     className="border-white/70 text-white hover:text-white hover:bg-white/10"
-                    onClick={() => navigate('/business')}
+                    onClick={() => navigate(t('hero.ctaSecondary.path'))}
                   >
-                    Explore solutions
+                    {t('hero.ctaSecondary.label')}
                   </Button>
                 </div>
               </div>
@@ -104,12 +75,10 @@ const AboutTrustPayPage: React.FC = () => {
             <div className="max-w-7xl mx-auto space-y-10">
               <div className="flex flex-col gap-3">
                 <p className="text-sm font-semibold text-[#d1202f] uppercase tracking-wide">
-                  What we stand for
+                  {t('principles.eyebrow')}
                 </p>
-                <h2 className="text-3xl font-bold text-foreground">Principles that guide every decision</h2>
-                <p className="text-muted-foreground max-w-3xl">
-                  From how we secure your data to how we staff our teams, our values keep us accountable to you.
-                </p>
+                <h2 className="text-3xl font-bold text-foreground">{t('principles.title')}</h2>
+                <p className="text-muted-foreground max-w-3xl">{t('principles.description')}</p>
               </div>
 
               <div className="grid md:grid-cols-3 gap-6">
@@ -135,9 +104,9 @@ const AboutTrustPayPage: React.FC = () => {
             <div className="max-w-7xl mx-auto space-y-8">
               <div className="flex flex-col gap-3">
                 <p className="text-sm font-semibold text-[#d1202f] uppercase tracking-wide">
-                  Our path
+                  {t('milestones.eyebrow')}
                 </p>
-                <h2 className="text-3xl font-bold text-foreground">Milestones that shaped TrustPay</h2>
+                <h2 className="text-3xl font-bold text-foreground">{t('milestones.title')}</h2>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
@@ -161,25 +130,23 @@ const AboutTrustPayPage: React.FC = () => {
           <div className="px-nav-margin">
             <div className="max-w-7xl mx-auto bg-gradient-to-r from-[#d1202f] to-[#b71b24] text-white rounded-2xl p-8 shadow-card flex flex-col md:flex-row items-center justify-between gap-6">
               <div>
-                <p className="text-sm uppercase tracking-[0.3em] text-white/80">Next Steps</p>
-                <h3 className="text-2xl font-bold mt-2">Let&apos;s build what you need</h3>
-                <p className="text-white/80 mt-2">
-                  Whether you need corporate banking, wealth planning, or payment modernization, we&apos;re ready to help.
-                </p>
+                <p className="text-sm uppercase tracking-[0.3em] text-white/80">{t('cta.eyebrow')}</p>
+                <h3 className="text-2xl font-bold mt-2">{t('cta.title')}</h3>
+                <p className="text-white/80 mt-2">{t('cta.description')}</p>
               </div>
               <div className="flex gap-3">
                 <Button
                   className="bg-white text-[#8b1b24] hover:bg-white/90 border-none"
-                  onClick={() => navigate('/commercial-banking')}
+                  onClick={() => navigate(t('cta.primary.path'))}
                 >
-                  Talk with us
+                  {t('cta.primary.label')}
                 </Button>
                 <Button
                   variant="outline"
                   className="border-white/70 text-white hover:bg-white/10"
-                  onClick={() => navigate('/dashboard')}
+                  onClick={() => navigate(t('cta.secondary.path'))}
                 >
-                  Explore the app
+                  {t('cta.secondary.label')}
                 </Button>
               </div>
             </div>

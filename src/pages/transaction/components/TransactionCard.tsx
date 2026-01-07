@@ -1,24 +1,24 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import Icon from '../../../components/AppIcon';
 import { TransactionCardProps } from '../types';
 
 const TransactionCard = ({ transaction, isExpanded, onToggle }: TransactionCardProps) => {
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+  const { t, i18n } = useTranslation('transaction');
+  const formatCurrency = (amount: number, currency: string = 'USD') =>
+    new Intl.NumberFormat(i18n.language || 'en-US', {
       style: 'currency',
-      currency: 'USD'
+      currency: currency.toUpperCase()
     }).format(Math.abs(amount));
-  };
 
-  const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
+  const formatDate = (date: Date) =>
+    new Intl.DateTimeFormat(i18n.language || 'en-US', {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
     }).format(date);
-  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -69,14 +69,14 @@ const TransactionCard = ({ transaction, isExpanded, onToggle }: TransactionCardP
         <div className="flex flex-col items-end gap-2">
           <span className={`text-base font-bold ${getTypeColor(transaction.type)}`}>
             {transaction.type === 'credit' ? '+' : '-'}
-            {formatCurrency(transaction.amount)}
+            {formatCurrency(transaction.amount, transaction.currency || 'USD')}
           </span>
           <span
             className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium capitalize ${getStatusColor(
               transaction.status
             )}`}
           >
-            {transaction.status}
+            {t(`filters.statusOptions.${transaction.status}`, { defaultValue: transaction.status })}
           </span>
         </div>
       </div>
@@ -85,14 +85,14 @@ const TransactionCard = ({ transaction, isExpanded, onToggle }: TransactionCardP
         onClick={onToggle}
         className="w-full mt-4 pt-4 border-t border-border flex items-center justify-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-ring rounded-md"
       >
-        <span>{isExpanded ? 'Hide Details' : 'View Details'}</span>
+        <span>{isExpanded ? t('card.hideDetails') : t('card.viewDetails')}</span>
         <Icon name={isExpanded ? 'ChevronUp' : 'ChevronDown'} size={16} />
       </button>
 
       {isExpanded && (
         <div className="mt-4 pt-4 border-t border-border space-y-3">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Reference Number</span>
+            <span className="text-sm text-muted-foreground">{t('card.reference')}</span>
             <span className="text-sm text-foreground font-medium">
               {transaction.referenceNumber}
             </span>
@@ -101,19 +101,19 @@ const TransactionCard = ({ transaction, isExpanded, onToggle }: TransactionCardP
           {transaction.merchantDetails && (
             <>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Merchant</span>
+                <span className="text-sm text-muted-foreground">{t('card.merchant')}</span>
                 <span className="text-sm text-foreground font-medium">
                   {transaction.merchantDetails.name}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Location</span>
+                <span className="text-sm text-muted-foreground">{t('card.location')}</span>
                 <span className="text-sm text-foreground font-medium">
                   {transaction.merchantDetails.location}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Contact</span>
+                <span className="text-sm text-muted-foreground">{t('card.contact')}</span>
                 <span className="text-sm text-foreground font-medium">
                   {transaction.merchantDetails.contact}
                 </span>

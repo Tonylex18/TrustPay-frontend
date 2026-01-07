@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { useNavigate } from "react-router-dom";
 import { City, Country, State, type ICity, type ICountry, type IState } from "country-state-city";
+import { useTranslation } from "react-i18next";
 import NavigationBar from "../../components/ui/NavigationBar";
 import BreadcrumbTrail from "../../components/ui/BreadcrumbTrail";
 import Input from "../../components/ui/Input";
@@ -11,6 +12,7 @@ import { toast } from "react-toastify";
 
 const KycPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation("kyc");
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -88,15 +90,15 @@ const KycPage: React.FC = () => {
       return;
     }
     if (!form.documentImage) {
-      setError("Document image is required.");
+      setError(t("messages.error.documentImageRequired"));
       return;
     }
     if (!form.dobDay || !form.dobMonth || !form.dobYear) {
-      setError("Complete date of birth.");
+      setError(t("messages.error.dobIncomplete"));
       return;
     }
     if (!form.country || !form.state || !form.city) {
-      setError("Country, state, and city are required.");
+      setError(t("messages.error.locationRequired"));
       return;
     }
     setSubmitting(true);
@@ -126,31 +128,32 @@ const KycPage: React.FC = () => {
       });
       const payload = await res.json().catch(() => null);
       if (!res.ok) {
-        const msg = payload?.errors || payload?.message || "Unable to submit KYC.";
+        const msg = payload?.errors || payload?.message || t("messages.error.submitFailed");
         setError(msg);
         toast.error(msg);
         return;
       }
-      toast.success("KYC submitted. Status: pending.");
+      toast.success(t("messages.success"));
       navigate("/dashboard");
     } catch (_err) {
-      setError("Unable to submit KYC.");
-      toast.error("Unable to submit KYC.");
+      const msg = t("messages.error.submitFailed");
+      setError(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }
   };
 
   const breadcrumbItems = [
-    { label: "Dashboard", path: "/dashboard" },
-    { label: "KYC" },
+    { label: t("breadcrumb.dashboard"), path: "/dashboard" },
+    { label: t("breadcrumb.kyc") },
   ];
 
   return (
     <>
       <Helmet>
-        <title>KYC Verification - TrustPay</title>
-        <meta name="description" content="Complete your KYC to enable banking features." />
+        <title>{t("meta.title")}</title>
+        <meta name="description" content={t("meta.description")} />
       </Helmet>
       <div className="min-h-screen bg-background">
         <NavigationBar onNavigate={(path) => navigate(path)} />
@@ -159,30 +162,28 @@ const KycPage: React.FC = () => {
             <div className="max-w-7xl mx-auto space-y-6">
               <BreadcrumbTrail items={breadcrumbItems} />
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Verify your identity</h1>
-                <p className="text-muted-foreground">
-                  Provide your details and document images to complete KYC.
-                </p>
+                <h1 className="text-2xl font-bold text-foreground">{t("hero.title")}</h1>
+                <p className="text-muted-foreground">{t("hero.subtitle")}</p>
               </div>
               <form onSubmit={handleSubmit} className="bg-card border border-border rounded-xl p-6 space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input label="First Name" value={form.firstName} onChange={(e) => handleChange("firstName", e.target.value)} required />
-                  <Input label="Last Name" value={form.lastName} onChange={(e) => handleChange("lastName", e.target.value)} required />
+                  <Input label={t("form.firstName")} value={form.firstName} onChange={(e) => handleChange("firstName", e.target.value)} required />
+                  <Input label={t("form.lastName")} value={form.lastName} onChange={(e) => handleChange("lastName", e.target.value)} required />
                 </div>
                 <div className="grid grid-cols-3 gap-3">
-                  <Input label="Day" type="number" min={1} max={31} value={form.dobDay} onChange={(e) => handleChange("dobDay", e.target.value)} required />
-                  <Input label="Month" type="number" min={1} max={12} value={form.dobMonth} onChange={(e) => handleChange("dobMonth", e.target.value)} required />
-                  <Input label="Year" type="number" min={1900} max={9999} value={form.dobYear} onChange={(e) => handleChange("dobYear", e.target.value)} required />
+                  <Input label={t("form.dob.day")} type="number" min={1} max={31} value={form.dobDay} onChange={(e) => handleChange("dobDay", e.target.value)} required />
+                  <Input label={t("form.dob.month")} type="number" min={1} max={12} value={form.dobMonth} onChange={(e) => handleChange("dobMonth", e.target.value)} required />
+                  <Input label={t("form.dob.year")} type="number" min={1900} max={9999} value={form.dobYear} onChange={(e) => handleChange("dobYear", e.target.value)} required />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Country</label>
+                  <label className="text-sm font-medium text-foreground">{t("form.country.label")}</label>
                   <select
                     className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                     value={form.country}
                     onChange={(e) => handleCountrySelect(e.target.value)}
                     required
                   >
-                    <option value="">Select a country</option>
+                    <option value="">{t("form.country.placeholder")}</option>
                     {countries.map((c) => (
                       <option key={c.isoCode} value={c.isoCode}>
                         {c.name} ({c.isoCode})
@@ -190,12 +191,12 @@ const KycPage: React.FC = () => {
                     ))}
                   </select>
                 </div>
-                <Input label="Address Line 1" value={form.addressLine1} onChange={(e) => handleChange("addressLine1", e.target.value)} required />
-                <Input label="Address Line 2 (optional)" value={form.addressLine2} onChange={(e) => handleChange("addressLine2", e.target.value)} />
+                <Input label={t("form.addressLine1")} value={form.addressLine1} onChange={(e) => handleChange("addressLine1", e.target.value)} required />
+                <Input label={t("form.addressLine2")} value={form.addressLine2} onChange={(e) => handleChange("addressLine2", e.target.value)} />
                 {/* <Input label="ssn (optional for US citizen only)" type="number" /> */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">State / Province</label>
+                    <label className="text-sm font-medium text-foreground">{t("form.state.label")}</label>
                     <select
                       className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                       value={form.state}
@@ -203,7 +204,7 @@ const KycPage: React.FC = () => {
                       disabled={!form.country}
                       required
                     >
-                      <option value="">{form.country ? "Select a state" : "Select country first"}</option>
+                      <option value="">{form.country ? t("form.state.placeholder") : t("form.state.placeholderDisabled")}</option>
                       {states.map((s) => (
                         <option key={`${s.isoCode}-${s.name}`} value={s.isoCode}>
                           {s.name} ({s.isoCode})
@@ -212,7 +213,7 @@ const KycPage: React.FC = () => {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">City</label>
+                    <label className="text-sm font-medium text-foreground">{t("form.city.label")}</label>
                     <select
                       className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                       value={form.city}
@@ -220,7 +221,7 @@ const KycPage: React.FC = () => {
                       disabled={!form.state}
                       required
                     >
-                      <option value="">{form.state ? "Select a city" : "Select state first"}</option>
+                      <option value="">{form.state ? t("form.city.placeholder") : t("form.city.placeholderDisabled")}</option>
                       {cities.map((c) => {
                         const key = `${c.countryCode}-${c.stateCode}-${c.name}`;
                         return (
@@ -231,30 +232,30 @@ const KycPage: React.FC = () => {
                       })}
                     </select>
                   </div>
-                  <Input label="Postal Code" value={form.postalCode} onChange={(e) => handleChange("postalCode", e.target.value)} required />
+                  <Input label={t("form.postalCode")} value={form.postalCode} onChange={(e) => handleChange("postalCode", e.target.value)} required />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">Document Type</label>
+                    <label className="text-sm font-medium text-foreground">{t("form.documentType.label")}</label>
                     <select
                       className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                       value={form.documentType}
                       onChange={(e) => handleChange("documentType", e.target.value)}
                     >
-                      <option value="passport">Passport</option>
-                      <option value="national_id">National ID</option>
-                      <option value="driver_license">Driver License</option>
+                      <option value="passport">{t("form.documentType.options.passport")}</option>
+                      <option value="national_id">{t("form.documentType.options.national_id")}</option>
+                      <option value="driver_license">{t("form.documentType.options.driver_license")}</option>
                     </select>
                   </div>
                   <Input
-                    label="Document Number"
+                    label={t("form.documentNumber")}
                     value={form.documentNumber}
                     onChange={(e) => handleChange("documentNumber", e.target.value)}
                     required
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Document Image (front)</label>
+                  <label className="text-sm font-medium text-foreground">{t("form.documentImageFront")}</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -263,7 +264,7 @@ const KycPage: React.FC = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Document Image (back, optional)</label>
+                  <label className="text-sm font-medium text-foreground">{t("form.documentImageBack")}</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -271,7 +272,7 @@ const KycPage: React.FC = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Selfie Image (optional)</label>
+                  <label className="text-sm font-medium text-foreground">{t("form.selfieImage")}</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -285,10 +286,10 @@ const KycPage: React.FC = () => {
                 )}
                 <div className="flex justify-end gap-3 pt-2">
                   <Button type="button" variant="outline" onClick={() => navigate("/dashboard")} disabled={submitting}>
-                    Cancel
+                    {t("form.cancel")}
                   </Button>
                   <Button type="submit" loading={submitting}>
-                    Submit KYC
+                    {t("form.submit")}
                   </Button>
                 </div>
               </form>

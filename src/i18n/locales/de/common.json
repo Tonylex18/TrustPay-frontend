@@ -1,0 +1,54 @@
+{
+  "brand": {
+    "name": "TrustPay",
+    "product": "Banking"
+  },
+  "navigation": {
+    "personal": "Privatkunden",
+    "investing": "Investieren & Vermögensverwaltung",
+    "business": "Geschäftskunden",
+    "commercial": "Firmenkunden",
+    "cib": "Unternehmens- & Investmentbanking",
+    "about": "Über TrustPay",
+    "dashboard": "Dashboard",
+    "transactions": "Transaktionen",
+    "transfer": "Überweisung",
+    "profile": "Profil",
+    "signOn": "Anmelden"
+  },
+  "tooltips": {
+    "dashboard": "Kontenübersicht und Schnellaktionen anzeigen",
+    "transactions": "Transaktionshistorie und Details ansehen",
+    "transfer": "Geld auf Konten überweisen",
+    "profile": "Kontoeinstellungen verwalten"
+  },
+  "language": {
+    "label": "Sprache",
+    "english": "Englisch",
+    "french": "Französisch",
+    "spanish": "Spanisch",
+    "german": "Deutsch",
+    "greek": "Griechisch",
+    "portuguese": "Portugiesisch"
+  },
+  "actions": {
+    "dashboard": "Dashboard",
+    "signOn": "Anmelden",
+    "createAccount": "Konto erstellen",
+    "depositMoney": "Geld einzahlen",
+    "payBill": "Rechnung bezahlen",
+    "showCardDetails": "Kartendetails anzeigen",
+    "hideCardDetails": "Kartendetails ausblenden",
+    "sendCode": "Code senden",
+    "activate": "Aktivieren",
+    "verifyCode": "Code prüfen",
+    "signIn": "Anmelden"
+  },
+  "aria": {
+    "home": "TrustPay Startseite",
+    "languageSelector": "Sprache auswählen"
+  },
+  "status": {
+    "loadingDashboard": "Dashboard wird geladen..."
+  }
+}

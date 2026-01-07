@@ -1,0 +1,60 @@
+{
+  "metaTitle": "Painel - TrustPay",
+  "metaDescription": "Gerencie suas contas, veja transações e acesse serviços bancários no painel TrustPay.",
+  "welcomeWithName": "Bem-vindo de volta, {{name}}!",
+  "welcome": "Bem-vindo de volta!",
+  "overview": "Aqui está o resumo das suas contas e das atividades recentes",
+  "noPrimaryAccount": "Nenhuma conta principal ainda.",
+  "quickActions": {
+    "title": "Ações rápidas",
+    "description": "Acesse seus recursos bancários mais usados"
+  },
+  "allAccounts": "Todas as contas",
+  "createAccount": "Criar conta",
+  "noAccounts": "Nenhuma conta disponível ainda.",
+  "virtualCardRequest": {
+    "title": "Solicitação de cartão virtual",
+    "accountLine": "Conta ••••{{last4}}",
+    "feeStatus": "Status da tarifa: {{status}}",
+    "underReview": "Sua solicitação de cartão está em análise. Geralmente leva de 2 a 3 dias úteis.",
+    "reason": "Motivo: {{reason}}",
+    "rejected": "Rejeitada",
+    "approved": "Aprovada",
+    "issued": "Emitida",
+    "pendingApproval": "Aguardando aprovação"
+  },
+  "virtualCardEmpty": {
+    "prompt": "Solicite um cartão virtual no seu perfil para ver os dados seguros.",
+    "fee": "Tarifa do cartão virtual: cobrança única de US$ 5 ao solicitar.",
+    "processing": "Prazo: solicitações são revisadas em 2–3 dias úteis."
+  },
+  "payments": {
+    "title": "Pagamentos e contas"
+  },
+  "financialTip": {
+    "title": "Dica financeira",
+    "body": "Configure transferências automáticas para sua poupança para construir seu fundo de emergência de forma constante."
+  },
+  "quickActionsItems": {
+    "deposit": {
+      "label": "Depositar dinheiro",
+      "description": "Adicionar fundos à sua conta"
+    },
+    "transfer": {
+      "label": "Transferir dinheiro",
+      "description": "Enviar dinheiro para qualquer conta"
+    },
+    "payBills": {
+      "label": "Pagar contas",
+      "description": "Pague suas contas"
+    },
+    "viewTransactions": {
+      "label": "Ver transações",
+      "description": "Revisar histórico de transações"
+    }
+  },
+  "breadcrumb": {
+    "home": "Início",
+    "dashboard": "Painel"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "brand": {
+    "name": "TrustPay",
+    "product": "Banking"
+  },
+  "navigation": {
+    "personal": "Personal",
+    "investing": "Investing & Wealth Management",
+    "business": "Business",
+    "commercial": "Commercial Banking",
+    "cib": "Corporate & Investment Banking",
+    "about": "About TrustPay",
+    "dashboard": "Dashboard",
+    "transactions": "Transactions",
+    "transfer": "Transfer",
+    "profile": "Profile",
+    "signOn": "Sign On"
+  },
+  "tooltips": {
+    "dashboard": "View account overview and quick actions",
+    "transactions": "View transaction history and details",
+    "transfer": "Send money to accounts",
+    "profile": "Manage account settings"
+  },
+  "language": {
+    "label": "Language",
+    "english": "English",
+    "french": "Français",
+    "spanish": "Español",
+    "german": "Deutsch",
+    "greek": "Ελληνικά",
+    "portuguese": "Português"
+  },
+  "actions": {
+    "dashboard": "Dashboard",
+    "signOn": "Sign On",
+    "createAccount": "Create Account",
+    "depositMoney": "Deposit Money",
+    "payBill": "Pay a Bill",
+    "showCardDetails": "Show card details",
+    "hideCardDetails": "Hide card details",
+    "sendCode": "Send code",
+    "activate": "Activate",
+    "verifyCode": "Verify code",
+    "signIn": "Sign In"
+  },
+  "aria": {
+    "home": "TrustPay home",
+    "languageSelector": "Select language"
+  },
+  "status": {
+    "loadingDashboard": "Loading your dashboard..."
+  }
+}

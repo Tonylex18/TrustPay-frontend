@@ -1,0 +1,60 @@
+{
+  "metaTitle": "Dashboard - TrustPay",
+  "metaDescription": "Verwalte deine Konten, sieh Transaktionen und nutze Bank-Services in deinem TrustPay-Dashboard.",
+  "welcomeWithName": "Willkommen zurück, {{name}}!",
+  "welcome": "Willkommen zurück!",
+  "overview": "Hier findest du deine Kontoübersicht und aktuelle Aktivitäten",
+  "noPrimaryAccount": "Noch kein Hauptkonto vorhanden.",
+  "quickActions": {
+    "title": "Schnellaktionen",
+    "description": "Greife auf deine meistgenutzten Bankfunktionen zu"
+  },
+  "allAccounts": "Alle Konten",
+  "createAccount": "Konto erstellen",
+  "noAccounts": "Noch keine Konten verfügbar.",
+  "virtualCardRequest": {
+    "title": "Antrag auf virtuelle Karte",
+    "accountLine": "Konto ••••{{last4}}",
+    "feeStatus": "Gebührenstatus: {{status}}",
+    "underReview": "Dein Kartenantrag wird geprüft. Das dauert in der Regel 2–3 Werktage.",
+    "reason": "Grund: {{reason}}",
+    "rejected": "Abgelehnt",
+    "approved": "Genehmigt",
+    "issued": "Ausgegeben",
+    "pendingApproval": "Ausstehende Freigabe"
+  },
+  "virtualCardEmpty": {
+    "prompt": "Fordere eine virtuelle Karte in deinem Profil an, um sichere Kartendaten zu sehen.",
+    "fee": "Gebühr virtuelle Karte: Einmalige Gebühr von 5 $ wird bei Antragstellung abgebucht.",
+    "processing": "Bearbeitungszeit: Kartenanträge werden in 2–3 Werktagen geprüft."
+  },
+  "payments": {
+    "title": "Zahlungen & Rechnungen"
+  },
+  "financialTip": {
+    "title": "Finanztipp",
+    "body": "Richte automatische Überweisungen auf dein Sparkonto ein, um den Notgroschen kontinuierlich aufzubauen."
+  },
+  "quickActionsItems": {
+    "deposit": {
+      "label": "Geld einzahlen",
+      "description": "Füge deinem Konto Guthaben hinzu"
+    },
+    "transfer": {
+      "label": "Geld überweisen",
+      "description": "Geld auf jedes Konto senden"
+    },
+    "payBills": {
+      "label": "Rechnungen bezahlen",
+      "description": "Deine Rechnungen begleichen"
+    },
+    "viewTransactions": {
+      "label": "Transaktionen ansehen",
+      "description": "Transaktionshistorie prüfen"
+    }
+  },
+  "breadcrumb": {
+    "home": "Start",
+    "dashboard": "Dashboard"
+  }
+}

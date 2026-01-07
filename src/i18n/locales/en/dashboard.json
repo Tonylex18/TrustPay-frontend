@@ -1,0 +1,60 @@
+{
+  "metaTitle": "Dashboard - TrustPay",
+  "metaDescription": "Manage your accounts, view transactions, and access banking services from your TrustPay dashboard.",
+  "welcomeWithName": "Welcome back, {{name}}!",
+  "welcome": "Welcome back!",
+  "overview": "Here's your account overview and recent activity",
+  "noPrimaryAccount": "No primary account found yet.",
+  "quickActions": {
+    "title": "Quick Actions",
+    "description": "Access your most used banking features"
+  },
+  "allAccounts": "All Accounts",
+  "createAccount": "Create Account",
+  "noAccounts": "No accounts available yet.",
+  "virtualCardRequest": {
+    "title": "Virtual Card Request",
+    "accountLine": "Account ••••{{last4}}",
+    "feeStatus": "Fee status: {{status}}",
+    "underReview": "Your card request is under review. This typically takes 2–3 business days.",
+    "reason": "Reason: {{reason}}",
+    "rejected": "Rejected",
+    "approved": "Approved",
+    "issued": "Issued",
+    "pendingApproval": "Pending Approval"
+  },
+  "virtualCardEmpty": {
+    "prompt": "Issue a virtual card from your profile to view secure card numbers.",
+    "fee": "Virtual Card Fee: A one-time $5 issuance fee will be deducted from your balance when you apply.",
+    "processing": "Processing Time: Card requests are reviewed within 2–3 business days."
+  },
+  "payments": {
+    "title": "Payments & Bills"
+  },
+  "financialTip": {
+    "title": "Financial Tip",
+    "body": "Consider setting up automatic transfers to your savings account to build your emergency fund consistently."
+  },
+  "quickActionsItems": {
+    "deposit": {
+      "label": "Deposit Money",
+      "description": "Add funds to your account"
+    },
+    "transfer": {
+      "label": "Transfer Funds",
+      "description": "Send money to any account"
+    },
+    "payBills": {
+      "label": "Pay Bills",
+      "description": "Pay your utility bills"
+    },
+    "viewTransactions": {
+      "label": "View Transactions",
+      "description": "Check transaction history"
+    }
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "dashboard": "Dashboard"
+  }
+}

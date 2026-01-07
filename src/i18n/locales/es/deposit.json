@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "title": "Depositar fondos - TrustPay",
+    "description": "Agregue fondos a su cuenta TrustPay con rieles seguros."
+  },
+  "breadcrumb": {
+    "dashboard": "Panel",
+    "deposit": "Depositar fondos"
+  },
+  "page": {
+    "title": "Depósito móvil de cheques",
+    "subtitle": "Cargue las imágenes frontal y posterior de su cheque. Los fondos quedan pendientes hasta que un admin los apruebe."
+  },
+  "form": {
+    "amountLabel": "Monto del depósito",
+    "amountPlaceholder": "Ingrese el monto",
+    "amountDescription": "Depósito mínimo $1",
+    "accountNameLabel": "Nombre de la cuenta",
+    "accountNumberLabel": "Número de cuenta",
+    "bankNameLabel": "Banco",
+    "bankNameValue": "TrustPay Bank",
+    "checkImagesLabel": "Imágenes del cheque",
+    "frontLabel": "Frente del cheque",
+    "backLabel": "Reverso del cheque",
+    "tapToUpload": "Toque para subir",
+    "uploadNote": "Suba fotos claras del cheque firmado. El depósito permanece pendiente hasta la aprobación.",
+    "submit": "Enviar depósito móvil"
+  },
+  "previewModal": {
+    "title": "Confirmar depósito",
+    "depositAmount": "Monto del depósito",
+    "selectedAccount": "Cuenta seleccionada",
+    "accountNumber": "Número de cuenta",
+    "processingFee": "Cargo por procesamiento",
+    "totalDeposit": "Depósito total",
+    "warning": "Verifique todos los datos con cuidado. El depósito puede quedar pendiente hasta la revisión de un admin.",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar depósito",
+    "submitting": "Enviando..."
+  },
+  "submittedModal": {
+    "title": "Depósito enviado",
+    "depositAmount": "Monto del depósito",
+    "status": "Estado",
+    "account": "Cuenta",
+    "accountNumber": "Número de cuenta",
+    "reference": "Referencia",
+    "pendingReference": "Asignación pendiente",
+    "note": "Recibimos su depósito móvil. Puede quedar pendiente hasta la revisión. Los fondos no están disponibles hasta la aprobación.",
+    "close": "Cerrar",
+    "makeAnother": "Hacer otro depósito"
+  },
+  "messages": {
+    "error": {
+      "amount": "Ingrese un monto de depósito válido.",
+      "account": "Seleccione una cuenta a acreditar.",
+      "images": "Suba las imágenes frontal y posterior del cheque.",
+      "completeForm": "Complete el formulario de depósito antes de enviarlo.",
+      "submitFailed": "No se pudo enviar el depósito móvil.",
+      "processFailed": "No se puede procesar el depósito móvil ahora."
+    },
+    "success": "Depósito enviado para revisión."
+  }
+}

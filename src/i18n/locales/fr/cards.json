@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "virtualCard": "Carte virtuelle",
+    "linkedAccount": "Compte associé :",
+    "activation": "Activation :"
+  },
+  "actions": {
+    "showDetails": "Afficher les détails de la carte",
+    "hideDetails": "Masquer les détails de la carte",
+    "sendCode": "Envoyer le code",
+    "activate": "Activer"
+  },
+  "details": {
+    "digitalAccess": "Accès numérique",
+    "securedByStripe": "Sécurisé par Stripe Issuing",
+    "validThruPlaceholder": "Valide jusqu'au — — / — —",
+    "cvcPlaceholder": "CVV — — —",
+    "sensitiveHeading": "Données sensibles",
+    "sensitiveSubheading": "Ne pas partager",
+    "numberLabel": "Numéro",
+    "expiryLabel": "Expiration",
+    "cvcLabel": "CVC"
+  },
+  "activation": {
+    "title": "Activer votre carte",
+    "description": "Envoyez un code à 6 chiffres par e-mail et saisissez-le ci-dessous pour activer cette carte virtuelle.",
+    "placeholder": "Saisir le code d'activation",
+    "messageLabel": "Message d'activation",
+    "loadingDetails": "Chargement des détails sécurisés…",
+    "secureNote": "Les numéros de carte et le CVC sont affichés par Stripe et ne transitent jamais par les serveurs ou l'état local de TrustPay."
+  },
+  "messages": {
+    "emailRequired": "Un e-mail est nécessaire pour envoyer le code d'activation.",
+    "sendFailed": "Impossible d'envoyer le code d'activation.",
+    "sendError": "Impossible d'envoyer le code d'activation pour le moment.",
+    "sendSuccess": "Code d'activation envoyé par e-mail.",
+    "codeRequired": "Saisissez le code d'activation envoyé par e-mail.",
+    "activateFailed": "Activation impossible. Vérifiez le code et réessayez.",
+    "activated": "Carte activée.",
+    "activateError": "Impossible d'activer la carte pour le moment.",
+    "stripeMissing": "La clé publique Stripe est manquante.",
+    "stripeInitFailed": "Stripe n'a pas pu s'initialiser.",
+    "cardRefMissing": "Référence de carte manquante pour les détails sécurisés.",
+    "authError": "Impossible d'autoriser l'accès sécurisé à la carte.",
+    "loadFailed": "Impossible de charger les détails de la carte."
+  }
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Input from '../../../components/ui/Input';
 import { Checkbox } from '../../../components/ui/Checkbox';
 import Button from '../../../components/ui/Button';
@@ -21,26 +22,27 @@ const RegistrationForm = ({
   isSubmitting
 }: RegistrationFormProps) => {
   const navigate = useNavigate();
+  const { t } = useTranslation('registration');
 
   return (
     <form onSubmit={onSubmit} className="space-y-5">
       <Input
-        label="Email Address"
+        label={t('form.emailLabel')}
         type="email"
-        placeholder="Enter your email"
+        placeholder={t('form.emailPlaceholder')}
         value={formData.email}
         onChange={(e) => onInputChange('email', e.target.value)}
         error={errors.email}
-        description="We'll never share your email with anyone"
+        description={t('form.emailDescription')}
         required
         disabled={isSubmitting}
       />
 
       <div>
         <Input
-          label="Password"
+          label={t('form.passwordLabel')}
           type="password"
-          placeholder="Create a strong password"
+          placeholder={t('form.passwordPlaceholder')}
           value={formData.password}
           onChange={(e) => onInputChange('password', e.target.value)}
           error={errors.password}
@@ -53,9 +55,9 @@ const RegistrationForm = ({
       </div>
 
       <Input
-        label="Confirm Password"
+        label={t('form.confirmPasswordLabel')}
         type="password"
-        placeholder="Re-enter your password"
+        placeholder={t('form.confirmPasswordPlaceholder')}
         value={formData.confirmPassword}
         onChange={(e) => onInputChange('confirmPassword', e.target.value)}
         error={errors.confirmPassword}
@@ -67,13 +69,13 @@ const RegistrationForm = ({
         <Checkbox
           label={
             <span className="text-sm">
-              I agree to the{' '}
+              {t('form.termsPrefix')}{' '}
               <button
                 type="button"
                 onClick={() => window.open('/terms', '_blank')}
                 className="text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring rounded"
               >
-                Terms of Service
+                {t('form.termsLink')}
               </button>
             </span>
           }
@@ -87,13 +89,13 @@ const RegistrationForm = ({
         <Checkbox
           label={
             <span className="text-sm">
-              I agree to the{' '}
+              {t('form.privacyPrefix')}{' '}
               <button
                 type="button"
                 onClick={() => window.open('/privacy', '_blank')}
                 className="text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring rounded"
               >
-                Privacy Policy
+                {t('form.privacyLink')}
               </button>
             </span>
           }
@@ -113,12 +115,12 @@ const RegistrationForm = ({
           loading={isSubmitting}
           disabled={isSubmitting}
         >
-          Create Account
+          {t('form.createAccount')}
         </Button>
 
         <div className="text-center">
           <span className="text-sm text-muted-foreground">
-            Already have an account?{' '}
+            {t('form.already')}{' '}
           </span>
           <button
             type="button"
@@ -126,7 +128,7 @@ const RegistrationForm = ({
             className="text-sm text-primary font-medium hover:underline focus:outline-none focus:ring-2 focus:ring-ring rounded"
             disabled={isSubmitting}
           >
-            Sign In
+            {t('form.signIn')}
           </button>
         </div>
       </div>

@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "title": "Konto erstellen - TrustPay",
+    "description": "Erstellen Sie Ihr TrustPay-Konto und starten Sie sicheres Online-Banking."
+  },
+  "hero": {
+    "eyebrow": "TrustPay",
+    "title": "Starten Sie mit TrustPay",
+    "subtitle": "Geführtes Onboarding mit Sicherheit auf Bankniveau, damit Sie Gelder bewegen und Treasury sicher steuern können.",
+    "openAccount": "Konto eröffnen",
+    "ctaLogin": "Bereits ein Konto?",
+    "ctaAbout": "Mehr über TrustPay",
+    "features": [
+      { "icon": "ShieldCheck", "title": "Sicher gestaltet", "text": "Verschlüsselung, Geräteprüfungen und proaktives Monitoring." },
+      { "icon": "Rocket", "title": "Schneller Start", "text": "Registrierung in Minuten abschließen und loslegen." },
+      { "icon": "Headset", "title": "Support 24/7", "text": "Spezialisten helfen, wann immer Sie sie brauchen." },
+      { "icon": "Sparkles", "title": "Moderne Tools", "text": "Payments, Treasury und Wealth in einer Experience." }
+    ]
+  },
+  "form": {
+    "title": "Erstellen Sie Ihr TrustPay-Konto",
+    "subtitle": "Eröffnen Sie ein sicheres Konto für Payments, Treasury und Vermögensverwaltung.",
+    "emailLabel": "E-Mail-Adresse",
+    "emailPlaceholder": "E-Mail eingeben",
+    "emailDescription": "Wir geben Ihre E-Mail niemals weiter",
+    "passwordLabel": "Passwort",
+    "passwordPlaceholder": "Starkes Passwort erstellen",
+    "confirmPasswordLabel": "Passwort bestätigen",
+    "confirmPasswordPlaceholder": "Passwort erneut eingeben",
+    "termsPrefix": "Ich stimme den",
+    "termsLink": "Nutzungsbedingungen",
+    "privacyPrefix": "Ich stimme der",
+    "privacyLink": "Datenschutzerklärung",
+    "createAccount": "Konto erstellen",
+    "already": "Bereits ein Konto?",
+    "signIn": "Anmelden",
+    "otpInstruction": "Geben Sie den 6-stelligen Code ein, den wir an {{email}} gesendet haben, um Ihr Konto zu aktivieren.",
+    "otpPlaceholder": "••••••",
+    "verifyCode": "Code verifizieren",
+    "editCredentials": "E-Mail oder Passwort ändern",
+    "footerNote": "Mit der Kontoerstellung akzeptieren Sie unsere Datenschutz- und Sicherheitsrichtlinien"
+  },
+  "password": {
+    "strengthTitle": "Passwortstärke",
+    "strengthLabel": {
+      "weak": "Schwach",
+      "fair": "Ausreichend",
+      "medium": "Mittel",
+      "strong": "Stark",
+      "veryStrong": "Sehr stark"
+    },
+    "requirements": {
+      "length": "Mindestens 8 Zeichen",
+      "uppercase": "Großbuchstaben enthalten",
+      "lowercase": "Kleinbuchstaben enthalten",
+      "number": "Zahl enthalten",
+      "special": "Sonderzeichen enthalten"
+    },
+    "tooWeak": "Passwort zu schwach. Erfüllen Sie mindestens 3 Anforderungen"
+  },
+  "messages": {
+    "errors": {
+      "otpRequired": "Geben Sie den 6-stelligen Code ein, der an Ihre E-Mail gesendet wurde",
+      "emailRequired": "E-Mail ist erforderlich",
+      "emailInvalid": "Bitte eine gültige E-Mail eingeben",
+      "passwordRequired": "Passwort ist erforderlich",
+      "confirmPasswordRequired": "Bitte bestätigen Sie Ihr Passwort",
+      "passwordsMismatch": "Passwörter stimmen nicht überein",
+      "termsRequired": "Sie müssen den Nutzungsbedingungen zustimmen",
+      "privacyRequired": "Sie müssen der Datenschutzerklärung zustimmen",
+      "registrationFailed": "Registrierung fehlgeschlagen. Bitte erneut versuchen.",
+      "incompleteResponse": "Antwort unvollständig. Bitte erneut versuchen."
+    },
+    "info": {
+      "otpPrompt": "Geben Sie den Code aus der E-Mail ein, um Ihr Konto zu aktivieren.",
+      "emailVerification": "Prüfen Sie Ihre E-Mail, um das Konto vor dem Login zu verifizieren."
+    },
+    "success": {
+      "accountCreated": "Konto erfolgreich erstellt."
+    }
+  },
+  "security": {
+    "title": "Ihre Sicherheit hat Priorität",
+    "items": [
+      "Verschlüsselung auf Bankniveau",
+      "Sichere Datenspeicherung",
+      "Geschützte Privatsphäre"
+    ]
+  }
+}

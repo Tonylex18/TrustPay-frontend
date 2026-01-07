@@ -1,0 +1,174 @@
+{
+  "meta": {
+    "title": "Μεταφορά χρημάτων - TrustPay",
+    "description": "Στείλτε χρήματα με ασφάλεια μεταξύ των λογαριασμών σας ή σε εξωτερικούς δικαιούχους."
+  },
+  "breadcrumb": {
+    "dashboard": "Πίνακας",
+    "transfer": "Μεταφορά"
+  },
+  "page": {
+    "title": "Μεταφορά χρημάτων",
+    "subtitle": "Στείλτε χρήματα με ασφάλεια στους δικαιούχους σας",
+    "loading": "Φόρτωση στοιχείων λογαριασμού..."
+  },
+  "form": {
+    "fromAccount": "Από λογαριασμό",
+    "destinationInternal": "Προορισμός (δικός σας λογαριασμός)",
+    "destinationPlaceholder": "Επιλέξτε προορισμό",
+    "destinationWarning": "Χρειάζεστε έναν ακόμη λογαριασμό για εσωτερική μεταφορά.",
+    "accountHolderName": "Όνομα δικαιούχου",
+    "accountHolderPlaceholder": "Maria Papadopoulou",
+    "routingNumber": "Routing number",
+    "routingPlaceholder": "Routing number",
+    "bankName": "Τράπεζα",
+    "bankPlaceholder": "Τράπεζα",
+    "accountNumberLabel": "Αριθμός λογαριασμού",
+    "accountNumberPlaceholder": "Εισαγάγετε 10ψήφιο αριθμό λογαριασμού",
+    "accountTypeLabel": "Τύπος λογαριασμού",
+    "accountTypePlaceholder": "Επιλέξτε τύπο λογαριασμού",
+    "accountTypeOptions": {
+      "checking": "Όψεως",
+      "savings": "Ταμιευτήριο"
+    },
+    "memoLabel": "Σημείωση (προαιρετικό)",
+    "memoPlaceholder": "Προσθέστε σημείωση για αυτή τη μεταφορά",
+    "memoDescription": "Μέγιστο 100 χαρακτήρες",
+    "reviewButton": "Έλεγχος μεταφοράς"
+  },
+  "status": {
+    "verifyingAccount": "Γίνεται έλεγχος λογαριασμού...",
+    "verifiedAccount": "Επαληθεύτηκε: {{name}}",
+    "bankIdentified": "Η τράπεζα εντοπίστηκε"
+  },
+  "amountInput": {
+    "label": "Ποσό μεταφοράς",
+    "ariaLabel": "Ποσό μεταφοράς σε δολάρια",
+    "available": "Διαθέσιμο υπόλοιπο:",
+    "remaining": "Υπόλοιπο ημερήσιου ορίου:"
+  },
+  "transferType": {
+    "label": "Τύπος μεταφοράς",
+    "options": {
+      "internal": {
+        "title": "Εσωτερική μεταφορά",
+        "description": "Μεταξύ των δικών σας λογαριασμών",
+        "time": "Άμεση"
+      },
+      "external": {
+        "title": "Εξωτερική μεταφορά",
+        "description": "Προς άλλες τράπεζες",
+        "time": "1-2 εργάσιμες"
+      }
+    }
+  },
+  "processing": {
+    "instant": "Άμεση",
+    "external": "1-2 εργάσιμες"
+  },
+  "summary": {
+    "title": "Σύνοψη μεταφοράς",
+    "amount": "Ποσό μεταφοράς",
+    "fee": "Κόστος επεξεργασίας",
+    "total": "Συνολικό ποσό",
+    "processingTime": "Χρόνος επεξεργασίας",
+    "externalNotice": "Οι εξωτερικές μεταφορές μπορεί να διαρκέσουν 1-2 εργάσιμες. Ελέγξτε τα στοιχεία του δικαιούχου."
+  },
+  "confirmation": {
+    "title": "Επιβεβαίωση μεταφοράς",
+    "amount": "Ποσό μεταφοράς",
+    "accountNumber": "Αριθμός λογαριασμού",
+    "transferType": "Τύπος μεταφοράς",
+    "memo": "Σημείωση",
+    "fee": "Κόστος επεξεργασίας",
+    "total": "Συνολική χρέωση",
+    "warning": "Ελέγξτε προσεκτικά όλες τις λεπτομέρειες. Η συναλλαγή δεν μπορεί να αναιρεθεί μετά την επιβεβαίωση.",
+    "cancel": "Άκυρο",
+    "confirm": "Επιβεβαίωση μεταφοράς",
+    "processing": "Γίνεται επεξεργασία..."
+  },
+  "info": {
+    "title": "Σημαντικές πληροφορίες",
+    "items": [
+      "Οι εσωτερικές μεταφορές εκτελούνται άμεσα",
+      "Οι εξωτερικές μεταφορές μπορεί να διαρκέσουν 1-2 εργάσιμες",
+      "Επαληθεύστε τα στοιχεία δικαιούχου πριν την επιβεβαίωση",
+      "Η συναλλαγή δεν μπορεί να ανακληθεί μετά την επιβεβαίωση"
+    ]
+  },
+  "pinEntry": {
+    "title": "Εισάγετε PIN μεταφοράς",
+    "description": "Εισάγετε το PIN 4–6 ψηφίων για να εγκρίνετε αυτή τη μεταφορά.",
+    "label": "PIN",
+    "cancel": "Άκυρο",
+    "confirm": "Επιβεβαίωση μεταφοράς",
+    "invalid": "Εισάγετε PIN 4–6 ψηφίων."
+  },
+  "pinSetup": {
+    "title": "Ορίστε PIN μεταφοράς",
+    "description": "Δημιουργήστε PIN 4–6 ψηφίων για μεταφορές και αναλήψεις. Μην το κοινοποιείτε.",
+    "newPin": "Νέο PIN",
+    "confirmPin": "Επιβεβαίωση PIN",
+    "currentPin": "Τρέχον PIN (αν ενημερώνετε)",
+    "cancel": "Άκυρο",
+    "save": "Αποθήκευση PIN",
+    "invalid": "Εισάγετε ταυτόσημα PIN 4–6 ψηφίων."
+  },
+  "security": {
+    "title": "Ασφάλεια & όρια",
+    "dailyLimit": "Ημερήσιο όριο μεταφοράς",
+    "perTransaction": "Όριο ανά συναλλαγή",
+    "remainingToday": "{{amount}} υπόλοιπο σήμερα",
+    "items": {
+      "secureTitle": "Ασφαλής μεταφορά",
+      "secureDescription": "Όλες οι μεταφορές είναι κρυπτογραφημένες και προστατευμένες",
+      "notificationsTitle": "Άμεσες ειδοποιήσεις",
+      "notificationsDescription": "Λάβετε ειδοποίηση για κάθε συναλλαγή",
+      "historyTitle": "Ιστορικό συναλλαγών",
+      "historyDescription": "Παρακολουθήστε όλες τις μεταφορές σας ανά πάσα στιγμή"
+    }
+  },
+  "labels": {
+    "internalBank": "TrustPay (εσωτερικό)",
+    "yourAccount": "Ο λογαριασμός σας"
+  },
+  "messages": {
+    "error": {
+      "routingRequired": "Εισαγάγετε routing number",
+      "routingInvalid": "Το routing number πρέπει να έχει 9 ψηφία",
+      "accountHolderRequired": "Το όνομα δικαιούχου είναι υποχρεωτικό",
+      "bankNameRequired": "Το όνομα τράπεζας είναι υποχρεωτικό",
+      "bankLookupFirst": "Αναζητήστε την τράπεζα πρώτα με όνομα δικαιούχου και routing",
+      "accountNumberRequired": "Εισαγάγετε αριθμό λογαριασμού προορισμού",
+      "accountNumberVerify": "Επαληθεύστε τον αριθμό λογαριασμού πριν συνεχίσετε",
+      "accountTypeRequired": "Επιλέξτε τύπο λογαριασμού",
+      "fromAccountRequired": "Επιλέξτε λογαριασμό προέλευσης.",
+      "toAccountRequired": "Επιλέξτε λογαριασμό προορισμού.",
+      "toAccountDifferent": "Επιλέξτε διαφορετικό λογαριασμό προορισμού.",
+      "amountRequired": "Εισαγάγετε ποσό μεταφοράς",
+      "amountPositive": "Το ποσό πρέπει να είναι μεγαλύτερο από μηδέν",
+      "insufficientBalance": "Μη επαρκές υπόλοιπο",
+      "perTransactionLimit": "Το ποσό υπερβαίνει το όριο ανά συναλλαγή {{limit}}",
+      "dailyLimit": "Το ποσό υπερβαίνει το ημερήσιο υπόλοιπο ορίου {{limit}}",
+      "pinRequired": "Ορίστε PIN μεταφοράς πριν στείλετε χρήματα.",
+      "destinationRequired": "Επιλέξτε λογαριασμό προορισμού.",
+      "routingMissing": "Λείπει routing number για τον προορισμό.",
+      "pinLocked": "Το PIN είναι κλειδωμένο, δοκιμάστε αργότερα.",
+      "transferFailed": "Η μεταφορά δεν ολοκληρώθηκε.",
+      "verifyAccountMissing": "Εισαγάγετε αριθμό λογαριασμού και τράπεζα.",
+      "bankNotFound": "Η τράπεζα δεν βρέθηκε. Ελέγξτε το routing number.",
+      "bankLookupUnavailable": "Η αναζήτηση δεν είναι διαθέσιμη. Δοκιμάστε ξανά ή εισαγάγετε την τράπεζα χειροκίνητα.",
+      "pinSaveFailed": "Δεν ήταν δυνατή η αποθήκευση του PIN.",
+      "pinSaveUnavailable": "Δεν είναι δυνατή η αποθήκευση του PIN τώρα."
+    },
+    "success": {
+      "transferSubmitted": "Η μεταφορά υποβλήθηκε. Θα ολοκληρωθεί σύντομα.",
+      "pinSet": "Το PIN μεταφοράς αποθηκεύτηκε."
+    },
+    "info": {
+      "stepUp": "Η μεταφορά υποβλήθηκε. Μπορεί να απαιτηθεί επιπλέον επαλήθευση."
+    },
+    "defaultMemoInternal": "Μεταφορά στον λογαριασμό σας",
+    "defaultMemoExternal": "Μεταφορά σε δικαιούχο"
+  }
+}

@@ -1,6 +1,8 @@
 import Icon from '../../../components/AppIcon';
+import { useTranslation } from 'react-i18next';
 
 const RegistrationHeader = () => {
+  const { t } = useTranslation('registration');
   return (
     <div className="mb-8 text-left">
       <div className="flex items-center mb-4">
@@ -9,10 +11,10 @@ const RegistrationHeader = () => {
         </div>
       </div>
       <h1 className="text-3xl font-semibold text-foreground mb-2">
-        Create your TrustPay account
+        {t('form.title')}
       </h1>
       <p className="text-muted-foreground text-base">
-        Open a secure account to access payments, treasury, and wealth tools in one place.
+        {t('form.subtitle')}
       </p>
     </div>
   );

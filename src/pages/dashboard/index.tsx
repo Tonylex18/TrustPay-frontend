@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import { useTranslation } from 'react-i18next';
 import NavigationBar from '../../components/ui/NavigationBar';
 import BreadcrumbTrail from '../../components/ui/BreadcrumbTrail';
 import QuickActionPanel from '../../components/ui/QuickActionPanel';
@@ -55,6 +56,7 @@ const normalizeStatus = (value: string | null | undefined): DashboardStatus => {
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(['dashboard', 'common']);
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -392,38 +394,38 @@ const Dashboard: React.FC = () => {
 
   const quickActions: QuickActionConfig[] = [
     {
-      label: "Deposit Money",
+      label: t('dashboard:quickActionsItems.deposit.label'),
       icon: "ArrowDownToLine",
       onClick: () => navigate('/deposit'),
       variant: "default",
-      description: "Add funds to your account"
+      description: t('dashboard:quickActionsItems.deposit.description')
     },
     {
-      label: "Transfer Funds",
+      label: t('dashboard:quickActionsItems.transfer.label'),
       icon: "Send",
       onClick: () => navigate('/money-transfer', { state: { hasTransferPin } }),
       variant: "outline",
-      description: "Send money to any account"
+      description: t('dashboard:quickActionsItems.transfer.description')
     },
     {
-      label: "Pay Bills",
+      label: t('dashboard:quickActionsItems.payBills.label'),
       icon: "Receipt",
       onClick: () => navigate('/bills'),
       variant: "outline",
-      description: "Pay your utility bills"
+      description: t('dashboard:quickActionsItems.payBills.description')
     },
     {
-      label: "View Transactions",
+      label: t('dashboard:quickActionsItems.viewTransactions.label'),
       icon: "List",
       onClick: () => navigate('/transactions'),
       variant: "secondary",
-      description: "Check transaction history"
+      description: t('dashboard:quickActionsItems.viewTransactions.description')
     }
   ];
 
   const breadcrumbItems = [
-    { label: "Home", path: "/dashboard" },
-    { label: "Dashboard" }
+    { label: t('dashboard:breadcrumb.home'), path: "/dashboard" },
+    { label: t('dashboard:breadcrumb.dashboard') }
   ];
 
   const transferLedger = useMemo(() => {
@@ -566,29 +568,31 @@ const Dashboard: React.FC = () => {
     if (normalized === 'REJECTED') {
       return (
         <span className="px-2 py-1 text-[11px] font-semibold rounded-full border bg-error/10 text-error border-error/30">
-          Rejected
+          {t('dashboard:virtualCardRequest.rejected')}
         </span>
       );
     }
     if (normalized === 'APPROVED' || normalized === 'ISSUED') {
       return (
         <span className="px-2 py-1 text-[11px] font-semibold rounded-full border bg-success/10 text-success border-success/30">
-          {normalized === 'ISSUED' ? 'Issued' : 'Approved'}
+          {normalized === 'ISSUED' ? t('dashboard:virtualCardRequest.issued') : t('dashboard:virtualCardRequest.approved')}
         </span>
       );
     }
     return (
       <span className="px-2 py-1 text-[11px] font-semibold rounded-full border bg-amber-50 text-amber-700 border-amber-200">
-        Pending Approval
+        {t('dashboard:virtualCardRequest.pendingApproval')}
       </span>
     );
   };
 
+  const firstName = dashboardData?.user?.name?.split(' ')[0];
+
   return (
     <>
       <Helmet>
-        <title>Dashboard - TrustPay</title>
-        <meta name="description" content="Manage your accounts, view transactions, and access banking services from your TrustPay dashboard." />
+        <title>{t('dashboard:metaTitle')}</title>
+        <meta name="description" content={t('dashboard:metaDescription')} />
       </Helmet>
 
       <div className="min-h-screen bg-background">
@@ -606,18 +610,18 @@ const Dashboard: React.FC = () => {
                 <div>
                   <h1 className="text-3xl font-bold text-foreground">
                     {dashboardData?.user?.name
-                      ? `Welcome back, ${dashboardData.user.name.split(' ')[0]}!`
-                      : 'Welcome back!'}
+                      ? t('dashboard:welcomeWithName', { name: firstName })
+                      : t('dashboard:welcome')}
                   </h1>
                   <p className="text-muted-foreground mt-1">
-                    Here's your account overview and recent activity
+                    {t('dashboard:overview')}
                   </p>
                 </div>
               </div>
 
               {isLoading && (
                 <div className="bg-card border border-border rounded-xl p-8 text-center text-muted-foreground">
-                  Loading your dashboard...
+                  {t('common:status.loadingDashboard')}
                 </div>
               )}
 
@@ -634,14 +638,14 @@ const Dashboard: React.FC = () => {
                       <AccountBalanceCard account={primaryAccount} />
                     ) : (
                       <div className="bg-card border border-border rounded-xl p-6 text-muted-foreground">
-                        No primary account found yet.
+                        {t('dashboard:noPrimaryAccount')}
                       </div>
                     )}
                     
                     <QuickActionPanel
                       actions={quickActions}
-                      title="Quick Actions"
-                      description="Access your most used banking features"
+                      title={t('dashboard:quickActions.title')}
+                      description={t('dashboard:quickActions.description')}
                       layout="grid"
                     />
 
@@ -652,14 +656,14 @@ const Dashboard: React.FC = () => {
                   <div className="bg-card border border-border rounded-lg p-6 shadow-card">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-lg font-semibold text-foreground">
-                        All Accounts
+                        {t('dashboard:allAccounts')}
                       </h3>
                       <Button size="sm" variant="default" onClick={() => setShowCreateModal(true)} disabled={kycStatus !== 'APPROVED'}>
-                        Create Account
+                        {t('dashboard:createAccount')}
                       </Button>
                     </div>
                     {dashboardData.accounts.length === 0 ? (
-                      <p className="text-sm text-muted-foreground">No accounts available yet.</p>
+                      <p className="text-sm text-muted-foreground">{t('dashboard:noAccounts')}</p>
                     ) : (
                       <AccountSummaryCards accounts={dashboardData.accounts} onSelect={handleAccountSelect} />
                     )}
@@ -675,19 +679,21 @@ const Dashboard: React.FC = () => {
                       <div className="border border-border rounded-lg p-4 bg-card/60">
                         <div className="flex items-start justify-between gap-3">
                           <div>
-                            <p className="text-sm font-semibold text-foreground">Virtual Card Request</p>
+                            <p className="text-sm font-semibold text-foreground">{t('dashboard:virtualCardRequest.title')}</p>
                             <p className="text-xs text-muted-foreground">
-                              Account ••••{activeRequest.accountLast4 || '----'}
+                              {t('dashboard:virtualCardRequest.accountLine', { last4: activeRequest.accountLast4 || '----' })}
                             </p>
                             <p className="text-xs text-muted-foreground mt-1">
-                              Fee status: {(activeRequest.feeStatus || 'PENDING').toString().replace(/_/g, ' ')}
+                              {t('dashboard:virtualCardRequest.feeStatus', { status: (activeRequest.feeStatus || 'PENDING').toString().replace(/_/g, ' ') })}
                             </p>
                             {activeRequest.rejectionReason && (
-                              <p className="text-xs text-error mt-1">Reason: {activeRequest.rejectionReason}</p>
+                              <p className="text-xs text-error mt-1">
+                                {t('dashboard:virtualCardRequest.reason', { reason: activeRequest.rejectionReason })}
+                              </p>
                             )}
                             {(!activeRequest.rejectionReason && (activeRequest.status || '').toUpperCase() !== 'REJECTED') && (
                               <p className="text-xs text-muted-foreground mt-2">
-                                Your card request is under review. This typically takes 2–3 business days.
+                                {t('dashboard:virtualCardRequest.underReview')}
                               </p>
                             )}
                           </div>
@@ -706,12 +712,12 @@ const Dashboard: React.FC = () => {
                         />
                       ) : (
                         <div className="bg-card border border-border rounded-lg p-4 text-sm text-muted-foreground">
-                          <p>Issue a virtual card from your profile to view secure card numbers.</p>
+                          <p>{t('dashboard:virtualCardEmpty.prompt')}</p>
                           <p className="text-xs mt-2">
-                            Virtual Card Fee: A one-time $5 issuance fee will be deducted from your balance when you apply.
+                            {t('dashboard:virtualCardEmpty.fee')}
                           </p>
                           <p className="text-xs">
-                            Processing Time: Card requests are reviewed within 2–3 business days.
+                            {t('dashboard:virtualCardEmpty.processing')}
                           </p>
                         </div>
                       )
@@ -720,7 +726,7 @@ const Dashboard: React.FC = () => {
 
                   <div className="bg-card border border-border rounded-lg p-6 shadow-card">
                     <h3 className="text-lg font-semibold text-foreground mb-4">
-                      Payments & Bills
+                      {t('dashboard:payments.title')}
                     </h3>
                     <div className="space-y-3">
                       <Button
@@ -730,7 +736,7 @@ const Dashboard: React.FC = () => {
                         iconName="ArrowDownToLine"
                         iconPosition="left"
                       >
-                        Deposit Money
+                        {t('common:actions.depositMoney')}
                       </Button>
                       <Button
                         variant="outline"
@@ -739,7 +745,7 @@ const Dashboard: React.FC = () => {
                         iconName="Receipt"
                         iconPosition="left"
                       >
-                        Pay a Bill
+                        {t('common:actions.payBill')}
                       </Button>
                     </div>
                   </div>
@@ -751,10 +757,10 @@ const Dashboard: React.FC = () => {
                         </div>
                         <div>
                           <h4 className="text-sm font-semibold text-foreground mb-1">
-                            Financial Tip
+                            {t('dashboard:financialTip.title')}
                           </h4>
                           <p className="text-sm text-muted-foreground">
-                            Consider setting up automatic transfers to your savings account to build your emergency fund consistently.
+                            {t('dashboard:financialTip.body')}
                           </p>
                         </div>
                       </div>

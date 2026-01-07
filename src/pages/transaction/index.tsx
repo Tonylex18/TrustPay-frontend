@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import NavigationBar from '../../components/ui/NavigationBar';
 import BreadcrumbTrail from '../../components/ui/BreadcrumbTrail';
 import QuickActionPanel from '../../components/ui/QuickActionPanel';
@@ -37,6 +38,7 @@ const normalizeStatus = (value: string | null | undefined): Transaction['status'
 
 const TransactionsPage = () => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation('transaction');
   const [isMobile, setIsMobile] = useState(false);
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
   const [sortConfig, setSortConfig] = useState<SortConfig>({
@@ -351,12 +353,12 @@ const TransactionsPage = () => {
 
   const handleExport = () => {
     if (filteredAndSortedTransactions.length === 0) {
-      toast.info('No transactions to export.');
+      toast.info(t('filters.noExport'));
       return;
     }
 
     const csvContent = [
-      ['Date', 'Description', 'Type', 'Amount', 'Status', 'Reference'],
+      [t('table.date'), t('table.description'), 'Type', t('table.amount'), t('table.status'), t('table.reference')],
       ...filteredAndSortedTransactions.map((t) => [
         t.date.toISOString(),
         t.description,
@@ -376,36 +378,36 @@ const TransactionsPage = () => {
     a.download = `transactions_${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
-    toast.success('Transactions exported.');
+    toast.success(t('filters.exportSuccess'));
   };
 
   const quickActions = [
     {
-      label: 'Transfer Money',
+      label: t('quickActions.transfer'),
       icon: 'Send',
       onClick: () => navigate('/money-transfer'),
       variant: 'default' as const,
-      description: 'Send money to any account'
+      description: t('quickActions.transferDesc')
     },
     {
-      label: 'View Dashboard',
+      label: t('quickActions.dashboard'),
       icon: 'Home',
       onClick: () => navigate('/dashboard'),
       variant: 'outline' as const,
-      description: 'Go to dashboard'
+      description: t('quickActions.dashboardDesc')
     },
     {
-      label: 'Profile Settings',
+      label: t('quickActions.profile'),
       icon: 'User',
       onClick: () => navigate('/user-profile'),
       variant: 'outline' as const,
-      description: 'Manage your profile'
+      description: t('quickActions.profileDesc')
     }
   ];
 
   const breadcrumbItems = [
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'Transactions' }
+    { label: t('breadcrumb.dashboard'), path: '/dashboard' },
+    { label: t('breadcrumb.transactions') }
   ];
 
   return (
@@ -419,24 +421,22 @@ const TransactionsPage = () => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <h1 className="text-3xl font-bold text-foreground">Transaction History</h1>
-            <p className="text-muted-foreground">
-              View and manage all your banking transactions
-            </p>
+            <h1 className="text-3xl font-bold text-foreground">{t('page.title')}</h1>
+            <p className="text-muted-foreground">{t('page.subtitle')}</p>
           </div>
 
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div className="text-sm text-muted-foreground">
               {isLoadingAccounts
-                ? 'Loading accounts...'
+                ? t('page.loadingAccounts')
                 : accounts.length === 0
-                  ? 'No accounts yet. Create an account to see transactions.'
-                  : 'Select an account to view its ledger activity.'}
+                  ? t('page.noAccounts')
+                  : t('page.selectAccount')}
             </div>
             {accounts.length > 0 && (
               <div className="flex items-center gap-2">
                 <label className="text-sm text-foreground" htmlFor="account-select">
-                  Account
+                  {t('page.accountLabel')}
                 </label>
                 <select
                   id="account-select"
@@ -458,16 +458,16 @@ const TransactionsPage = () => {
                 onClick={() => navigate('/dashboard')}
                 type="button"
               >
-                Create an account
+                {t('page.ctaCreate')}
               </button>
             )}
           </div>
 
           <QuickActionPanel
             actions={quickActions}
-            title="Quick Actions"
+            title={t('quickActions.title')}
             layout="horizontal"
-            description="Perform quick actions from here"
+            description={t('quickActions.description')}
           />
 
           <FilterToolbar

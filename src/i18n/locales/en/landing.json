@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "title": "TrustPay - Modern Digital Banking Made Simple",
+    "description": "Experience secure, convenient digital banking with TrustPay. Instant transfers, 24/7 access, and bank-level security. Join 50,000+ satisfied users today.",
+    "keywords": "mobile banking, digital banking, online banking, secure banking, instant transfers"
+  },
+  "hero": {
+    "badge": "Trusted by 50,000+ Users",
+    "headline": "Banking That Works For You",
+    "subheadline": "Banking That Works For You",
+    "description": "Experience seamless digital banking with enterprise-grade security, instant transfers, and 24/7 account access. Manage your finances smarter with TrustPay.",
+    "buttons": [
+      { "label": "Get Started Free", "variant": "default", "path": "/registration", "icon": "ArrowRight" },
+      { "label": "Sign In", "variant": "outline", "path": "/dashboard" }
+    ],
+    "avatarsLabel": "50,000+ Active Users",
+    "avatarsSubcopy": "Join our growing community",
+    "avatarSuffix": "K+",
+    "overlayTitle": "Banking Made Simple",
+    "overlaySubtitle": "Manage your finances anytime, anywhere"
+  },
+  "featuresSection": {
+    "title": "Everything You Need to Bank Smarter",
+    "subtitle": "Powerful features designed to make your banking experience seamless, secure, and efficient",
+    "learnMore": "Learn more",
+    "learnMoreAria": "Learn more about {{title}}",
+    "items": [
+      { "icon": "Zap", "title": "Instant Transfers", "description": "Send and receive money instantly with zero fees. Transfer funds to any account within seconds using our secure platform." },
+      { "icon": "Shield", "title": "Bank-Level Security", "description": "Your data is protected with 256-bit encryption, two-factor authentication, and real-time fraud monitoring systems." },
+      { "icon": "Smartphone", "title": "Mobile First Design", "description": "Access your accounts anywhere, anytime. Our responsive platform works seamlessly across all devices." },
+      { "icon": "CreditCard", "title": "Smart Card Management", "description": "Control your cards with instant freeze/unfreeze, spending limits, and real-time transaction notifications." },
+      { "icon": "PieChart", "title": "Financial Insights", "description": "Track spending patterns, set budgets, and receive personalized financial recommendations powered by AI." },
+      { "icon": "Headphones", "title": "24/7 Support", "description": "Get help whenever you need it with our round-the-clock customer support team and comprehensive help center." }
+    ]
+  },
+  "benefitsSection": {
+    "title": "Why Choose TrustPay?",
+    "subtitle": "Experience banking with enterprise-grade security and user-friendly features designed for modern financial management",
+    "items": [
+      { "icon": "Lock", "title": "Advanced Security", "description": "Multi-layer security with biometric authentication, device recognition, and real-time fraud detection to keep your money safe.", "badge": "Verified" },
+      { "icon": "Zap", "title": "Lightning Fast", "description": "Experience instant transactions, real-time balance updates, and seamless account management with our optimized platform.", "badge": "Fast" },
+      { "icon": "DollarSign", "title": "Zero Hidden Fees", "description": "Transparent pricing with no monthly maintenance fees, no minimum balance requirements, and free unlimited transactions." },
+      { "icon": "Globe", "title": "Global Access", "description": "Bank from anywhere in the world with multi-currency support and international transfer capabilities." },
+      { "icon": "TrendingUp", "title": "Smart Savings", "description": "Automated savings tools, competitive interest rates, and personalized investment recommendations to grow your wealth." },
+      { "icon": "Users", "title": "Family Banking", "description": "Manage multiple accounts, set up allowances for kids, and share expenses with family members seamlessly." }
+    ]
+  },
+  "trust": {
+    "title": "Bank-Level Security",
+    "assurance": "FDIC Insured",
+    "indicators": [
+      { "icon": "Shield", "label": "SSL Certified" },
+      { "icon": "CheckCircle", "label": "PCI Compliant" },
+      { "icon": "Lock", "label": "SOC 2 Type II" },
+      { "icon": "Award", "label": "ISO 27001" }
+    ]
+  },
+  "testimonialsSection": {
+    "title": "Trusted by Thousands of Happy Customers",
+    "subtitle": "See what our users have to say about their banking experience with TrustPay",
+    "items": [
+      {
+        "name": "Sarah Johnson",
+        "role": "Small Business Owner",
+        "avatar": "https://img.rocket.new/generatedImages/rocket_gen_img_10df5a971-1765003957966.png",
+        "alt": "Professional woman with brown hair in business casual attire smiling at camera against neutral background",
+        "rating": 5,
+        "comment": "TrustPay has transformed how I manage my business finances. The instant transfers and detailed analytics help me make better financial decisions every day."
+      },
+      {
+        "name": "Michael Chen",
+        "role": "Freelance Designer",
+        "avatar": "https://img.rocket.new/generatedImages/rocket_gen_img_11e9982cf-1763295713796.png",
+        "alt": "Young Asian man with glasses wearing casual shirt smiling confidently in modern office setting",
+        "rating": 5,
+        "comment": "The web app is incredibly intuitive and the security features give me peace of mind. I can manage all my accounts on the go without any hassle."
+      },
+      {
+        "name": "Emily Rodriguez",
+        "role": "Marketing Manager",
+        "avatar": "https://img.rocket.new/generatedImages/rocket_gen_img_11504e941-1763295994346.png",
+        "alt": "Hispanic woman with long dark hair in professional blazer smiling warmly in bright office environment",
+        "rating": 5,
+        "comment": "Best banking experience I've ever had. The customer support is outstanding and the platform is so easy to use. Highly recommend to everyone!"
+      }
+    ]
+  },
+  "cta": {
+    "badge": "Get Started Today",
+    "title": "Ready to Transform Your Banking Experience?",
+    "description": "Join thousands of satisfied customers who trust TrustPay for their financial needs. Open your account in minutes and start banking smarter.",
+    "primaryButton": { "label": "Create Free Account", "variant": "secondary", "path": "/registration", "icon": "UserPlus" },
+    "stats": {
+      "usersValue": "50K+",
+      "usersLabel": "Active Users",
+      "transactionsValue": "$2B+",
+      "transactionsLabel": "Transactions",
+      "ratingValue": "4.9/5",
+      "ratingLabel": "User Rating"
+    }
+  },
+  "footer": {
+    "description": "Your trusted partner for secure, convenient, and modern banking solutions. Banking made simple, accessible, and secure.",
+    "productTitle": "Product",
+    "companyTitle": "Company",
+    "legalTitle": "Legal",
+    "productLinks": [
+      { "label": "Features", "href": "#features" },
+      { "label": "Security", "href": "#security" },
+      { "label": "Pricing", "href": "#pricing" },
+      { "label": "FAQ", "href": "#faq" }
+    ],
+    "companyLinks": [
+      { "label": "About Us", "href": "#about" },
+      { "label": "Careers", "href": "#careers" },
+      { "label": "Press", "href": "#press" },
+      { "label": "Contact", "href": "#contact" }
+    ],
+    "legalLinks": [
+      { "label": "Privacy Policy", "href": "#privacy" },
+      { "label": "Terms of Service", "href": "#terms" },
+      { "label": "Cookie Policy", "href": "#cookies" },
+      { "label": "Compliance", "href": "#compliance" }
+    ],
+    "bottom": {
+      "rights": "© {{year}} TrustPay. All rights reserved.",
+      "encryption": "256-bit SSL Encryption",
+      "insured": "FDIC Insured"
+    }
+  }
+}

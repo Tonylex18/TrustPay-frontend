@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { loadStripe, type StripeElements, type StripeIssuingCardCvcDisplayElement, type StripeIssuingCardExpiryDisplayElement, type StripeIssuingCardNumberDisplayElement } from '@stripe/stripe-js';
+import { useTranslation } from 'react-i18next';
 import Button from '../../../components/ui/Button';
 import { API_BASE_URL } from '../../../utils/api';
 import { toast } from 'react-toastify';
@@ -28,6 +29,7 @@ const stripeKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '';
 const stripePromise = stripeKey ? loadStripe(stripeKey) : Promise.resolve(null);
 
 const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, userEmail, onActivated }) => {
+  const { t } = useTranslation(['cards', 'common']);
   const [showDetails, setShowDetails] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -82,7 +84,7 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
     if (!card.id) return;
     if (!card.bankAccountId) return;
     if (!userEmail) {
-      setActivationMessage('Email required to send activation code.');
+      setActivationMessage(t('cards:messages.emailRequired'));
       return;
     }
     setSendingActivation(true);
@@ -102,15 +104,15 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
       });
       const payload = await res.json().catch(() => null);
       if (!res.ok) {
-        const message = payload?.errors || payload?.message || 'Unable to send activation code.';
+        const message = payload?.errors || payload?.message || t('cards:messages.sendFailed');
         setActivationMessage(message);
         toast.error(message);
         return;
       }
-      setActivationMessage('Activation code sent to your email.');
-      toast.success('Activation code sent to your email.');
+      setActivationMessage(t('cards:messages.sendSuccess'));
+      toast.success(t('cards:messages.sendSuccess'));
     } catch (_err) {
-      setActivationMessage('Unable to send activation code right now.');
+      setActivationMessage(t('cards:messages.sendError'));
     } finally {
       setSendingActivation(false);
     }
@@ -118,7 +120,7 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
 
   const handleActivateCard = async () => {
     if (!activationCode.trim()) {
-      setActivationMessage('Enter the activation code we emailed you.');
+      setActivationMessage(t('cards:messages.codeRequired'));
       return;
     }
     setActivating(true);
@@ -129,28 +131,28 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ otpCode: activationCode.trim() })
-      });
-      const payload = await res.json().catch(() => null);
-      if (!res.ok) {
-        const message = payload?.errors || payload?.message || 'Activation failed. Check your code and try again.';
-        setActivationMessage(message);
-        toast.error(message);
-        return;
+          },
+          body: JSON.stringify({ otpCode: activationCode.trim() })
+        });
+        const payload = await res.json().catch(() => null);
+        if (!res.ok) {
+          const message = payload?.errors || payload?.message || t('cards:messages.activateFailed');
+          setActivationMessage(message);
+          toast.error(message);
+          return;
+        }
+        setActivationStatus('ACTIVE');
+        setActivationMessage(t('cards:messages.activated'));
+        toast.success(t('cards:messages.activated'));
+        if (typeof onActivated === 'function') {
+          onActivated(card.id);
+        }
+      } catch (_err) {
+        setActivationMessage(t('cards:messages.activateError'));
+      } finally {
+        setActivating(false);
       }
-      setActivationStatus('ACTIVE');
-      setActivationMessage('Card activated.');
-      toast.success('Card activated.');
-      if (typeof onActivated === 'function') {
-        onActivated(card.id);
-      }
-    } catch (_err) {
-      setActivationMessage('Unable to activate card right now.');
-    } finally {
-      setActivating(false);
-    }
-  };
+    };
   useEffect(() => {
     return () => teardownElements();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -169,7 +171,7 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
       setError(null);
 
       if (!stripeKey) {
-        setError('Stripe publishable key is missing.');
+        setError(t('cards:messages.stripeMissing'));
         setLoading(false);
         return;
       }
@@ -177,15 +179,15 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
       try {
         const stripe = await stripePromise;
         if (!stripe) {
-          throw new Error('Stripe failed to initialize.');
+          throw new Error(t('cards:messages.stripeInitFailed'));
         }
         if (!card.stripeCardId) {
-          throw new Error('Card reference missing for secure details.');
+          throw new Error(t('cards:messages.cardRefMissing'));
         }
 
         const nonceResult = await stripe.createEphemeralKeyNonce({ issuingCard: card.stripeCardId });
         if (!nonceResult.nonce || nonceResult.error) {
-          const message = nonceResult.error?.message || 'Unable to authorize secure card access.';
+          const message = nonceResult.error?.message || t('cards:messages.authError');
           throw new Error(message);
         }
 
@@ -199,7 +201,7 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
         });
         const payload = await res.json().catch(() => null);
         if (!res.ok || !payload?.secret || !payload?.issuingCardId) {
-          const message = payload?.errors || payload?.message || 'Unable to load card details.';
+          const message = payload?.errors || payload?.message || t('cards:messages.loadFailed');
           throw new Error(message);
         }
 
@@ -234,7 +236,7 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
         const expiryEl = elements.create('issuingCardExpiryDisplay', issuingElementOptions);
 
         if (!numberRef.current || !cvcRef.current || !expiryRef.current) {
-          throw new Error('Card containers not available.');
+          throw new Error(t('cards:messages.loadFailed'));
         }
 
         numberEl.mount(numberRef.current);
@@ -244,7 +246,7 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
         mountedElements.current = { elements, number: numberEl, cvc: cvcEl, expiry: expiryEl };
       } catch (err) {
         if (cancelled) return;
-        const message = err instanceof Error ? err.message : 'Unable to load card details.';
+        const message = err instanceof Error ? err.message : t('cards:messages.loadFailed');
         setError(message);
         setShowDetails(false);
       } finally {
@@ -268,15 +270,15 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <p className="text-sm font-semibold text-foreground">{card.brand || 'Virtual Card'}</p>
+            <p className="text-sm font-semibold text-foreground">{card.brand || t('cards:labels.virtualCard')}</p>
             {statusBadge}
           </div>
           <p className="text-xs text-muted-foreground mt-1">•••• {card.last4}</p>
           <p className="text-xs text-muted-foreground">
-            Linked account: {linkedAccountLast4 ? `••••${linkedAccountLast4}` : '—'}
+            {t('cards:labels.linkedAccount')} {linkedAccountLast4 ? `••••${linkedAccountLast4}` : '—'}
           </p>
           <p className="text-[11px] text-muted-foreground mt-1">
-            Activation: {activationStatus || '—'}
+            {t('cards:labels.activation')} {activationStatus || '—'}
           </p>
         </div>
         <Button
@@ -286,14 +288,14 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
           onClick={() => setShowDetails((prev) => !prev)}
           disabled={loading}
         >
-          {showDetails ? 'Hide card details' : 'Show card details'}
+          {showDetails ? t('cards:actions.hideDetails') : t('cards:actions.showDetails')}
         </Button>
       </div>
       {activationStatus !== 'ACTIVE' && (
         <div className="border border-border rounded-lg p-3 bg-muted/30 space-y-2">
-          <p className="text-sm font-semibold text-foreground">Activate your card</p>
+          <p className="text-sm font-semibold text-foreground">{t('cards:activation.title')}</p>
           <p className="text-xs text-muted-foreground">
-            Send a 6-digit code to your email and enter it below to activate this virtual card.
+            {t('cards:activation.description')}
           </p>
           <div className="flex flex-col md:flex-row gap-2">
             <input
@@ -301,15 +303,15 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
               inputMode="numeric"
               maxLength={6}
               className="flex-1 border border-border rounded-md px-3 py-2 bg-background text-foreground"
-              placeholder="Enter activation code"
+              placeholder={t('cards:activation.placeholder')}
               value={activationCode}
               onChange={(e) => setActivationCode(e.target.value.trim())}
             />
             <Button variant="outline" onClick={sendActivationOtp} loading={sendingActivation}>
-              Send code
+              {t('cards:actions.sendCode')}
             </Button>
             <Button onClick={handleActivateCard} loading={activating}>
-              Activate
+              {t('cards:actions.activate')}
             </Button>
           </div>
           {activationMessage && (
@@ -342,7 +344,7 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
             >
               <div className="flex items-center justify-between mb-6">
                 <div className="space-y-1">
-                  <p className="text-[11px] uppercase tracking-[0.2em] text-white/60">Virtual Card</p>
+                  <p className="text-[11px] uppercase tracking-[0.2em] text-white/60">{t('cards:labels.virtualCard')}</p>
                   <p className="text-xl font-semibold">{card.brand || 'Visa'}</p>
                 </div>
                 <span className="rounded-full bg-white/10 px-3 py-1 text-[11px] uppercase tracking-wide border border-white/20">
@@ -352,15 +354,15 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
               <div className="flex items-center gap-3 mb-10">
                 <span className="h-10 w-14 rounded-md bg-amber-300/90 shadow-inner" />
                 <div className="text-white/70 text-sm">
-                  <p>Digital Access</p>
-                  <p className="text-xs">Secured by Stripe Issuing</p>
+                  <p>{t('cards:details.digitalAccess')}</p>
+                  <p className="text-xs">{t('cards:details.securedByStripe')}</p>
                 </div>
               </div>
               <div className="space-y-2">
                 <p className="text-2xl font-semibold tracking-[0.25em]">•••• •••• •••• {card.last4}</p>
                 <div className="flex items-center justify-between text-xs text-white/70">
-                  <span>Valid Thru — — / — —</span>
-                  <span>CVV — — —</span>
+                  <span>{t('cards:details.validThruPlaceholder')}</span>
+                  <span>{t('cards:details.cvcPlaceholder')}</span>
                 </div>
               </div>
             </div>
@@ -370,44 +372,44 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
               style={{ transform: 'rotateY(180deg)', backfaceVisibility: 'hidden' }}
             >
               <div className="flex items-center justify-between mb-4">
-                <p className="text-[11px] uppercase tracking-wide text-white/60">Sensitive details</p>
-                <p className="text-[11px] uppercase tracking-wide text-white/60">Do not share</p>
+                <p className="text-[11px] uppercase tracking-wide text-white/60">{t('cards:details.sensitiveHeading')}</p>
+                <p className="text-[11px] uppercase tracking-wide text-white/60">{t('cards:details.sensitiveSubheading')}</p>
               </div>
               <div className="flex flex-col gap-3">
                 <div className="bg-white/10 rounded-lg px-3 py-2">
-                  <p className="text-[11px] uppercase tracking-wide text-white/60 mb-1">Number</p>
+                  <p className="text-[11px] uppercase tracking-wide text-white/60 mb-1">{t('cards:details.numberLabel')}</p>
                   <div
                     ref={numberRef}
                     className="min-h-[32px] text-lg font-semibold tracking-[0.18em]"
-                    aria-label="Card number"
+                    aria-label={t('cards:details.numberLabel')}
                   />
                 </div>
                 <div className='grid grid-cols-1 md:grid-cols-3 gap-3'>
                   <div className="bg-white/10 rounded-lg px-3 py-2">
-                    <p className="text-[11px] uppercase tracking-wide text-white/60 mb-1">Expiry</p>
+                    <p className="text-[11px] uppercase tracking-wide text-white/60 mb-1">{t('cards:details.expiryLabel')}</p>
                     <div
                       ref={expiryRef}
                       className="min-h-[32px] text-lg font-semibold tracking-[0.12em]"
-                      aria-label="Expiry date"
+                      aria-label={t('cards:details.expiryLabel')}
                     />
                   </div>
 
                   <div className="bg-white/10 rounded-lg px-3 py-2">
-                    <p className="text-[11px] uppercase tracking-wide text-white/60 mb-1">CVC</p>
+                    <p className="text-[11px] uppercase tracking-wide text-white/60 mb-1">{t('cards:details.cvcLabel')}</p>
                     <div
                       ref={cvcRef}
                       className="min-h-[32px] text-lg font-semibold tracking-[0.12em]"
-                      aria-label="CVC"
+                      aria-label={t('cards:details.cvcLabel')}
                     />
                   </div>
                 </div>
               </div>
               {loading && (
-                <p className="text-xs text-white/70 mt-3">Loading secure details…</p>
+                <p className="text-xs text-white/70 mt-3">{t('cards:activation.loadingDetails')}</p>
               )}
               {!loading && (
                 <p className="text-xs text-white/70 mt-3">
-                  Card numbers and CVC are rendered by Stripe and never touch TrustPay servers or local state.
+                  {t('cards:activation.secureNote')}
                 </p>
               )}
             </div>

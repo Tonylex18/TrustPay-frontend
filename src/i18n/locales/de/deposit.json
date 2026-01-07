@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "title": "Geld einzahlen - TrustPay",
+    "description": "Fügen Sie Ihrem TrustPay-Konto über sichere Rails Guthaben hinzu."
+  },
+  "breadcrumb": {
+    "dashboard": "Dashboard",
+    "deposit": "Geld einzahlen"
+  },
+  "page": {
+    "title": "Mobiler Scheckeinzahlung",
+    "subtitle": "Laden Sie Vorder- und Rückseite Ihres Schecks hoch. Gelder bleiben ausstehend, bis ein Admin prüft und freigibt."
+  },
+  "form": {
+    "amountLabel": "Einzahlungsbetrag",
+    "amountPlaceholder": "Betrag eingeben",
+    "amountDescription": "Mindesteinzahlung 1 $",
+    "accountNameLabel": "Kontoname",
+    "accountNumberLabel": "Kontonummer",
+    "bankNameLabel": "Bankname",
+    "bankNameValue": "TrustPay Bank",
+    "checkImagesLabel": "Scheck-Bilder",
+    "frontLabel": "Vorderseite des Schecks",
+    "backLabel": "Rückseite des Schecks",
+    "tapToUpload": "Zum Hochladen tippen",
+    "uploadNote": "Laden Sie klare Fotos des unterschriebenen Schecks hoch. Die Einzahlung bleibt ausstehend bis zur Freigabe.",
+    "submit": "Mobile Einzahlung senden"
+  },
+  "previewModal": {
+    "title": "Einzahlung bestätigen",
+    "depositAmount": "Einzahlungsbetrag",
+    "selectedAccount": "Ausgewähltes Konto",
+    "accountNumber": "Kontonummer",
+    "processingFee": "Bearbeitungsgebühr",
+    "totalDeposit": "Gesamteinzahlung",
+    "warning": "Bitte prüfen Sie alle Angaben sorgfältig. Die Einzahlung kann bis zur Prüfung durch einen Admin ausstehend bleiben.",
+    "cancel": "Abbrechen",
+    "confirm": "Einzahlung bestätigen",
+    "submitting": "Wird gesendet..."
+  },
+  "submittedModal": {
+    "title": "Einzahlung eingereicht",
+    "depositAmount": "Einzahlungsbetrag",
+    "status": "Status",
+    "account": "Konto",
+    "accountNumber": "Kontonummer",
+    "reference": "Referenz",
+    "pendingReference": "Zuweisung ausstehend",
+    "note": "Wir haben Ihre mobile Einzahlung erhalten. Sie kann bis zur Prüfung ausstehend bleiben. Gelder sind bis zur Freigabe nicht verfügbar.",
+    "close": "Schließen",
+    "makeAnother": "Weitere Einzahlung"
+  },
+  "messages": {
+    "error": {
+      "amount": "Geben Sie einen gültigen Einzahlungsbetrag ein.",
+      "account": "Wählen Sie ein Konto zur Gutschrift.",
+      "images": "Laden Sie Vorder- und Rückseite des Schecks hoch.",
+      "completeForm": "Bitte Formular ausfüllen, bevor Sie absenden.",
+      "submitFailed": "Mobile Einzahlung konnte nicht gesendet werden.",
+      "processFailed": "Mobile Einzahlung kann derzeit nicht verarbeitet werden."
+    },
+    "success": "Einzahlung zur Prüfung eingereicht."
+  }
+}

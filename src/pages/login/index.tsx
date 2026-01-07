@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Icon from '../../components/AppIcon';
 import Input from '../../components/ui/Input';
 import { Checkbox } from '../../components/ui/Checkbox';
@@ -11,6 +12,7 @@ import { API_BASE_URL, setStoredToken } from '../../utils/api';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(['auth', 'common']);
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: '',
@@ -24,18 +26,18 @@ const LoginPage: React.FC = () => {
 
   const securityTips: SecurityTip[] = [
     {
-      title: 'Multi-layer security',
-      description: 'Encrypted sessions, device recognition, and anomaly monitoring on every sign in.',
+      title: t('auth:tips.multiLayer.title'),
+      description: t('auth:tips.multiLayer.description'),
       icon: 'ShieldCheck'
     },
     {
-      title: 'Two-step verification',
-      description: 'We may request an extra check when risk signals increase to keep your account safe.',
+      title: t('auth:tips.twoStep.title'),
+      description: t('auth:tips.twoStep.description'),
       icon: 'Lock'
     },
     {
-      title: '24/7 support',
-      description: 'Customer service is ready if you notice unusual activity or need access help.',
+      title: t('auth:tips.support.title'),
+      description: t('auth:tips.support.description'),
       icon: 'Headset'
     }
   ];
@@ -59,20 +61,20 @@ const LoginPage: React.FC = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = t('auth:errors.emailRequired');
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Enter a valid email address';
+      newErrors.email = t('auth:errors.emailInvalid');
     }
 
     if (!awaitingOtp) {
       if (!formData.password) {
-        newErrors.password = 'Password is required';
+        newErrors.password = t('auth:errors.passwordRequired');
       } else if (formData.password.length < 6) {
-        newErrors.password = 'Password must be at least 6 characters';
+        newErrors.password = t('auth:errors.passwordLength');
       }
     } else {
       if (!otpCode || otpCode.trim().length !== 6) {
-        newErrors.password = 'Enter the 6-digit code sent to your email';
+        newErrors.password = t('auth:errors.codeRequired');
       }
     }
 
@@ -101,7 +103,7 @@ const LoginPage: React.FC = () => {
 
       const payload = await response.json().catch(() => null);
       if (!response.ok) {
-        const message = payload?.errors || payload?.message || 'Unable to sign in. Please try again.';
+        const message = payload?.errors || payload?.message || t('auth:messages.loginError');
         setFormError(message);
         toast.error(message);
         return;
@@ -110,7 +112,7 @@ const LoginPage: React.FC = () => {
       if (payload?.emailVerificationRequired) {
         setAwaitingOtp(false);
         setOtpCode('');
-        const message = payload?.message || 'Please verify your email address to continue.';
+        const message = payload?.message || t('auth:messages.verifyEmail');
         setFormError(message);
         toast.info(message);
         return;
@@ -119,7 +121,7 @@ const LoginPage: React.FC = () => {
       if (payload?.otpRequired) {
         setAwaitingOtp(true);
         setOtpCode('');
-        const message = payload?.message || 'Check your email for the 6-digit code.';
+        const message = payload?.message || t('auth:messages.checkEmailCode');
         setFormError(message);
         toast.info(message);
         return;
@@ -128,14 +130,14 @@ const LoginPage: React.FC = () => {
       const token = payload?.token;
       const user = payload?.user;
       if (!token || !user) {
-        const message = 'Login response was incomplete. Please try again.';
+        const message = t('auth:messages.incompleteResponse');
         setFormError(message);
         toast.error(message);
         return;
       }
 
       setStoredToken(token, formData.rememberMe);
-      toast.success('Signed in successfully.');
+      toast.success(t('auth:messages.success'));
       navigate('/dashboard');
     } finally {
       setIsSubmitting(false);
@@ -145,11 +147,8 @@ const LoginPage: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Sign In | TrustPay</title>
-        <meta
-          name="description"
-          content="Securely sign in to your TrustPay account to manage payments, treasury, and banking from one place."
-        />
+        <title>{t('auth:metaTitle')}</title>
+        <meta name="description" content={t('auth:metaDescription')} />
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-[#d1202f]/10 via-background to-[#f6c33d]/10 flex items-center justify-center px-4 py-10">
@@ -160,17 +159,14 @@ const LoginPage: React.FC = () => {
                 <Icon name="Landmark" size={24} color="white" />
               </div>
               <div>
-                <p className="text-xs uppercase tracking-[0.25em] text-white/80">TrustPay</p>
-                <p className="text-xl font-semibold leading-tight">Sign in securely</p>
+                <p className="text-xs uppercase tracking-[0.25em] text-white/80">{t('auth:heroTag')}</p>
+                <p className="text-xl font-semibold leading-tight">{t('auth:heroTitle')}</p>
               </div>
             </div>
 
             <div className="space-y-3">
-              <h1 className="text-3xl font-bold leading-tight">Welcome back</h1>
-              <p className="text-white/85">
-                Access treasury, payments, and wealth dashboards from one secure place. We keep every session
-                protected with layered controls.
-              </p>
+              <h1 className="text-3xl font-bold leading-tight">{t('auth:heroHeading')}</h1>
+              <p className="text-white/85">{t('auth:heroBody')}</p>
             </div>
 
             <div className="space-y-4">
@@ -193,13 +189,13 @@ const LoginPage: React.FC = () => {
                 className="border-white/70 text-white hover:bg-white/10"
                 onClick={() => navigate('/about-trustpay')}
               >
-                About TrustPay
+                {t('auth:cta.about')}
               </Button>
               <Button
                 className="bg-white text-[#8b1b24] hover:bg-white/90 border-none"
                 onClick={() => navigate('/registration')}
               >
-                Open an account
+                {t('auth:cta.openAccount')}
               </Button>
             </div>
           </div>
@@ -207,11 +203,9 @@ const LoginPage: React.FC = () => {
           <div className="p-8 bg-card">
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <p className="text-sm font-semibold text-[#d1202f] uppercase tracking-wide">Sign on</p>
-                <h2 className="text-2xl font-bold text-foreground">Log in to TrustPay</h2>
-                <p className="text-sm text-muted-foreground">
-                  Enter your credentials to continue. For help, reach out to customer service anytime.
-                </p>
+                <p className="text-sm font-semibold text-[#d1202f] uppercase tracking-wide">{t('auth:form.eyebrow')}</p>
+                <h2 className="text-2xl font-bold text-foreground">{t('auth:form.title')}</h2>
+                <p className="text-sm text-muted-foreground">{t('auth:form.description')}</p>
               </div>
 
               {formError && (
@@ -221,32 +215,32 @@ const LoginPage: React.FC = () => {
               )}
 
               <Input
-                label="Email"
+                label={t('auth:form.emailLabel')}
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
-                placeholder="you@company.com"
+                placeholder={t('auth:form.placeholders.email')}
                 error={errors.email}
                 required
               />
 
               {!awaitingOtp ? (
                 <Input
-                  label="Password"
+                  label={t('auth:form.passwordLabel')}
                   type="password"
                   value={formData.password}
                   onChange={(e) => handleInputChange('password', e.target.value)}
-                  placeholder="••••••••"
+                  placeholder={t('auth:form.placeholders.password')}
                   error={errors.password}
                   required
                 />
               ) : (
                 <Input
-                  label="Login code"
+                  label={t('auth:form.codeLabel')}
                   type="text"
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value.replace(/[^0-9]/g, '').slice(0, 6))}
-                  placeholder="6-digit code"
+                  placeholder={t('auth:form.placeholders.code')}
                   error={errors.password}
                   required
                 />
@@ -256,28 +250,28 @@ const LoginPage: React.FC = () => {
                 <Checkbox
                   checked={formData.rememberMe}
                   onChange={(e) => handleInputChange('rememberMe', e.target.checked)}
-                  label="Keep me signed in"
+                  label={t('auth:form.rememberMe')}
                 />
                 <a
                   href="mailto:support@trustpay.com?subject=Reset%20my%20TrustPay%20password"
                   className="text-sm font-semibold text-primary hover:underline"
                 >
-                  Forgot password?
+                  {t('auth:form.forgotPassword')}
                 </a>
               </div>
 
               <Button type="submit" size="lg" className="w-full" loading={isSubmitting}>
-                {awaitingOtp ? 'Verify code' : 'Sign In'}
+                {awaitingOtp ? t('auth:form.submitVerify') : t('auth:form.submitSignIn')}
               </Button>
 
               <div className="flex items-center justify-between text-sm text-muted-foreground">
-                <span>New to TrustPay?</span>
+                <span>{t('auth:form.newToTrustPay')}</span>
                 <button
                   type="button"
                   className="font-semibold text-primary hover:underline"
                   onClick={() => navigate('/registration')}
                 >
-                  Create an account
+                  {t('auth:form.createAccount')}
                 </button>
               </div>
             </form>

@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "title": "Inversión y gestión patrimonial | TrustPay",
+    "description": "Inversión guiada por asesores, planificación patrimonial y soluciones de crédito inspiradas en la banca de inversión."
+  },
+  "hero": {
+    "eyebrow": "Inversión y patrimonio",
+    "title": "Plataforma patrimonial con ADN de mercados de capitales",
+    "description": "Portafolios, planificación y crédito que combinan la rigurosidad institucional con el cuidado de un equipo dedicado.",
+    "ctaPrimary": { "label": "Comenzar a planificar", "path": "/registration" },
+    "ctaSecondary": { "label": "Hablar con un asesor", "path": "/commercial-banking" },
+    "strategies": [
+      { "title": "Perspectiva basada en investigación", "detail": "Comités de inversión monitoreando macro, sectores y factores para adaptarse rápido.", "icon": "BarChart3", "highlight": "Llamadas semanales" },
+      { "title": "Riesgo gestionado por diseño", "detail": "Análisis de escenarios, límites de drawdown y coberturas para posiciones concentradas.", "icon": "ShieldCheck", "highlight": "Protección a la baja" },
+      { "title": "Asesoría + Digital", "detail": "Asesores dedicados con vistas digitales intuitivas para actuar en cualquier lugar.", "icon": "Smartphone", "highlight": "Humano + app" }
+    ]
+  },
+  "offerings": {
+    "eyebrow": "Soluciones",
+    "title": "Estrategias patrimoniales a medida",
+    "description": "Inspiradas en plataformas institucionales líderes, entregadas mediante relaciones personales y herramientas intuitivas.",
+    "items": [
+      { "title": "Portafolios personalizados", "description": "Asignaciones en mercados públicos, alternativos y efectivo con opciones de indexación directa.", "icon": "PieChart", "metrics": ["Indexación directa", "Eficiente en impuestos", "Multi-activos"] },
+      { "title": "Planificación por objetivos", "description": "Planificación de retiro, educación y liquidez con escenarios y pruebas de estrés.", "icon": "Target", "metrics": ["Retiro", "Educación", "Liquidez"] },
+      { "title": "Trust & patrimonio", "description": "Estructuras de trust, filantropía y estrategias intergeneracionales guiadas por especialistas.", "icon": "Gem", "metrics": ["Transferencia patrimonial", "Filantropía", "Trusts"] },
+      { "title": "Liquidez y crédito", "description": "Líneas respaldadas por valores, hipotecas a medida y gestión estratégica de efectivo.", "icon": "Banknote", "metrics": ["Líneas de crédito", "Hipotecas", "Efectivo"] }
+    ]
+  },
+  "insights": {
+    "eyebrow": "Ideas y research",
+    "title": "Mantente adelante con nuestra visión",
+    "description": "Research semanal, notas de mercado y guías de planificación para actuar con confianza.",
+    "cta": { "label": "Cómo pensamos", "path": "/about-trustpay" },
+    "items": [
+      { "title": "Playbook de mercado 2024", "summary": "Nuestro posicionamiento en acciones quality, crédito de corta duración y activos reales.", "category": "Visión de mercado" },
+      { "title": "Planear eventos de liquidez", "summary": "Planificación previa a la transacción, QSBS y estrategias de donación.", "category": "Estrategia patrimonial" },
+      { "title": "Navegar tasas más altas", "summary": "Escalonar efectivo, oportunidades de refinanciación y cobertura de riesgo de tasa.", "category": "Insights" }
+    ],
+    "readMore": "Leer más"
+  },
+  "advisors": {
+    "eyebrow": "Asesores dedicados",
+    "title": "Un equipo alineado a tus objetivos",
+    "description": "Trabaja con asesores experimentados respaldados por especialistas en planificación, crédito e inversión.",
+    "people": [
+      { "name": "Evelyn Carter", "focus": "Familias y fundadores", "credential": "CFA, CFP" },
+      { "name": "Marcus Reid", "focus": "Ejecutivos y compensación en acciones", "credential": "CRPC, CEP" },
+      { "name": "Sophia Lee", "focus": "Liquidez y crédito", "credential": "Especialista en patrimonio" }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Listos cuando tú estés",
+    "title": "Diseñemos tu plan",
+    "description": "Alinearemos objetivos, riesgo y liquidez y construiremos un roadmap que sigues en la app.",
+    "primary": { "label": "Conecta con nosotros", "path": "/business" },
+    "secondary": { "label": "Ver portafolios", "path": "/dashboard" }
+  }
+}

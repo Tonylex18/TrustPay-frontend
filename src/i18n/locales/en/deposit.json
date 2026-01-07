@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "title": "Deposit Money - TrustPay",
+    "description": "Add funds to your TrustPay account using secure rails."
+  },
+  "breadcrumb": {
+    "dashboard": "Dashboard",
+    "deposit": "Deposit Money"
+  },
+  "page": {
+    "title": "Mobile Check Deposit",
+    "subtitle": "Upload front and back images of your check. Funds remain pending until an admin reviews and approves."
+  },
+  "form": {
+    "amountLabel": "Deposit Amount",
+    "amountPlaceholder": "Enter amount",
+    "amountDescription": "Minimum deposit $1",
+    "accountNameLabel": "Account name",
+    "accountNumberLabel": "Account number",
+    "bankNameLabel": "Bank name",
+    "bankNameValue": "TrustPay Bank",
+    "checkImagesLabel": "Check Images",
+    "frontLabel": "Front of check",
+    "backLabel": "Back of check",
+    "tapToUpload": "Tap to upload",
+    "uploadNote": "Upload clear photos of the signed check. Deposits stay pending until an admin approves.",
+    "submit": "Submit Mobile Deposit"
+  },
+  "previewModal": {
+    "title": "Confirm Deposit",
+    "depositAmount": "Deposit Amount",
+    "selectedAccount": "Selected account",
+    "accountNumber": "Account Number",
+    "processingFee": "Processing Fee",
+    "totalDeposit": "Total Deposit",
+    "warning": "Please verify all details carefully. This deposit may stay pending until an admin reviews it.",
+    "cancel": "Cancel",
+    "confirm": "Confirm Deposit",
+    "submitting": "Submitting..."
+  },
+  "submittedModal": {
+    "title": "Deposit Submitted",
+    "depositAmount": "Deposit Amount",
+    "status": "Status",
+    "account": "Account",
+    "accountNumber": "Account Number",
+    "reference": "Reference",
+    "pendingReference": "Pending assignment",
+    "note": "We received your mobile deposit. It may stay pending until an admin reviews it. Funds are unavailable until approval.",
+    "close": "Close",
+    "makeAnother": "Make Another Deposit"
+  },
+  "messages": {
+    "error": {
+      "amount": "Enter a valid deposit amount.",
+      "account": "Select an account to fund.",
+      "images": "Upload front and back images of the check.",
+      "completeForm": "Please complete the deposit form before submitting.",
+      "submitFailed": "Unable to submit mobile deposit.",
+      "processFailed": "Unable to process mobile deposit right now."
+    },
+    "success": "Deposit submitted for review."
+  }
+}

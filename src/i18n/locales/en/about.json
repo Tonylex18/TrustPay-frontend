@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "title": "About TrustPay | Who We Are",
+    "description": "Learn about TrustPay’s mission, security-first approach, and the teams powering modern banking experiences."
+  },
+  "hero": {
+    "eyebrow": "About TrustPay",
+    "title": "Banking built on trust, with the rigor of leading corporate banks",
+    "description": "We combine secure infrastructure, human expertise, and transparent service so you can operate with confidence—whether you are scaling fast or stewarding generations of wealth.",
+    "ctaPrimary": { "label": "Join TrustPay", "path": "/registration" },
+    "ctaSecondary": { "label": "Explore solutions", "path": "/business" },
+    "metrics": [
+      { "label": "Clients served", "value": "50K+", "detail": "From startups to middle-market leaders trusting TrustPay." },
+      { "label": "Availability", "value": "99.95%", "detail": "Redundant, monitored, and built for always-on banking." },
+      { "label": "Protected transfers", "value": "$12B+", "detail": "Processed annually with layered fraud defenses." }
+    ]
+  },
+  "principles": {
+    "eyebrow": "What we stand for",
+    "title": "Principles that guide every decision",
+    "description": "From how we secure your data to how we staff our teams, our values keep us accountable to you.",
+    "values": [
+      {
+        "title": "Trust-first Security",
+        "description": "Defense-in-depth, SOC 2 alignment, and role-based controls across every workflow.",
+        "icon": "ShieldCheck"
+      },
+      {
+        "title": "People + Platform",
+        "description": "Dedicated teams plus intuitive experiences so you can move quickly without sacrificing control.",
+        "icon": "Users"
+      },
+      {
+        "title": "Transparency",
+        "description": "Clear pricing, clear settlement times, and proactive communication when things change.",
+        "icon": "Sparkles"
+      }
+    ]
+  },
+  "milestones": {
+    "eyebrow": "Our path",
+    "title": "Milestones that shaped TrustPay",
+    "items": [
+      { "year": "2018", "title": "TrustPay launches", "detail": "Built to make modern treasury and payments accessible to every business." },
+      { "year": "2020", "title": "Real-time rails", "detail": "Introduced RTP and faster onboarding with guided controls." },
+      { "year": "2022", "title": "Commercial banking suite", "detail": "Expanded coverage teams and introduced advanced treasury APIs." },
+      { "year": "2024", "title": "Wealth & advisory", "detail": "Brought capital markets-inspired wealth planning to clients." }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Next Steps",
+    "title": "Let's build what you need",
+    "description": "Whether you need corporate banking, wealth planning, or payment modernization, we're ready to help.",
+    "primary": { "label": "Talk with us", "path": "/commercial-banking" },
+    "secondary": { "label": "Explore the app", "path": "/dashboard" }
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "title": "Transactions - TrustPay",
+    "description": "View and manage your transaction history, filters, and exports."
+  },
+  "breadcrumb": {
+    "dashboard": "Dashboard",
+    "transactions": "Transactions"
+  },
+  "page": {
+    "title": "Transaction History",
+    "subtitle": "View and manage all your banking transactions",
+    "accountLabel": "Account",
+    "loading": "Loading transactions...",
+    "noAccounts": "No accounts yet. Create an account to see transactions.",
+    "selectAccount": "Select an account to view its ledger activity.",
+    "loadingAccounts": "Loading accounts...",
+    "ctaCreate": "Create an account",
+    "emptyTitle": "No transactions found",
+    "emptySubtitle": "Try adjusting your filters or search criteria"
+  },
+  "quickActions": {
+    "title": "Quick Actions",
+    "description": "Perform quick actions from here",
+    "transfer": "Transfer Money",
+    "transferDesc": "Send money to any account",
+    "dashboard": "View Dashboard",
+    "dashboardDesc": "Go to dashboard",
+    "profile": "Profile Settings",
+    "profileDesc": "Manage your profile"
+  },
+  "filters": {
+    "searchPlaceholder": "Search by description or amount...",
+    "filters": "Filters",
+    "results": "{{count}} {{count, plural, one {result} other {results}}}",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "type": "Transaction Type",
+    "status": "Status",
+    "clear": "Clear Filters",
+    "export": "Export",
+    "types": {
+      "all": "All Types",
+      "credit": "Credit",
+      "debit": "Debit"
+    },
+    "statusOptions": {
+      "all": "All Status",
+      "completed": "Completed",
+      "pending": "Pending",
+      "failed": "Failed"
+    },
+    "clearedToast": "Filters cleared.",
+    "noExport": "No transactions to export.",
+    "exportSuccess": "Transactions exported."
+  },
+  "table": {
+    "date": "Date",
+    "description": "Description",
+    "status": "Status",
+    "amount": "Amount",
+    "reference": "Reference Number",
+    "merchant": "Merchant",
+    "location": "Location",
+    "contact": "Contact"
+  },
+  "card": {
+    "viewDetails": "View Details",
+    "hideDetails": "Hide Details",
+    "reference": "Reference Number",
+    "merchant": "Merchant",
+    "location": "Location",
+    "contact": "Contact"
+  },
+  "pagination": {
+    "showing": "Showing {{start}}-{{end}} of {{total}}",
+    "perPage": {
+      "10": "10 per page",
+      "25": "25 per page",
+      "50": "50 per page",
+      "100": "100 per page"
+    },
+    "pageXofY": "Page {{current}} of {{total}}",
+    "prev": "Previous page",
+    "next": "Next page"
+  },
+  "messages": {
+    "loadAccountsFailed": "Unable to load accounts.",
+    "loadTransactionsFailed": "Unable to load transactions."
+  }
+}

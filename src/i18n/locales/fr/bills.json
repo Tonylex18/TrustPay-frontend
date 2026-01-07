@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "title": "Factures - TrustPay",
+    "description": "Soumettez et suivez vos paiements de factures avec visibilité sur les statuts."
+  },
+  "breadcrumb": {
+    "dashboard": "Tableau de bord",
+    "bills": "Factures",
+    "details": "Détails du paiement"
+  },
+  "page": {
+    "title": "Factures et paiements",
+    "subtitle": "Soumettez vos factures avec des statuts clairs et des détails prêts pour l’audit.",
+    "loading": "Chargement des données de factures...",
+    "statusLegendTitle": "Sensibilisation au statut",
+    "statusLegendBody": "Soumis ≠ payé. Les éléments en attente restent en revue jusqu’à la comptabilisation. Le solde disponible n’est pas réduit avant la comptabilisation ou un blocage backend.",
+    "refresh": "Actualiser"
+  },
+  "list": {
+    "title": "Paiements de factures récents",
+    "subtitle": "Voir les paiements soumis, approuvés, rejetés ou en échec.",
+    "empty": "Aucun paiement de facture pour le moment. Envoyez votre première facture à droite pour la voir ici.",
+    "loading": "Chargement des factures...",
+    "auditTitle": "Conseils d’audit",
+    "audit1": "Les pastilles de statut indiquent si un paiement est en attente, payé, rejeté ou en échec.",
+    "audit2": "Cliquez sur une facture pour voir références, horodatages de revue et motifs de rejet.",
+    "audit3": "Actualiser récupère l’état le plus récent du backend — aucun ajustement local du solde."
+  },
+  "steps": {
+    "category": { "title": "Catégorie", "description": "Choisissez le type de facture" },
+    "biller": { "title": "Fournisseur", "description": "Choisissez qui vous payez" },
+    "details": { "title": "Détails", "description": "Référence, montant, compte" },
+    "review": { "title": "Revue", "description": "Confirmer et soumettre" },
+    "selectCategoryTitle": "Sélectionnez une catégorie",
+    "selectCategorySubtitle": "Choisissez le type de facture pour charger les bons fournisseurs.",
+    "billersAvailable": "{{count}} fournisseurs disponibles",
+    "noCategories": "Aucune catégorie de facture disponible pour l’instant.",
+    "loadingCategories": "Chargement des catégories...",
+    "continue": "Continuer",
+    "selectBillerTitle": "Choisissez le fournisseur",
+    "selectBillerSubtitle": "Choisissez un fournisseur listé ou saisissez le nom exact de votre facture.",
+    "changeCategory": "Changer de catégorie",
+    "listedBiller": "Fournisseur listé",
+    "noBillers": "Aucun fournisseur listé pour cette catégorie. Vous pouvez saisir un nom personnalisé.",
+    "customBiller": "Nom du fournisseur personnalisé",
+    "customBillerPlaceholder": "ex : Résidence du Parc",
+    "billersLabel": "Fournisseurs",
+    "customBillerInfo": "Si vous saisissez un fournisseur personnalisé, nous utiliserons ce nom pour ce paiement uniquement.",
+    "referenceLabel": "Référence ou numéro de compte",
+    "referencePlaceholder": "Entrez la référence indiquée sur votre facture",
+    "amountLabel": "Montant",
+    "noteLabel": "Note (optionnel)",
+    "notePlaceholder": "Ajoutez une note pour ce paiement",
+    "sourceAccountLabel": "Compte source",
+    "detailsIntroTitle": "Détails du paiement",
+    "detailsIntroBody": "Utilisez le numéro de référence ou de compte figurant sur votre facture. Les paiements en attente ne réduisent pas le solde disponible avant approbation.",
+    "paymentDescriptionLabel": "Description du paiement (optionnel)",
+    "paymentDescriptionPlaceholder": "Visible pour vous et les administrateurs (ex. « Loyer juillet, appart 12B »).",
+    "adminApprovalTitle": "Approbation admin requise",
+    "adminApprovalBody": "Soumis ≠ payé. Les admins examinent et comptabilisent le débit avant sortie des fonds. Les paiements en attente ne réduisent pas le solde sauf blocage backend.",
+    "back": "Retour"
+  },
+  "statusHelp": {
+    "SUBMITTED": "En attente d’approbation. Les fonds peuvent rester disponibles jusqu’à la comptabilisation.",
+    "PAID": "Comptabilisé et réglé au fournisseur.",
+    "REJECTED": "Non traité. Les blocages éventuels sont levés.",
+    "FAILED": "Échec. Vérifiez et renvoyez."
+  },
+  "labels": {
+    "biller": "Fournisseur",
+    "category": "Catégorie",
+    "reference": "Référence",
+    "amount": "Montant",
+    "note": "Note",
+    "account": "Compte",
+    "sourceAccount": "Compte source",
+    "description": "Description",
+    "created": "Créé"
+  },
+  "table": {
+    "status": "Statut"
+  },
+  "errors": {
+    "selectCategory": "Sélectionnez une catégorie pour continuer.",
+    "selectBiller": "Choisissez un fournisseur ou saisissez un nom personnalisé.",
+    "referenceRequired": "Ajoutez la référence ou le numéro de compte figurant sur votre facture.",
+    "amountInvalid": "Saisissez un montant valide supérieur à 0.",
+    "accountRequired": "Sélectionnez le compte pour financer ce paiement.",
+    "kycRequired": "L’approbation KYC est requise avant de soumettre des paiements.",
+    "disabledProfile": "Votre compte est désactivé. Contactez le support.",
+    "completeFields": "Complétez tous les champs obligatoires avant de soumettre.",
+    "loadCategories": "Impossible de charger les catégories de factures.",
+    "loadPayments": "Impossible de charger les paiements de factures.",
+    "refreshPayments": "Impossible d’actualiser les paiements de factures.",
+    "submitFailed": "Impossible de soumettre le paiement pour le moment.",
+    "billNotFound": "Paiement de facture introuvable.",
+    "loadPayment": "Impossible de charger le paiement de facture."
+  },
+  "success": {
+    "submitted": "Paiement soumis pour approbation admin."
+  },
+  "friendly": {
+    "kyc": "Complétez le KYC avant de soumettre des paiements.",
+    "disabled": "Votre profil est désactivé. Contactez le support.",
+    "insufficient": "Solde disponible insuffisant pour ce paiement.",
+    "active": "Sélectionnez un compte source actif.",
+    "fallback": "Impossible de traiter la demande."
+  },
+  "statusBadge": {
+    "SUBMITTED": "En attente",
+    "APPROVED": "Approuvé",
+    "PAID": "Payé",
+    "REJECTED": "Rejeté",
+    "FAILED": "Échec",
+    "DRAFT": "Brouillon",
+    "UNKNOWN": "Inconnu"
+  },
+  "cards": {
+    "defaultCategory": "Paiement de facture",
+    "defaultBiller": "Fournisseur",
+    "ref": "Réf {{ref}}"
+  },
+  "review": {
+    "summaryTitle": "Revoir et soumettre",
+    "summarySubtitle": "Confirmez les détails du paiement de facture. Ce paiement sera envoyé pour approbation admin.",
+    "noticeTitle": "Avis de soumission",
+    "noticeBody": "Les paiements restent en attente jusqu’à approbation et comptabilisation. Vous verrez la mise à jour de statut une fois traité.",
+    "submitCta": "Soumettre pour approbation"
+  },
+  "detailsPage": {
+    "metaTitle": "Détails paiement facture - TrustPay",
+    "metaDescription": "Consultez les statuts et l’audit d’un paiement de facture.",
+    "title": "Paiement de facture",
+    "subtitle": "Consultez statut, référence, horodatages et motifs de rejet.",
+    "back": "Retour aux factures",
+    "refresh": "Actualiser",
+    "statusTitle": "Sensibilisation au statut",
+    "statusBody": "Soumis ≠ payé. L’approbation admin déclenche le débit. Les éléments en attente ne réduisent pas le solde disponible sauf blocage backend.",
+    "loading": "Chargement du paiement...",
+    "amount": "Montant",
+    "adminReviewDate": "Date de revue admin",
+    "pending": "En attente",
+    "paymentDescription": "Description du paiement",
+    "rejectionReason": "Motif de rejet"
+  }
+}

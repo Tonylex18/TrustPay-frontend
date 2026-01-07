@@ -1,4 +1,5 @@
 import Icon from '../../../components/AppIcon';
+import { useTranslation } from 'react-i18next';
 
 interface TransferTypeSelectorProps {
   value: 'internal' | 'external';
@@ -6,27 +7,28 @@ interface TransferTypeSelectorProps {
 }
 
 const TransferTypeSelector = ({ value, onChange }: TransferTypeSelectorProps) => {
+  const { t } = useTranslation('transfer');
   const types = [
     {
       value: 'internal' as const,
-      label: 'Internal Transfer',
-      description: 'Transfer between your own accounts',
+      label: t('transferType.options.internal.title'),
+      description: t('transferType.options.internal.description'),
       icon: 'ArrowLeftRight',
-      processingTime: 'Instant'
+      processingTime: t('transferType.options.internal.time')
     },
     {
       value: 'external' as const,
-      label: 'External Transfer',
-      description: 'Transfer to other bank accounts',
+      label: t('transferType.options.external.title'),
+      description: t('transferType.options.external.description'),
       icon: 'Send',
-      processingTime: '1-2 business days'
+      processingTime: t('transferType.options.external.time')
     }
   ];
 
   return (
     <div>
       <label className="block text-sm font-medium text-foreground mb-2">
-        Transfer Type <span className="text-error">*</span>
+        {t('transferType.label')} <span className="text-error">*</span>
       </label>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

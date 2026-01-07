@@ -10,8 +10,14 @@ export default defineConfig({
   build: {
     outDir: "build",
     chunkSizeWarningLimit: 2000,
+    target: "es2015",
+    cssTarget: "chrome61"
   },
-  plugins: [tsconfigPaths(), react(), tagger()],
+  plugins: [
+    tsconfigPaths(), 
+    react(), 
+  ...(process.env.NODE_ENV === "development" ? [tagger()] : [])
+  ],
   server: {
     port: 4028,
     host: "0.0.0.0",

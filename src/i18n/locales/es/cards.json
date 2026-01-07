@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "virtualCard": "Tarjeta virtual",
+    "linkedAccount": "Cuenta asociada:",
+    "activation": "Activación:"
+  },
+  "actions": {
+    "showDetails": "Mostrar detalles de la tarjeta",
+    "hideDetails": "Ocultar detalles de la tarjeta",
+    "sendCode": "Enviar código",
+    "activate": "Activar"
+  },
+  "details": {
+    "digitalAccess": "Acceso digital",
+    "securedByStripe": "Protegido por Stripe Issuing",
+    "validThruPlaceholder": "Válida hasta — — / — —",
+    "cvcPlaceholder": "CVV — — —",
+    "sensitiveHeading": "Datos sensibles",
+    "sensitiveSubheading": "No compartir",
+    "numberLabel": "Número",
+    "expiryLabel": "Vencimiento",
+    "cvcLabel": "CVC"
+  },
+  "activation": {
+    "title": "Activa tu tarjeta",
+    "description": "Envía un código de 6 dígitos a tu correo y escríbelo abajo para activar esta tarjeta virtual.",
+    "placeholder": "Ingresa el código de activación",
+    "messageLabel": "Mensaje de activación",
+    "loadingDetails": "Cargando detalles seguros…",
+    "secureNote": "Los números de tarjeta y CVC se muestran a través de Stripe y nunca pasan por los servidores o estado local de TrustPay."
+  },
+  "messages": {
+    "emailRequired": "Se requiere el correo para enviar el código de activación.",
+    "sendFailed": "No se pudo enviar el código de activación.",
+    "sendError": "No se puede enviar el código de activación en este momento.",
+    "sendSuccess": "Código de activación enviado a tu correo.",
+    "codeRequired": "Ingresa el código de activación enviado a tu correo.",
+    "activateFailed": "No se pudo activar. Verifica el código e inténtalo de nuevo.",
+    "activated": "Tarjeta activada.",
+    "activateError": "No se puede activar la tarjeta ahora mismo.",
+    "stripeMissing": "Falta la clave pública de Stripe.",
+    "stripeInitFailed": "Stripe no pudo inicializarse.",
+    "cardRefMissing": "Falta la referencia de la tarjeta para los detalles seguros.",
+    "authError": "No se pudo autorizar el acceso seguro a la tarjeta.",
+    "loadFailed": "No se pudieron cargar los detalles de la tarjeta."
+  }
+}

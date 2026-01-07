@@ -1,0 +1,146 @@
+{
+  "meta": {
+    "title": "Facturas - TrustPay",
+    "description": "Envíe y rastree pagos de facturas con visibilidad de estados y aprobaciones."
+  },
+  "breadcrumb": {
+    "dashboard": "Panel",
+    "bills": "Facturas",
+    "details": "Detalles del pago"
+  },
+  "page": {
+    "title": "Facturas y pagos",
+    "subtitle": "Envíe pagos de facturas con estados claros y detalles listos para auditoría.",
+    "loading": "Cargando datos de facturas...",
+    "statusLegendTitle": "Conciencia de estado",
+    "statusLegendBody": "Enviado ≠ pagado. Los pendientes permanecen en revisión hasta que un admin registre el débito. El saldo disponible no se reduce hasta la contabilización o un bloqueo backend.",
+    "refresh": "Actualizar"
+  },
+  "list": {
+    "title": "Pagos recientes de facturas",
+    "subtitle": "Vea pagos enviados, aprobados, rechazados o fallidos.",
+    "empty": "Aún no hay pagos de facturas. Envíe su primera factura a la derecha para verla aquí.",
+    "loading": "Cargando facturas...",
+    "auditTitle": "Consejos de auditoría",
+    "audit1": "Las etiquetas de estado muestran si un pago está pendiente de aprobación, pagado, rechazado o fallido.",
+    "audit2": "Haga clic en cualquier factura para ver referencias, marcas de revisión y motivos de rechazo.",
+    "audit3": "Actualizar obtiene el último estado del backend: sin ediciones de saldo del lado del cliente."
+  },
+  "steps": {
+    "category": { "title": "Categoría", "description": "Elija el tipo de factura" },
+    "biller": { "title": "Proveedor", "description": "Seleccione a quién paga" },
+    "details": { "title": "Detalles", "description": "Referencia, monto, cuenta" },
+    "review": { "title": "Revisar", "description": "Confirmar y enviar" },
+    "selectCategoryTitle": "Seleccione una categoría",
+    "selectCategorySubtitle": "Elija el tipo de factura para cargar los proveedores correctos.",
+    "billersAvailable": "{{count}} proveedores disponibles",
+    "noCategories": "No hay categorías de facturas disponibles todavía.",
+    "loadingCategories": "Cargando categorías...",
+    "continue": "Continuar",
+    "selectBillerTitle": "Seleccione el proveedor",
+    "selectBillerSubtitle": "Elija un proveedor listado o ingrese el nombre exactamente como aparece en su factura.",
+    "changeCategory": "Cambiar categoría",
+    "listedBiller": "Proveedor listado",
+    "noBillers": "No hay proveedores listados para esta categoría. Puede ingresar un proveedor personalizado.",
+    "customBiller": "Nombre de proveedor personalizado",
+    "customBillerPlaceholder": "ej.: Apartamentos Lago Azul",
+    "billersLabel": "Proveedores",
+    "customBillerInfo": "Si ingresa un proveedor personalizado, usaremos ese nombre solo para este pago.",
+    "referenceLabel": "Referencia o número de cuenta",
+    "referencePlaceholder": "Ingrese la referencia que aparece en su factura",
+    "amountLabel": "Monto",
+    "noteLabel": "Nota (opcional)",
+    "notePlaceholder": "Agregue una nota para este pago",
+    "sourceAccountLabel": "Cuenta origen",
+    "detailsIntroTitle": "Detalles del pago",
+    "detailsIntroBody": "Use el número de referencia o cuenta impreso en su factura. Los pagos pendientes no reducen el saldo disponible hasta ser aprobados.",
+    "paymentDescriptionLabel": "Descripción del pago (opcional)",
+    "paymentDescriptionPlaceholder": "Visible para usted y administradores (p. ej., \"Renta julio, apto 12B\").",
+    "adminApprovalTitle": "Requiere aprobación admin",
+    "adminApprovalBody": "Enviado ≠ pagado. Los administradores revisan y registran el débito antes de que los fondos salgan de su cuenta. Los pendientes no reducen el saldo salvo un bloqueo backend.",
+    "back": "Atrás"
+  },
+  "statusHelp": {
+    "SUBMITTED": "En espera de aprobación. Los fondos pueden seguir disponibles hasta contabilizarse.",
+    "PAID": "Contabilizado y liquidado al proveedor.",
+    "REJECTED": "No procesado. Cualquier bloqueo se libera.",
+    "FAILED": "Falló el intento. Revise y reenvíe."
+  },
+  "labels": {
+    "biller": "Proveedor",
+    "category": "Categoría",
+    "reference": "Referencia",
+    "amount": "Monto",
+    "note": "Nota",
+    "account": "Cuenta",
+    "sourceAccount": "Cuenta origen",
+    "description": "Descripción",
+    "created": "Creado"
+  },
+  "table": {
+    "status": "Estado"
+  },
+  "errors": {
+    "selectCategory": "Seleccione una categoría para continuar.",
+    "selectBiller": "Elija un proveedor o ingrese un nombre personalizado.",
+    "referenceRequired": "Agregue la referencia o número de cuenta de su factura.",
+    "amountInvalid": "Ingrese un monto válido mayor que 0.",
+    "accountRequired": "Seleccione la cuenta para fondear este pago.",
+    "kycRequired": "La aprobación KYC es obligatoria antes de enviar pagos de facturas.",
+    "disabledProfile": "Su cuenta está deshabilitada. Contacte soporte.",
+    "completeFields": "Complete todos los campos obligatorios antes de enviar.",
+    "loadCategories": "No se pueden cargar las categorías de facturas.",
+    "loadPayments": "No se pueden cargar los pagos de facturas.",
+    "refreshPayments": "No se pueden actualizar los pagos de facturas.",
+    "submitFailed": "No se puede enviar el pago de factura en este momento.",
+    "billNotFound": "Pago de factura no encontrado.",
+    "loadPayment": "No se puede cargar el pago de factura."
+  },
+  "success": {
+    "submitted": "Pago de factura enviado para aprobación admin."
+  },
+  "friendly": {
+    "kyc": "Complete el KYC antes de enviar pagos de facturas.",
+    "disabled": "Su perfil está deshabilitado. Contacte soporte.",
+    "insufficient": "Saldo disponible insuficiente para este pago.",
+    "active": "Seleccione una cuenta origen activa.",
+    "fallback": "No se puede procesar la solicitud."
+  },
+  "statusBadge": {
+    "SUBMITTED": "Pendiente de aprobación",
+    "APPROVED": "Aprobado",
+    "PAID": "Pagado",
+    "REJECTED": "Rechazado",
+    "FAILED": "Fallido",
+    "DRAFT": "Borrador",
+    "UNKNOWN": "Desconocido"
+  },
+  "cards": {
+    "defaultCategory": "Pago de factura",
+    "defaultBiller": "Proveedor",
+    "ref": "Ref {{ref}}"
+  },
+  "review": {
+    "summaryTitle": "Revisar y enviar",
+    "summarySubtitle": "Confirme los detalles del pago de factura. Este pago se enviará para aprobación admin.",
+    "noticeTitle": "Aviso de envío",
+    "noticeBody": "Los pagos permanecen pendientes hasta que un admin apruebe y registre el asiento. Verá el estado actualizado una vez procesado.",
+    "submitCta": "Enviar para aprobación"
+  },
+  "detailsPage": {
+    "metaTitle": "Detalles de pago de factura - TrustPay",
+    "metaDescription": "Vea el estado y los datos de auditoría de su pago de factura.",
+    "title": "Pago de factura",
+    "subtitle": "Vea estado, número de referencia, horas de revisión y motivos de rechazo.",
+    "back": "Volver a facturas",
+    "refresh": "Actualizar",
+    "statusTitle": "Conciencia de estado",
+    "statusBody": "Enviado ≠ pagado. La aprobación admin registra el débito. Los pendientes no reducen saldo salvo retención backend.",
+    "loading": "Cargando pago de factura...",
+    "amount": "Monto",
+    "adminReviewDate": "Fecha de revisión admin",
+    "pending": "Pendiente",
+    "paymentDescription": "Descripción del pago",
+    "rejectionReason": "Motivo de rechazo"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "title": "Vérification KYC - TrustPay",
+    "description": "Complétez votre KYC pour activer les fonctionnalités bancaires."
+  },
+  "breadcrumb": {
+    "dashboard": "Tableau de bord",
+    "kyc": "KYC"
+  },
+  "hero": {
+    "title": "Vérifiez votre identité",
+    "subtitle": "Fournissez vos informations et vos documents pour finaliser le KYC."
+  },
+  "form": {
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "dob": {
+      "day": "Jour",
+      "month": "Mois",
+      "year": "Année"
+    },
+    "country": {
+      "label": "Pays",
+      "placeholder": "Sélectionnez un pays"
+    },
+    "addressLine1": "Adresse ligne 1",
+    "addressLine2": "Adresse ligne 2 (optionnel)",
+    "state": {
+      "label": "État / Province",
+      "placeholder": "Sélectionnez un État",
+      "placeholderDisabled": "Choisissez d'abord le pays"
+    },
+    "city": {
+      "label": "Ville",
+      "placeholder": "Sélectionnez une ville",
+      "placeholderDisabled": "Choisissez d'abord l'État"
+    },
+    "postalCode": "Code postal",
+    "documentType": {
+      "label": "Type de document",
+      "options": {
+        "passport": "Passeport",
+        "national_id": "Carte nationale",
+        "driver_license": "Permis de conduire"
+      }
+    },
+    "documentNumber": "Numéro de document",
+    "documentImageFront": "Document (face avant)",
+    "documentImageBack": "Document (verso, optionnel)",
+    "selfieImage": "Selfie (optionnel)",
+    "cancel": "Annuler",
+    "submit": "Soumettre le KYC"
+  },
+  "messages": {
+    "error": {
+      "documentImageRequired": "L'image du document est requise.",
+      "dobIncomplete": "Complétez la date de naissance.",
+      "locationRequired": "Pays, État et ville sont requis.",
+      "submitFailed": "Impossible de soumettre le KYC."
+    },
+    "success": "KYC soumis. Statut : en attente."
+  }
+}

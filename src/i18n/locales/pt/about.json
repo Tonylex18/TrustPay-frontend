@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "title": "Sobre a TrustPay | Quem somos",
+    "description": "Conheça a missão da TrustPay, nossa abordagem de segurança em primeiro lugar e as equipes por trás de experiências bancárias modernas."
+  },
+  "hero": {
+    "eyebrow": "Sobre a TrustPay",
+    "title": "Banca construída sobre confiança, com o rigor das melhores instituições corporate",
+    "description": "Combinamos infraestrutura segura, expertise humana e serviço transparente para que você opere com confiança—seja crescendo rápido ou preservando patrimônio.",
+    "ctaPrimary": { "label": "Junte-se à TrustPay", "path": "/registration" },
+    "ctaSecondary": { "label": "Explorar soluções", "path": "/business" },
+    "metrics": [
+      { "label": "Clientes atendidos", "value": "50K+", "detail": "De startups a líderes mid-market que confiam na TrustPay." },
+      { "label": "Disponibilidade", "value": "99,95%", "detail": "Redundante, monitorada e feita para banca sempre ativa." },
+      { "label": "Transferências protegidas", "value": "US$ 12 bi+", "detail": "Processadas por ano com defesas antifraude em camadas." }
+    ]
+  },
+  "principles": {
+    "eyebrow": "No que acreditamos",
+    "title": "Princípios que guiam cada decisão",
+    "description": "De como protegemos seus dados a como formamos as equipes, nossos valores nos mantêm responsáveis perante você.",
+    "values": [
+      {
+        "title": "Segurança em primeiro lugar",
+        "description": "Defense-in-depth, alinhamento SOC 2 e controles por função em cada fluxo.",
+        "icon": "ShieldCheck"
+      },
+      {
+        "title": "Pessoas + Plataforma",
+        "description": "Times dedicados e experiências intuitivas para agir rápido sem perder controle.",
+        "icon": "Users"
+      },
+      {
+        "title": "Transparência",
+        "description": "Preços claros, prazos de liquidação claros e comunicação proativa quando algo muda.",
+        "icon": "Sparkles"
+      }
+    ]
+  },
+  "milestones": {
+    "eyebrow": "Nossa trajetória",
+    "title": "Marcos que moldaram a TrustPay",
+    "items": [
+      { "year": "2018", "title": "Lançamento da TrustPay", "detail": "Tornar tesouraria e pagamentos modernos acessíveis a qualquer empresa." },
+      { "year": "2020", "title": "Rails em tempo real", "detail": "Introduzimos RTP e onboarding mais rápido com controles guiados." },
+      { "year": "2022", "title": "Suite de banca comercial", "detail": "Ampliamos equipes de coverage e lançamos APIs avançadas de tesouraria." },
+      { "year": "2024", "title": "Wealth & advisory", "detail": "Planejamento patrimonial inspirado em mercados de capitais para clientes." }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Próximos passos",
+    "title": "Vamos construir o que você precisa",
+    "description": "Banca corporativa, planejamento patrimonial ou modernização de pagamentos—estamos prontos para ajudar.",
+    "primary": { "label": "Fale conosco", "path": "/commercial-banking" },
+    "secondary": { "label": "Explorar o app", "path": "/dashboard" }
+  }
+}

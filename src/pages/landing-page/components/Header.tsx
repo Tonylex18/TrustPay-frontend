@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import Icon from '../../../components/AppIcon';
+import LanguageSelector from '../../../components/LanguageSelector';
 import { getStoredToken } from '../../../utils/api';
 
 interface NavItem {
-  label: string;
+  labelKey: string;
   path: string;
   hash?: string;
 }
 
 const navItems: NavItem[] = [
-  { label: 'Personal', path: '/' },
-  { label: 'Investing & Wealth Management', path: '/investWealthManagement' },
-  { label: 'Business', path: '/business' },
-  { label: 'Commercial Banking', path: '/commercial-banking' },
-  { label: 'Corporate & Investment Banking', path: '/commercial-banking', hash: 'cib' },
-  { label: 'About TrustPay', path: '/about-trustpay' }
+  { labelKey: 'navigation.personal', path: '/' },
+  { labelKey: 'navigation.investing', path: '/investWealthManagement' },
+  { labelKey: 'navigation.business', path: '/business' },
+  { labelKey: 'navigation.commercial', path: '/commercial-banking' },
+  { labelKey: 'navigation.cib', path: '/commercial-banking', hash: 'cib' },
+  { labelKey: 'navigation.about', path: '/about-trustpay' }
 ];
 
 const Header: React.FC = () => {
+  const { t } = useTranslation('common');
   const navigate = useNavigate();
   const location = useLocation();
   const [hasToken, setHasToken] = useState<boolean>(false);
@@ -51,31 +54,32 @@ const Header: React.FC = () => {
         <div className="px-nav-margin">
           <div className="max-w-7xl mx-auto h-16 flex items-center gap-6">
             <button
-              onClick={() => handleNavigate({ label: 'Personal', path: '/' })}
+              onClick={() => navigate('/')}
               className="flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80 rounded-md"
-              aria-label="TrustPay home"
+              aria-label={t('aria.home')}
             >
               <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-white/10 border border-white/25">
                 <Icon name="Landmark" size={22} color="white" />
               </div>
               <div className="text-left">
                 <p className="text-xs uppercase tracking-[0.2em] leading-none text-white/80">
-                  TrustPay
+                  {t('brand.name')}
                 </p>
                 <p className="text-xl font-semibold leading-tight tracking-tight">
-                  Banking
+                  {t('brand.product')}
                 </p>
               </div>
             </button>
 
             <div className="ml-auto flex items-center gap-6">
+              <LanguageSelector variant="primary" />
               <button
                 onClick={() =>
-                  handleNavigate({ label: hasToken ? 'Dashboard' : 'Sign On', path: hasToken ? '/dashboard' : '/login' })
+                  handleNavigate({ labelKey: hasToken ? 'navigation.dashboard' : 'navigation.signOn', path: hasToken ? '/dashboard' : '/login' })
                 }
                 className="inline-flex items-center gap-2 h-10 px-5 rounded-full bg-white text-[#2f2a28] text-sm font-semibold shadow-md hover:shadow-lg transition-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
               >
-                <span>{hasToken ? 'Dashboard' : 'Sign On'}</span>
+                <span>{hasToken ? t('actions.dashboard') : t('actions.signOn')}</span>
                 <Icon name={hasToken ? 'Home' : 'LogIn'} size={16} color="#2f2a28" />
               </button>
             </div>
@@ -99,7 +103,7 @@ const Header: React.FC = () => {
                     } focus:outline-none focus-visible:ring-2 focus-visible:ring-[#d1202f]/60 rounded-sm`}
                     aria-current={active ? 'page' : undefined}
                   >
-                    {item.label}
+                    {t(item.labelKey)}
                     {active && (
                       <span className="absolute left-0 right-0 -bottom-1 h-[3px] bg-[#d1202f] rounded-full" />
                     )}

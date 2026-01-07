@@ -1,0 +1,90 @@
+{
+  "meta": {
+    "title": "Créer un compte - TrustPay",
+    "description": "Créez votre compte TrustPay et commencez à utiliser la banque en ligne en toute sécurité."
+  },
+  "hero": {
+    "eyebrow": "TrustPay",
+    "title": "Commencez à utiliser TrustPay",
+    "subtitle": "Onboarding guidé avec sécurité de niveau bancaire pour déplacer des fonds et gérer la trésorerie en confiance.",
+    "openAccount": "Ouvrir un compte",
+    "ctaLogin": "Vous avez déjà un compte ?",
+    "ctaAbout": "Découvrir TrustPay",
+    "features": [
+      { "icon": "ShieldCheck", "title": "Sécurisé par défaut", "text": "Chiffrement, contrôle des appareils et surveillance proactive." },
+      { "icon": "Rocket", "title": "Mise en route rapide", "text": "Terminez l’inscription en quelques minutes et commencez à transacter." },
+      { "icon": "Headset", "title": "Support 24/7", "text": "Des spécialistes disponibles quand vous en avez besoin." },
+      { "icon": "Sparkles", "title": "Outils modernes", "text": "Paiements, trésorerie et patrimoine dans une seule expérience." }
+    ]
+  },
+  "form": {
+    "title": "Créez votre compte TrustPay",
+    "subtitle": "Ouvrez un compte sécurisé pour accéder aux paiements, à la trésorerie et à la gestion de patrimoine.",
+    "emailLabel": "Adresse email",
+    "emailPlaceholder": "Entrez votre email",
+    "emailDescription": "Nous ne partagerons jamais votre email",
+    "passwordLabel": "Mot de passe",
+    "passwordPlaceholder": "Créez un mot de passe fort",
+    "confirmPasswordLabel": "Confirmez le mot de passe",
+    "confirmPasswordPlaceholder": "Saisissez à nouveau votre mot de passe",
+    "termsPrefix": "J’accepte les",
+    "termsLink": "Conditions d’utilisation",
+    "privacyPrefix": "J’accepte la",
+    "privacyLink": "Politique de confidentialité",
+    "createAccount": "Créer un compte",
+    "already": "Vous avez déjà un compte ?",
+    "signIn": "Se connecter",
+    "otpInstruction": "Entrez le code à 6 chiffres envoyé à {{email}} pour activer votre compte.",
+    "otpPlaceholder": "••••••",
+    "verifyCode": "Vérifier le code",
+    "editCredentials": "Modifier l’email ou le mot de passe",
+    "footerNote": "En créant un compte, vous acceptez nos politiques de protection des données et de sécurité"
+  },
+  "password": {
+    "strengthTitle": "Niveau du mot de passe",
+    "strengthLabel": {
+      "weak": "Faible",
+      "fair": "Moyen",
+      "medium": "Correct",
+      "strong": "Fort",
+      "veryStrong": "Très fort"
+    },
+    "requirements": {
+      "length": "Au moins 8 caractères",
+      "uppercase": "Contient une majuscule",
+      "lowercase": "Contient une minuscule",
+      "number": "Contient un chiffre",
+      "special": "Contient un caractère spécial"
+    },
+    "tooWeak": "Mot de passe trop faible. Respectez au moins 3 critères"
+  },
+  "messages": {
+    "errors": {
+      "otpRequired": "Entrez le code à 6 chiffres envoyé par email",
+      "emailRequired": "L’email est requis",
+      "emailInvalid": "Veuillez saisir une adresse email valide",
+      "passwordRequired": "Le mot de passe est requis",
+      "confirmPasswordRequired": "Veuillez confirmer votre mot de passe",
+      "passwordsMismatch": "Les mots de passe ne correspondent pas",
+      "termsRequired": "Vous devez accepter les Conditions d’utilisation",
+      "privacyRequired": "Vous devez accepter la Politique de confidentialité",
+      "registrationFailed": "Échec de l’inscription. Veuillez réessayer.",
+      "incompleteResponse": "Réponse d’inscription incomplète. Veuillez réessayer."
+    },
+    "info": {
+      "otpPrompt": "Entrez le code envoyé par email pour activer votre compte.",
+      "emailVerification": "Vérifiez votre email pour activer votre compte avant de vous connecter."
+    },
+    "success": {
+      "accountCreated": "Compte créé avec succès."
+    }
+  },
+  "security": {
+    "title": "Votre sécurité est notre priorité",
+    "items": [
+      "Chiffrement de niveau bancaire",
+      "Stockage sécurisé des données",
+      "Protection de la vie privée"
+    ]
+  }
+}

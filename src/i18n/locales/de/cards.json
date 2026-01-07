@@ -1,0 +1,47 @@
+{
+  "labels": {
+    "virtualCard": "Virtuelle Karte",
+    "linkedAccount": "Verknüpftes Konto:",
+    "activation": "Aktivierung:"
+  },
+  "actions": {
+    "showDetails": "Kartendetails anzeigen",
+    "hideDetails": "Kartendetails ausblenden",
+    "sendCode": "Code senden",
+    "activate": "Aktivieren"
+  },
+  "details": {
+    "digitalAccess": "Digitaler Zugang",
+    "securedByStripe": "Gesichert durch Stripe Issuing",
+    "validThruPlaceholder": "Gültig bis — — / — —",
+    "cvcPlaceholder": "CVC — — —",
+    "sensitiveHeading": "Sensible Daten",
+    "sensitiveSubheading": "Nicht teilen",
+    "numberLabel": "Nummer",
+    "expiryLabel": "Ablauf",
+    "cvcLabel": "CVC"
+  },
+  "activation": {
+    "title": "Aktiviere deine Karte",
+    "description": "Sende einen 6-stelligen Code an deine E-Mail und gib ihn unten ein, um diese virtuelle Karte zu aktivieren.",
+    "placeholder": "Aktivierungscode eingeben",
+    "messageLabel": "Aktivierungsnachricht",
+    "loadingDetails": "Sichere Details werden geladen…",
+    "secureNote": "Kartennummer und CVC werden von Stripe gerendert und gelangen nie auf TrustPay-Server oder in den lokalen Zustand."
+  },
+  "messages": {
+    "emailRequired": "E-Mail wird benötigt, um den Aktivierungscode zu senden.",
+    "sendFailed": "Aktivierungscode konnte nicht gesendet werden.",
+    "sendError": "Aktivierungscode kann gerade nicht gesendet werden.",
+    "sendSuccess": "Aktivierungscode an deine E-Mail gesendet.",
+    "codeRequired": "Gib den Aktivierungscode ein, den wir per E-Mail gesendet haben.",
+    "activateFailed": "Aktivierung fehlgeschlagen. Prüfe den Code und versuche es erneut.",
+    "activated": "Karte aktiviert.",
+    "activateError": "Karte kann im Moment nicht aktiviert werden.",
+    "stripeMissing": "Stripe-Public-Key fehlt.",
+    "stripeInitFailed": "Stripe konnte nicht initialisiert werden.",
+    "cardRefMissing": "Kartenreferenz für sichere Details fehlt.",
+    "authError": "Sicherer Karten-Zugriff konnte nicht autorisiert werden.",
+    "loadFailed": "Kartendetails konnten nicht geladen werden."
+  }
+}

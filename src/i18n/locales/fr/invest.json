@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "title": "Investissement & gestion de patrimoine | TrustPay",
+    "description": "Investissement guidé par le conseil, planification patrimoniale et solutions de crédit inspirées des meilleures banques d'investissement."
+  },
+  "hero": {
+    "eyebrow": "Investissement & patrimoine",
+    "title": "Une plateforme patrimoniale avec l'ADN des marchés",
+    "description": "Portefeuilles, planification et crédit qui combinent la rigueur des desks institutionnels avec l'accompagnement d'une équipe dédiée.",
+    "ctaPrimary": { "label": "Commencer à planifier", "path": "/registration" },
+    "ctaSecondary": { "label": "Parler à un conseiller", "path": "/commercial-banking" },
+    "strategies": [
+      { "title": "Vision pilotée par la recherche", "detail": "Comités d'investissement surveillant macro, secteurs et facteurs pour s'ajuster rapidement.", "icon": "BarChart3", "highlight": "Points marchés hebdo" },
+      { "title": "Risque maîtrisé par conception", "detail": "Analyses de scénarios, limites de drawdown et couvertures pour positions concentrées.", "icon": "ShieldCheck", "highlight": "Garde-fous baissiers" },
+      { "title": "Conseil + Digital", "detail": "Conseillers dédiés avec vues digitales intuitives pour agir partout.", "icon": "Smartphone", "highlight": "Humain + app" }
+    ]
+  },
+  "offerings": {
+    "eyebrow": "Offres",
+    "title": "Stratégies patrimoniales sur mesure",
+    "description": "Inspirées des meilleures plateformes institutionnelles, délivrées via des relations personnelles et des outils intuitifs.",
+    "items": [
+      { "title": "Portefeuilles personnalisés", "description": "Allocations sur marchés publics, alternatifs et cash avec options d'indexation directe.", "icon": "PieChart", "metrics": ["Indexation directe", "Optimisé fiscalement", "Multi-actifs"] },
+      { "title": "Planification par objectifs", "description": "Retraite, études, liquidité avec analyses de scénarios et stress tests.", "icon": "Target", "metrics": ["Retraite", "Éducation", "Liquidité"] },
+      { "title": "Trust & transmission", "description": "Structures de trusts, philanthropie et stratégies intergénérationnelles pilotées par des spécialistes.", "icon": "Gem", "metrics": ["Transmission", "Philanthropie", "Trusts"] },
+      { "title": "Liquidité & crédit", "description": "Lignes adossées à titres, prêts immobiliers sur mesure et gestion stratégique du cash.", "icon": "Banknote", "metrics": ["Lignes de crédit", "Prêts immo", "Cash"] }
+    ]
+  },
+  "insights": {
+    "eyebrow": "Analyses & recherche",
+    "title": "Rester en avance avec notre point de vue",
+    "description": "Recherche hebdomadaire, notes marchés et idées de planification pour agir en confiance.",
+    "cta": { "label": "Découvrir notre approche", "path": "/about-trustpay" },
+    "items": [
+      { "title": "Playbook marché 2024", "summary": "Notre positionnement sur actions quality, crédit court terme et actifs réels.", "category": "Vue marché" },
+      { "title": "Préparer un événement de liquidité", "summary": "Planification pré-cession, QSBS et stratégies de dons.", "category": "Stratégie patrimoniale" },
+      { "title": "Gérer des taux plus élevés", "summary": "Échelonnement du cash, opportunités de refinancement et couverture du risque de taux.", "category": "Insights" }
+    ],
+    "readMore": "Lire plus"
+  },
+  "advisors": {
+    "eyebrow": "Conseillers dédiés",
+    "title": "Une équipe alignée sur vos objectifs",
+    "description": "Travaillez avec des conseillers expérimentés soutenus par des spécialistes en planification, crédit et investissement.",
+    "people": [
+      { "name": "Evelyn Carter", "focus": "Familles & fondateurs", "credential": "CFA, CFP" },
+      { "name": "Marcus Reid", "focus": "Dirigeants & rémunération en actions", "credential": "CRPC, CEP" },
+      { "name": "Sophia Lee", "focus": "Liquidité & crédit", "credential": "Spécialiste patrimoine" }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Prêts quand vous l'êtes",
+    "title": "Concevons votre plan",
+    "description": "Alignons objectifs, risques et besoins de liquidité et bâtissons une feuille de route suivie dans l'app.",
+    "primary": { "label": "Entrer en contact", "path": "/business" },
+    "secondary": { "label": "Voir les portefeuilles", "path": "/dashboard" }
+  }
+}

@@ -1,29 +1,25 @@
 import React from 'react';
 import Icon from '../../../components/AppIcon';
 
-const Footer = () => {
-  const currentYear = new Date()?.getFullYear();
+type FooterLink = { label: string; href: string };
 
-  const footerLinks = {
-    product: [
-      { label: "Features", href: "#features" },
-      { label: "Security", href: "#security" },
-      { label: "Pricing", href: "#pricing" },
-      { label: "FAQ", href: "#faq" }
-    ],
-    company: [
-      { label: "About Us", href: "#about" },
-      { label: "Careers", href: "#careers" },
-      { label: "Press", href: "#press" },
-      { label: "Contact", href: "#contact" }
-    ],
-    legal: [
-      { label: "Privacy Policy", href: "#privacy" },
-      { label: "Terms of Service", href: "#terms" },
-      { label: "Cookie Policy", href: "#cookies" },
-      { label: "Compliance", href: "#compliance" }
-    ]
+type FooterContent = {
+  description: string;
+  productTitle: string;
+  companyTitle: string;
+  legalTitle: string;
+  productLinks: FooterLink[];
+  companyLinks: FooterLink[];
+  legalLinks: FooterLink[];
+  bottom: {
+    rights: string;
+    encryption: string;
+    insured: string;
   };
+};
+
+const Footer = ({ content }: { content: FooterContent }) => {
+  const currentYear = new Date()?.getFullYear();
 
   const socialLinks = [
     { icon: "Facebook", label: "Facebook", href: "#" },
@@ -47,7 +43,7 @@ const Footer = () => {
                 </span>
               </div>
               <p className="text-muted-foreground mb-6 max-w-sm">
-                Your trusted partner for secure, convenient, and modern banking solutions. Banking made simple, accessible, and secure.
+                {content.description}
               </p>
               <div className="flex items-center gap-4">
                 {socialLinks?.map((social) => (
@@ -64,9 +60,9 @@ const Footer = () => {
             </div>
 
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Product</h3>
+              <h3 className="font-semibold text-foreground mb-4">{content.productTitle}</h3>
               <ul className="space-y-3">
-                {footerLinks?.product?.map((link) => (
+                {content?.productLinks?.map((link) => (
                   <li key={link?.label}>
                     <a
                       href={link?.href}
@@ -80,9 +76,9 @@ const Footer = () => {
             </div>
 
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Company</h3>
+              <h3 className="font-semibold text-foreground mb-4">{content.companyTitle}</h3>
               <ul className="space-y-3">
-                {footerLinks?.company?.map((link) => (
+                {content?.companyLinks?.map((link) => (
                   <li key={link?.label}>
                     <a
                       href={link?.href}
@@ -96,9 +92,9 @@ const Footer = () => {
             </div>
 
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Legal</h3>
+              <h3 className="font-semibold text-foreground mb-4">{content.legalTitle}</h3>
               <ul className="space-y-3">
-                {footerLinks?.legal?.map((link) => (
+                {content?.legalLinks?.map((link) => (
                   <li key={link?.label}>
                     <a
                       href={link?.href}
@@ -115,19 +111,19 @@ const Footer = () => {
           <div className="pt-8 border-t border-border">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <p className="text-sm text-muted-foreground">
-                © {currentYear} TrustPay. All rights reserved.
+                {content.bottom.rights.replace('{{year}}', String(currentYear))}
               </p>
               <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2">
                   <Icon name="Shield" size={16} color="var(--color-success)" />
                   <span className="text-sm text-muted-foreground">
-                    256-bit SSL Encryption
+                    {content.bottom.encryption}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Icon name="Lock" size={16} color="var(--color-success)" />
                   <span className="text-sm text-muted-foreground">
-                    FDIC Insured
+                    {content.bottom.insured}
                   </span>
                 </div>
               </div>
