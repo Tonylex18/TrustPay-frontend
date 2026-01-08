@@ -9,6 +9,8 @@ export default defineConfig (({ mode }) => ({
   // comment this out if that isn't relevant for your project
   build: {
     outDir: "build",
+    target: ["es2017"], 
+    cssTarget: "safari13",
     chunkSizeWarningLimit: 2000,
   },
   plugins: [
