@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
-import tagger from "@dhiwise/component-tagger";
+// import tagger from "@dhiwise/component-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig (({ mode }) => ({
@@ -10,8 +10,6 @@ export default defineConfig (({ mode }) => ({
   build: {
     outDir: "build",
     chunkSizeWarningLimit: 2000,
-    target: "es2015",
-    cssTarget: "chrome61"
   },
   plugins: [
     tsconfigPaths(),

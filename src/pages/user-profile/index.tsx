@@ -14,6 +14,7 @@ import CardDetailsDisplay from './components/CardDetailsDisplay';
 import { UserProfile, ContactPreferences, PasswordChangeData, ProfileEditData, EditMode } from './types';
 import { toast } from 'react-toastify';
 import { API_BASE_URL, clearStoredToken, getStoredToken } from '../../utils/api';
+import { apiFetch } from 'utils/apiFetch';
 
 const UserProfilePage = () => {
   const navigate = useNavigate();
@@ -97,13 +98,13 @@ const UserProfilePage = () => {
       setLoadError(null);
       try {
         const [profileRes, kycRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/profile`, {
+          apiFetch(`${API_BASE_URL}/profile`, {
             headers: {
               Authorization: `Bearer ${token}`
             },
             signal: controller.signal
           }),
-          fetch(`${API_BASE_URL}/kyc/me`, {
+          apiFetch(`${API_BASE_URL}/kyc/me`, {
             headers: {
               Authorization: `Bearer ${token}`
             },
@@ -167,19 +168,19 @@ const UserProfilePage = () => {
       setCardRequestError(null);
       try {
         const [cardRes, accountRes, requestRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/cards`, {
+          apiFetch(`${API_BASE_URL}/cards`, {
             headers: {
               Authorization: `Bearer ${token}`
             },
             signal: controller.signal
           }),
-          fetch(`${API_BASE_URL}/accounts`, {
+          apiFetch(`${API_BASE_URL}/accounts`, {
             headers: {
               Authorization: `Bearer ${token}`
             },
             signal: controller.signal
           }),
-          fetch(`${API_BASE_URL}/card-requests`, {
+          apiFetch(`${API_BASE_URL}/card-requests`, {
             headers: {
               Authorization: `Bearer ${token}`
             },
@@ -311,7 +312,7 @@ const UserProfilePage = () => {
     setCardLoading(true);
     setCardError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/cards`, {
+      const response = await apiFetch(`${API_BASE_URL}/cards`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

@@ -9,6 +9,7 @@ import Button from '../../components/ui/Button';
 import { toast } from 'react-toastify';
 import { LoginFormData, ValidationErrors, SecurityTip } from './types';
 import { API_BASE_URL, setStoredToken } from '../../utils/api';
+import { apiFetch } from 'utils/apiFetch';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
@@ -93,7 +94,7 @@ const LoginPage: React.FC = () => {
         ? { email: formData.email, otp: otpCode.trim() }
         : { email: formData.email, password: formData.password };
 
-      const response = await fetch(endpoint, {
+      const response = await apiFetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

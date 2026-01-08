@@ -17,6 +17,7 @@ import {
   SortConfig,
   SortableTransactionField
 } from './types';
+import { apiFetch } from 'utils/apiFetch';
 
 const normalizeStatus = (value: string | null | undefined): Transaction['status'] => {
   const status = (value || '').toLowerCase();
@@ -92,11 +93,11 @@ const TransactionsPage = () => {
       setLoadError(null);
       try {
         const [accountsRes, profileRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/accounts`, {
+          apiFetch(`${API_BASE_URL}/accounts`, {
             headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
-          fetch(`${API_BASE_URL}/me`, {
+          apiFetch(`${API_BASE_URL}/me`, {
             headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           })
@@ -175,7 +176,7 @@ const TransactionsPage = () => {
       setIsLoading(true);
       setLoadError(null);
       try {
-        const transactionResponse = await fetch(
+        const transactionResponse = await apiFetch(
           `${API_BASE_URL}/accounts/${selectedAccountId}/transactions?limit=200`,
           {
             headers: { Authorization: `Bearer ${token}` },

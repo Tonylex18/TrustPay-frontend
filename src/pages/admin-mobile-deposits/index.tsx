@@ -6,6 +6,7 @@ import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
 import NavigationBar from "../../components/ui/NavigationBar";
 import { API_BASE_URL, clearStoredToken, getStoredToken } from "../../utils/api";
+import { apiFetch } from "utils/apiFetch";
 
 type MobileDeposit = {
   id: string;
@@ -41,7 +42,7 @@ const AdminMobileDepositsPage: React.FC = () => {
   const fetchDeposits = async (authToken: string) => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/mobile-deposits?status=PENDING`, {
+      const response = await apiFetch(`${API_BASE_URL}/admin/mobile-deposits?status=PENDING`, {
         headers: { Authorization: `Bearer ${authToken}` },
       });
       const payload = await response.json().catch(() => null);
@@ -73,7 +74,7 @@ const AdminMobileDepositsPage: React.FC = () => {
     if (!token) return;
     setActionLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/admin/mobile-deposits/${deposit.id}/approve`, {
+      const res = await apiFetch(`${API_BASE_URL}/admin/mobile-deposits/${deposit.id}/approve`, {
         method: "PATCH",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -97,7 +98,7 @@ const AdminMobileDepositsPage: React.FC = () => {
     if (!token) return;
     setActionLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/admin/mobile-deposits/${deposit.id}/reject`, {
+      const res = await apiFetch(`${API_BASE_URL}/admin/mobile-deposits/${deposit.id}/reject`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -14,6 +14,7 @@ import SecurityInfo from './components/SecurityInfo';
 import { TransferFormData, TransferSummary, TransferLimits, Account, VerifiedAccount } from './types';
 import { toast } from 'react-toastify';
 import { API_BASE_URL, getStoredToken } from '../../utils/api';
+import { apiFetch } from 'utils/apiFetch';
 
 type RoutingLookupResponse = {
   valid: boolean;
@@ -118,13 +119,13 @@ const MoneyTransfer = () => {
       setIsLoadingAccount(true);
       try {
         const [accountsRes, meRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/accounts`, {
+          apiFetch(`${API_BASE_URL}/accounts`, {
             headers: {
               Authorization: `Bearer ${token}`
             },
             signal: controller.signal
           }),
-          fetch(`${API_BASE_URL}/me`, {
+          apiFetch(`${API_BASE_URL}/me`, {
             headers: {
               Authorization: `Bearer ${token}`
             },
@@ -245,7 +246,7 @@ const MoneyTransfer = () => {
     setVerifyError(null);
 
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         `${API_BASE_URL}/api/v1/routing/lookup?routingNumber=${encodeURIComponent(routingNumber)}`
       );
       const payload: RoutingLookupResponse | null = await response.json().catch(() => null);
@@ -404,7 +405,7 @@ const MoneyTransfer = () => {
         formData.memo ||
         t(formData.transferType === 'internal' ? 'messages.defaultMemoInternal' : 'messages.defaultMemoExternal');
 
-      const response = await fetch(`${API_BASE_URL}/transfers`, {
+      const response = await apiFetch(`${API_BASE_URL}/transfers`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -519,7 +520,7 @@ const MoneyTransfer = () => {
     setPinSetupLoading(true);
     setPinSetupError(null);
     try {
-      const res = await fetch(`${API_BASE_URL}/accounts/${targetAccountId}/set-pin`, {
+      const res = await apiFetch(`${API_BASE_URL}/accounts/${targetAccountId}/set-pin`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

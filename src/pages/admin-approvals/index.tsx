@@ -13,6 +13,7 @@ import {
   getStoredToken,
   setStoredToken
 } from '../../utils/api';
+import { apiFetch } from 'utils/apiFetch';
 
 type PendingTransaction = {
   userId: string;
@@ -165,7 +166,7 @@ const AdminApprovalsPage: React.FC = () => {
     setIsLoading(true);
     setLoadError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/transactions?status=PENDING`, {
+      const response = await apiFetch(`${API_BASE_URL}/admin/transactions?status=PENDING`, {
         headers: {
           Authorization: `Bearer ${authToken}`
         },
@@ -220,7 +221,7 @@ const AdminApprovalsPage: React.FC = () => {
   const fetchKyc = async (authToken: string, signal?: AbortSignal) => {
     setIsLoadingKyc(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/kyc`, {
+      const response = await apiFetch(`${API_BASE_URL}/admin/kyc`, {
         headers: { Authorization: `Bearer ${authToken}` },
         signal
       });
@@ -247,7 +248,7 @@ const AdminApprovalsPage: React.FC = () => {
   const fetchCardTransactions = async (authToken: string, signal?: AbortSignal) => {
     setIsLoadingCardTxns(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/cards/transactions`, {
+      const response = await apiFetch(`${API_BASE_URL}/admin/cards/transactions`, {
         headers: { Authorization: `Bearer ${authToken}` },
         signal
       });
@@ -275,7 +276,7 @@ const AdminApprovalsPage: React.FC = () => {
     setIsLoadingCardRequests(true);
     setCardRequestError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/card-requests?status=PENDING_APPROVAL`, {
+      const response = await apiFetch(`${API_BASE_URL}/admin/card-requests?status=PENDING_APPROVAL`, {
         headers: { Authorization: `Bearer ${authToken}` },
         signal
       });
@@ -313,7 +314,7 @@ const AdminApprovalsPage: React.FC = () => {
     setIsLoadingDepositDetail(true);
     setDepositDetailError(null);
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         `${API_BASE_URL}/admin/mobile-deposits?transactionId=${encodeURIComponent(transactionId)}`,
         {
           headers: { Authorization: `Bearer ${authToken}` }
@@ -363,7 +364,7 @@ const AdminApprovalsPage: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/login`, {
+      const response = await apiFetch(`${API_BASE_URL}/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -406,7 +407,7 @@ const AdminApprovalsPage: React.FC = () => {
     setActiveActionId(actionKey);
 
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         `${API_BASE_URL}/admin/transactions/${item.transaction.id}/${action === 'approve' ? 'approve' : 'reject'}`,
         {
           method: 'PATCH',
@@ -450,7 +451,7 @@ const AdminApprovalsPage: React.FC = () => {
         : undefined;
 
     try {
-      const response = await fetch(
+      const response = await apiFetch(
         `${API_BASE_URL}/admin/card-requests/${id}/${action === 'approve' ? 'approve' : 'reject'}`,
         {
           method: 'POST',
@@ -490,7 +491,7 @@ const AdminApprovalsPage: React.FC = () => {
       }
     }
     try {
-      const response = await fetch(`${API_BASE_URL}/admin/kyc/${record.id}`, {
+      const response = await apiFetch(`${API_BASE_URL}/admin/kyc/${record.id}`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -536,7 +537,7 @@ const AdminApprovalsPage: React.FC = () => {
 
     setIsTestFundLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/admin/test-fund`, {
+      const response = await apiFetch(`${API_BASE_URL}/api/admin/test-fund`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

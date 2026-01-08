@@ -17,6 +17,7 @@ import StatusBadge from "../../components/bills/StatusBadge";
 import AccountSelector, { type Account } from "../../components/ui/AccountSelector";
 import Icon from "../../components/AppIcon";
 import { API_BASE_URL, clearStoredToken, getStoredToken } from "../../utils/api";
+import { apiFetch } from "utils/apiFetch";
 
 type BillCategory = {
 	id: string;
@@ -143,15 +144,15 @@ const fetchAll = useCallback(
 			setLoadError(null);
 			try {
 				const [catRes, payRes, meRes] = await Promise.all([
-					fetch(`${API_BASE_URL}/bill-categories`, {
+					apiFetch(`${API_BASE_URL}/bill-categories`, {
 						headers: { Authorization: `Bearer ${token}` },
 						signal,
 					}),
-					fetch(`${API_BASE_URL}/bills/payments`, {
+					apiFetch(`${API_BASE_URL}/bills/payments`, {
 						headers: { Authorization: `Bearer ${token}` },
 						signal,
 					}),
-					fetch(`${API_BASE_URL}/me`, {
+					apiFetch(`${API_BASE_URL}/me`, {
 						headers: { Authorization: `Bearer ${token}` },
 						signal,
 					}),
@@ -213,7 +214,7 @@ const fetchAll = useCallback(
 		}
 		setListLoading(true);
 		try {
-			const res = await fetch(`${API_BASE_URL}/bills/payments`, {
+			const res = await apiFetch(`${API_BASE_URL}/bills/payments`, {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 			const payload = await res.json().catch(() => null);
@@ -338,7 +339,7 @@ const handleNext = () => {
 
 		setIsSubmitting(true);
 		try {
-			const res = await fetch(`${API_BASE_URL}/bills/payments`, {
+			const res = await apiFetch(`${API_BASE_URL}/bills/payments`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

@@ -10,6 +10,7 @@ import RegistrationForm from './components/RegistrationForm';
 import SecurityMessage from './components/SecurityMessage';
 import type { RegistrationFormData, ValidationErrors, PasswordStrength } from './types';
 import { API_BASE_URL, setStoredToken } from '../../utils/api';
+import { apiFetch } from 'utils/apiFetch';
 
 const Registration = () => {
   const navigate = useNavigate();
@@ -128,7 +129,7 @@ const Registration = () => {
         ? { email: formData.email, otp: otpCode.trim() }
         : { email: formData.email, password: formData.password };
 
-      const response = await fetch(endpoint, {
+      const response = await apiFetch(endpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

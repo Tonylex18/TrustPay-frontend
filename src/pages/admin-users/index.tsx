@@ -7,6 +7,7 @@ import Select from "../../components/ui/Select";
 import Icon from "../../components/AppIcon";
 import { API_BASE_URL, getStoredToken } from "../../utils/api";
 import Input from "../../components/ui/Input";
+import { apiFetch } from "utils/apiFetch";
 
 type UserRow = {
 	id: string;
@@ -62,7 +63,7 @@ const AdminUsersPage: React.FC = () => {
 		const fetchUsers = async () => {
 			setLoading(true);
 			try {
-				const res = await fetch(`${API_BASE_URL}/admin/users`, {
+				const res = await apiFetch(`${API_BASE_URL}/admin/users`, {
 					headers: { Authorization: `Bearer ${token}` },
 					signal: controller.signal,
 				});
@@ -86,7 +87,7 @@ const AdminUsersPage: React.FC = () => {
 
 		const fetchAccounts = async () => {
 			try {
-				const res = await fetch(`${API_BASE_URL}/admin/accounts`, {
+				const res = await apiFetch(`${API_BASE_URL}/admin/accounts`, {
 					headers: { Authorization: `Bearer ${token}` },
 					signal: controller.signal,
 				});
@@ -103,13 +104,14 @@ const AdminUsersPage: React.FC = () => {
 				}
 			} catch {
 				// ignore account fetch failures
+				console.error("Failed to fetch accounts");
 			}
 		};
 
 		const fetchCards = async () => {
 			setCardsLoading(true);
 			try {
-				const res = await fetch(`${API_BASE_URL}/admin/cards`, {
+				const res = await apiFetch(`${API_BASE_URL}/admin/cards`, {
 					headers: { Authorization: `Bearer ${token}` },
 					signal: controller.signal,
 				});
@@ -129,6 +131,7 @@ const AdminUsersPage: React.FC = () => {
 				}
 			} catch {
 				// ignore card fetch failures to avoid blocking user list
+				console.error("Failed to fetch cards");
 			} finally {
 				setCardsLoading(false);
 			}
@@ -168,7 +171,7 @@ const AdminUsersPage: React.FC = () => {
 			let endpoint = `${API_BASE_URL}/admin/users/${userId}`;
 			if (action === "disable") endpoint += "/disable";
 			if (action === "enable") endpoint += "/enable";
-			const res = await fetch(endpoint, {
+			const res = await apiFetch(endpoint, {
 				method: action === "delete" ? "DELETE" : "PATCH",
 				headers: { Authorization: `Bearer ${token}` },
 			});
@@ -193,7 +196,7 @@ const AdminUsersPage: React.FC = () => {
 		if (!token) return;
 		setCardActionId(`${cardId}:${action}`);
 		try {
-			const res = await fetch(
+			const res = await apiFetch(
 				`${API_BASE_URL}/admin/cards/${cardId}/${action}`,
 				{
 					method: "PATCH",

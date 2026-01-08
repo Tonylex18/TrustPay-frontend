@@ -13,6 +13,7 @@ import CardDetailsDisplay from '../user-profile/components/CardDetailsDisplay';
 import type { DashboardData, QuickActionConfig } from './types';
 import { API_BASE_URL, clearStoredToken, getStoredToken } from '../../utils/api';
 import { toast } from 'react-toastify';
+import { apiFetch } from 'utils/apiFetch';
 
 type DashboardStatus = 'pending' | 'completed' | 'failed';
 
@@ -87,7 +88,7 @@ const Dashboard: React.FC = () => {
         const token = getStoredToken();
         if (!token) return;
         try {
-          const res = await fetch(`${API_BASE_URL}/kyc/me`, {
+          const res = await apiFetch(`${API_BASE_URL}/kyc/me`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           const payload = await res.json().catch(() => null);
@@ -130,23 +131,23 @@ const Dashboard: React.FC = () => {
       setCardRequests([]);
       try {
         const [meRes, accountsRes, kycRes, cardsRes, cardRequestsRes] = await Promise.all([
-          fetch(`${API_BASE_URL}/me`, {
+          apiFetch(`${API_BASE_URL}/me`, {
             headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
-          fetch(`${API_BASE_URL}/accounts`, {
+          apiFetch(`${API_BASE_URL}/accounts`, {
             headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
-          fetch(`${API_BASE_URL}/kyc/me`, {
+          apiFetch(`${API_BASE_URL}/kyc/me`, {
             headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
-          fetch(`${API_BASE_URL}/cards`, {
+          apiFetch(`${API_BASE_URL}/cards`, {
             headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
-          fetch(`${API_BASE_URL}/card-requests`, {
+          apiFetch(`${API_BASE_URL}/card-requests`, {
             headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
@@ -292,7 +293,7 @@ const Dashboard: React.FC = () => {
     const fetchRecentTx = async () => {
       setIsLoadingTransactions(true);
       try {
-        const res = await fetch(`${API_BASE_URL}/accounts/${primaryId}/transactions?limit=25`, {
+        const res = await apiFetch(`${API_BASE_URL}/accounts/${primaryId}/transactions?limit=25`, {
           headers: { Authorization: `Bearer ${token}` },
           signal: controller.signal
         });
@@ -443,7 +444,7 @@ const Dashboard: React.FC = () => {
     setCreateAccountLoading(true);
     setCreateAccountError(null);
     try {
-      const res = await fetch(`${API_BASE_URL}/accounts`, {
+      const res = await apiFetch(`${API_BASE_URL}/accounts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -533,7 +534,7 @@ const Dashboard: React.FC = () => {
         navigate('/login');
         return;
       }
-      const res = await fetch(`${API_BASE_URL}/accounts/${targetAccountId}/set-pin`, {
+      const res = await apiFetch(`${API_BASE_URL}/accounts/${targetAccountId}/set-pin`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

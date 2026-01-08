@@ -10,6 +10,7 @@ import StatusBadge from "../../components/bills/StatusBadge";
 import { formatCurrency, formatDate } from "../../components/bills/BillCard";
 import Icon from "../../components/AppIcon";
 import { API_BASE_URL, clearStoredToken, getStoredToken } from "../../utils/api";
+import { apiFetch } from "utils/apiFetch";
 
 type BillPaymentDetail = {
 	id: string;
@@ -62,7 +63,7 @@ const BillPaymentDetailsPage: React.FC = () => {
 		setIsLoading(true);
 		setLoadError(null);
 		try {
-			const res = await fetch(`${API_BASE_URL}/bills/payments`, {
+			const res = await apiFetch(`${API_BASE_URL}/bills/payments`, {
 				headers: { Authorization: `Bearer ${token}` },
 			});
 			if (res.status === 401) {
