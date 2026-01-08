@@ -89,7 +89,6 @@ const Dashboard: React.FC = () => {
         if (!token) return;
         try {
           const res = await apiFetch(`${API_BASE_URL}/kyc/me`, {
-            headers: { Authorization: `Bearer ${token}` },
           });
           const payload = await res.json().catch(() => null);
           if (res.ok && payload?.kyc) {
@@ -132,23 +131,18 @@ const Dashboard: React.FC = () => {
       try {
         const [meRes, accountsRes, kycRes, cardsRes, cardRequestsRes] = await Promise.all([
           apiFetch(`${API_BASE_URL}/me`, {
-            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
           apiFetch(`${API_BASE_URL}/accounts`, {
-            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
           apiFetch(`${API_BASE_URL}/kyc/me`, {
-            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
           apiFetch(`${API_BASE_URL}/cards`, {
-            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
           apiFetch(`${API_BASE_URL}/card-requests`, {
-            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
         ]);
@@ -294,7 +288,6 @@ const Dashboard: React.FC = () => {
       setIsLoadingTransactions(true);
       try {
         const res = await apiFetch(`${API_BASE_URL}/accounts/${primaryId}/transactions?limit=25`, {
-          headers: { Authorization: `Bearer ${token}` },
           signal: controller.signal
         });
         const payload = await res.json().catch(() => []);
@@ -447,8 +440,7 @@ const Dashboard: React.FC = () => {
       const res = await apiFetch(`${API_BASE_URL}/accounts`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ type: newAccountType })
       });
@@ -537,7 +529,6 @@ const Dashboard: React.FC = () => {
       const res = await apiFetch(`${API_BASE_URL}/accounts/${targetAccountId}/set-pin`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { API_BASE_URL, getStoredToken } from "../utils/api";
+import { apiFetch } from "utils/apiFetch";
 import { toast } from "react-toastify";
 
 type VisitorIdentity = {
@@ -50,8 +51,7 @@ const TawkChat = () => {
 
     const fetchVisitor = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/me`, {
-          headers: { Authorization: `Bearer ${token}` },
+        const res = await apiFetch(`${API_BASE_URL}/me`, {
           signal: controller.signal
         });
         const payload = await res.json().catch(() => null);

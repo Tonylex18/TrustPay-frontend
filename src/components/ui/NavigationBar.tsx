@@ -5,6 +5,7 @@ import Icon from '../AppIcon';
 import UserMenu from './UserMenu';
 import LanguageSelector from '../LanguageSelector';
 import { API_BASE_URL, getStoredToken } from '../../utils/api';
+import { apiFetch } from 'utils/apiFetch';
 
 interface NavigationBarProps {
   user?: {
@@ -90,8 +91,7 @@ const NavigationBar = ({ user, onNavigate }: NavigationBarProps) => {
     const token = getStoredToken();
     if (!token) return;
     const controller = new AbortController();
-    fetch(`${API_BASE_URL}/me`, {
-      headers: { Authorization: `Bearer ${token}` },
+    apiFetch(`${API_BASE_URL}/me`, {
       signal: controller.signal
     })
       .then((res) => res.json().then((payload) => ({ ok: res.ok, payload })).catch(() => ({ ok: res.ok, payload: null })))

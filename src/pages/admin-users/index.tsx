@@ -64,7 +64,6 @@ const AdminUsersPage: React.FC = () => {
 			setLoading(true);
 			try {
 				const res = await apiFetch(`${API_BASE_URL}/admin/users`, {
-					headers: { Authorization: `Bearer ${token}` },
 					signal: controller.signal,
 				});
 				const payload = await res.json().catch(() => null);
@@ -88,7 +87,6 @@ const AdminUsersPage: React.FC = () => {
 		const fetchAccounts = async () => {
 			try {
 				const res = await apiFetch(`${API_BASE_URL}/admin/accounts`, {
-					headers: { Authorization: `Bearer ${token}` },
 					signal: controller.signal,
 				});
 				const payload = await res.json().catch(() => []);
@@ -112,7 +110,6 @@ const AdminUsersPage: React.FC = () => {
 			setCardsLoading(true);
 			try {
 				const res = await apiFetch(`${API_BASE_URL}/admin/cards`, {
-					headers: { Authorization: `Bearer ${token}` },
 					signal: controller.signal,
 				});
 				const payload = await res.json().catch(() => []);
@@ -173,7 +170,6 @@ const AdminUsersPage: React.FC = () => {
 			if (action === "enable") endpoint += "/enable";
 			const res = await apiFetch(endpoint, {
 				method: action === "delete" ? "DELETE" : "PATCH",
-				headers: { Authorization: `Bearer ${token}` },
 			});
 			if (!res.ok) {
 				const payload = await res.json().catch(() => null);
@@ -200,7 +196,6 @@ const AdminUsersPage: React.FC = () => {
 				`${API_BASE_URL}/admin/cards/${cardId}/${action}`,
 				{
 					method: "PATCH",
-					headers: { Authorization: `Bearer ${token}` },
 				}
 			);
 			const payload = await res.json().catch(() => null);

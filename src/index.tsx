@@ -4,8 +4,6 @@ import "./styles/index.css";
 import "./i18n/config";
 import App from "./App";
 
-// ⛔️ DO NOT PATCH window.fetch AT ALL
-
 const container = document.getElementById("root");
 
 if (!container) {

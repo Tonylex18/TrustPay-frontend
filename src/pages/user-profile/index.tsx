@@ -99,15 +99,9 @@ const UserProfilePage = () => {
       try {
         const [profileRes, kycRes] = await Promise.all([
           apiFetch(`${API_BASE_URL}/profile`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },
             signal: controller.signal
           }),
           apiFetch(`${API_BASE_URL}/kyc/me`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },
             signal: controller.signal
           })
         ]);
@@ -169,21 +163,12 @@ const UserProfilePage = () => {
       try {
         const [cardRes, accountRes, requestRes] = await Promise.all([
           apiFetch(`${API_BASE_URL}/cards`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },
             signal: controller.signal
           }),
           apiFetch(`${API_BASE_URL}/accounts`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },
             signal: controller.signal
           }),
           apiFetch(`${API_BASE_URL}/card-requests`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },
             signal: controller.signal
           })
         ]);
@@ -315,7 +300,6 @@ const UserProfilePage = () => {
       const response = await apiFetch(`${API_BASE_URL}/cards`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ bankAccountId: selectedAccountId })

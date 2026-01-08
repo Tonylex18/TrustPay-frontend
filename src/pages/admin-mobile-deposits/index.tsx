@@ -43,7 +43,6 @@ const AdminMobileDepositsPage: React.FC = () => {
     setLoading(true);
     try {
       const response = await apiFetch(`${API_BASE_URL}/admin/mobile-deposits?status=PENDING`, {
-        headers: { Authorization: `Bearer ${authToken}` },
       });
       const payload = await response.json().catch(() => null);
       if (!response.ok) {
@@ -76,7 +75,6 @@ const AdminMobileDepositsPage: React.FC = () => {
     try {
       const res = await apiFetch(`${API_BASE_URL}/admin/mobile-deposits/${deposit.id}/approve`, {
         method: "PATCH",
-        headers: { Authorization: `Bearer ${token}` },
       });
       const payload = await res.json().catch(() => null);
       if (!res.ok) {
@@ -101,7 +99,6 @@ const AdminMobileDepositsPage: React.FC = () => {
       const res = await apiFetch(`${API_BASE_URL}/admin/mobile-deposits/${deposit.id}/reject`, {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ reason: rejectReason || undefined }),

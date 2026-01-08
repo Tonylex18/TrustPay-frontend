@@ -120,15 +120,9 @@ const MoneyTransfer = () => {
       try {
         const [accountsRes, meRes] = await Promise.all([
           apiFetch(`${API_BASE_URL}/accounts`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },
             signal: controller.signal
           }),
           apiFetch(`${API_BASE_URL}/me`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            },
             signal: controller.signal
           })
         ]);
@@ -408,8 +402,7 @@ const MoneyTransfer = () => {
       const response = await apiFetch(`${API_BASE_URL}/transfers`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           from_account_id: fromAccountId ?? userAccount?.id,
@@ -523,7 +516,6 @@ const MoneyTransfer = () => {
       const res = await apiFetch(`${API_BASE_URL}/accounts/${targetAccountId}/set-pin`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({

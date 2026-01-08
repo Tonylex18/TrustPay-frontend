@@ -94,11 +94,9 @@ const TransactionsPage = () => {
       try {
         const [accountsRes, profileRes] = await Promise.all([
           apiFetch(`${API_BASE_URL}/accounts`, {
-            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
           apiFetch(`${API_BASE_URL}/me`, {
-            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           })
         ]);
@@ -179,7 +177,6 @@ const TransactionsPage = () => {
         const transactionResponse = await apiFetch(
           `${API_BASE_URL}/accounts/${selectedAccountId}/transactions?limit=200`,
           {
-            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }
         );

@@ -48,7 +48,6 @@ const AdminKycReview: React.FC = () => {
 			setLoading(true);
 			try {
 				const res = await apiFetch(`${API_BASE_URL}/admin/kyc`, {
-					headers: { Authorization: `Bearer ${token}` },
 					signal: controller.signal,
 				});
 				const payload = await res.json().catch(() => []);
@@ -92,7 +91,6 @@ const AdminKycReview: React.FC = () => {
 			const res = await apiFetch(`${API_BASE_URL}/admin/kyc/${actionTarget.id}`, {
 				method: "PATCH",
 				headers: {
-					Authorization: `Bearer ${token}`,
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({

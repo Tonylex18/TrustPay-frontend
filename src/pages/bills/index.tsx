@@ -145,15 +145,12 @@ const fetchAll = useCallback(
 			try {
 				const [catRes, payRes, meRes] = await Promise.all([
 					apiFetch(`${API_BASE_URL}/bill-categories`, {
-						headers: { Authorization: `Bearer ${token}` },
 						signal,
 					}),
 					apiFetch(`${API_BASE_URL}/bills/payments`, {
-						headers: { Authorization: `Bearer ${token}` },
 						signal,
 					}),
 					apiFetch(`${API_BASE_URL}/me`, {
-						headers: { Authorization: `Bearer ${token}` },
 						signal,
 					}),
 				]);
@@ -214,9 +211,8 @@ const fetchAll = useCallback(
 		}
 		setListLoading(true);
 		try {
-			const res = await apiFetch(`${API_BASE_URL}/bills/payments`, {
-				headers: { Authorization: `Bearer ${token}` },
-			});
+		const res = await apiFetch(`${API_BASE_URL}/bills/payments`, {
+		});
 			const payload = await res.json().catch(() => null);
 			if (!res.ok) {
 				const msg = payload?.errors || payload?.message || t("errors.refreshPayments");
@@ -343,7 +339,6 @@ const handleNext = () => {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
 				},
 				body: JSON.stringify({
 					categoryId: form.categoryId,

@@ -319,9 +319,6 @@ const DepositForm = () => {
 
       const response = await apiFetch(`${API_BASE_URL}/mobile-deposits`, {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
         body: fd
       });
 

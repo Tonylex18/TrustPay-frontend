@@ -64,7 +64,6 @@ const BillPaymentDetailsPage: React.FC = () => {
 		setLoadError(null);
 		try {
 			const res = await apiFetch(`${API_BASE_URL}/bills/payments`, {
-				headers: { Authorization: `Bearer ${token}` },
 			});
 			if (res.status === 401) {
 				clearStoredToken();

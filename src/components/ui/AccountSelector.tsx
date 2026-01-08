@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL, getStoredToken } from "../../utils/api";
+import { apiFetch } from "utils/apiFetch";
 
 export type Account = {
   id: string;
@@ -39,9 +40,7 @@ const AccountSelector: React.FC<AccountSelectorProps> = ({ onSelect }) => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API_BASE_URL}/accounts`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await apiFetch(`${API_BASE_URL}/accounts`, {});
         const payload = await res.json().catch(() => null);
         if (!res.ok) {
           const msg = payload?.errors || payload?.message || "Unable to load accounts.";

@@ -124,7 +124,6 @@ const KycPage: React.FC = () => {
 
       const res = await apiFetch(`${API_BASE_URL}/kyc`, {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
         body: fd,
       });
       const payload = await res.json().catch(() => null);
