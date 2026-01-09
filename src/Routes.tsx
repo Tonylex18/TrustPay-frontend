@@ -24,8 +24,11 @@ import ScrollToTop from "./components/ScrollToTop";
 import KycPage from "./pages/kyc";
 import DepositConfirmationPage from "./pages/deposit/confirmation";
 import TawkChat from "./components/TawkChat";
+import RequireAuth from "./components/RequireAuth";
 
 const Routes: React.FC = () => {
+  const withAuth = (element: JSX.Element) => <RequireAuth>{element}</RequireAuth>;
+
   return (
     <BrowserRouter>
       <ErrorBoundary>
@@ -34,15 +37,15 @@ const Routes: React.FC = () => {
         <RouterRoutes>
           {/* Define your routes here */}
         <Route path="/" element={<LandingPage />} />
-        <Route path="/transactions" element={<TransactionsPage />} />
+        <Route path="/transactions" element={withAuth(<TransactionsPage />)} />
         <Route path="/registration" element={<Registration />} />
         <Route path="/landing-page" element={<LandingPage />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/money-transfer" element={<MoneyTransfer />} />
-        <Route path="/deposit" element={<DepositPage />} />
-        <Route path="/deposit/confirmation" element={<DepositConfirmationPage />} />
-        <Route path="/bills" element={<BillsPage />} />
-        <Route path="/bills/:id" element={<BillPaymentDetailsPage />} />
+        <Route path="/dashboard" element={withAuth(<Dashboard />)} />
+        <Route path="/money-transfer" element={withAuth(<MoneyTransfer />)} />
+        <Route path="/deposit" element={withAuth(<DepositPage />)} />
+        <Route path="/deposit/confirmation" element={withAuth(<DepositConfirmationPage />)} />
+        <Route path="/bills" element={withAuth(<BillsPage />)} />
+        <Route path="/bills/:id" element={withAuth(<BillPaymentDetailsPage />)} />
         <Route path="/business" element={<BusinessPage />} />
         <Route path="/commercial-banking" element={<CommercialBankingPage />} />
         <Route path="/investWealthManagement" element={<InvestWealthManagementPage />} />
@@ -52,8 +55,8 @@ const Routes: React.FC = () => {
         <Route path="/admin/kyc-review" element={<AdminKycReview />} />
         <Route path="/admin/users" element={<AdminUsersPage />} />
         <Route path="/admin/mobile-deposits" element={<AdminMobileDepositsPage />} />
-        <Route path="/user-profile" element={<UserProfilePage />} />
-        <Route path="/kyc" element={<KycPage />} />
+        <Route path="/user-profile" element={withAuth(<UserProfilePage />)} />
+        <Route path="/kyc" element={withAuth(<KycPage />)} />
         <Route path="*" element={<NotFound />} />
         </RouterRoutes>
       </ErrorBoundary>

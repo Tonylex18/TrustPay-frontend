@@ -303,7 +303,7 @@ const DepositForm = () => {
 
     const token = getStoredToken();
     if (!token) {
-      navigate('/login');
+      setConfirmationError(t('messages.error.submitFailed'));
       return;
     }
 
@@ -510,9 +510,7 @@ const DepositPage: React.FC = () => {
   ];
 
   useEffect(() => {
-    if (!getStoredToken()) {
-      navigate('/login');
-    }
+    // Auth gating handled by the router guard; no-op here.
   }, [navigate]);
 
   return (

@@ -9,7 +9,7 @@ import TransactionTable from './components/TransactionTable';
 import TransactionCard from './components/TransactionCard';
 import PaginationControls from './components/PaginationControls';
 import { toast } from 'react-toastify';
-import { API_BASE_URL, clearStoredToken, getStoredToken } from '../../utils/api';
+import { API_BASE_URL, getStoredToken } from '../../utils/api';
 import {
   Transaction,
   TransactionFilters,
@@ -82,9 +82,9 @@ const TransactionsPage = () => {
   useEffect(() => {
     const controller = new AbortController();
     const token = getStoredToken();
-
     if (!token) {
-      navigate('/login');
+      setIsLoading(false);
+      setIsLoadingAccounts(false);
       return;
     }
 
@@ -113,11 +113,6 @@ const TransactionsPage = () => {
         }
 
         if (!accountsRes.ok) {
-          if (accountsRes.status === 401) {
-            clearStoredToken();
-            navigate('/login');
-            return;
-          }
           const payload = await accountsRes.json().catch(() => null);
           const message = payload?.errors || payload?.message || 'Unable to load accounts.';
           setLoadError(message);
@@ -163,9 +158,7 @@ const TransactionsPage = () => {
   useEffect(() => {
     const controller = new AbortController();
     const token = getStoredToken();
-
     if (!token) {
-      navigate('/login');
       return;
     }
 
@@ -184,11 +177,6 @@ const TransactionsPage = () => {
         const transactionPayload = await transactionResponse.json().catch(() => null);
         if (!transactionResponse.ok) {
           const message = transactionPayload?.errors || transactionPayload?.message || 'Unable to load transactions.';
-          if (transactionResponse.status === 401) {
-            clearStoredToken();
-            navigate('/login');
-            return;
-          }
           setLoadError(message);
           toast.error(message);
           return;

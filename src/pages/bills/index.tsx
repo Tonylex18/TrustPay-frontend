@@ -16,7 +16,7 @@ import BillCard, {
 import StatusBadge from "../../components/bills/StatusBadge";
 import AccountSelector, { type Account } from "../../components/ui/AccountSelector";
 import Icon from "../../components/AppIcon";
-import { API_BASE_URL, clearStoredToken, getStoredToken } from "../../utils/api";
+import { API_BASE_URL, getStoredToken } from "../../utils/api";
 import { apiFetch } from "utils/apiFetch";
 
 type BillCategory = {
@@ -133,11 +133,11 @@ const BillsPage: React.FC = () => {
 			description: p.description,
 		}));
 
-const fetchAll = useCallback(
-	async (signal?: AbortSignal) => {
-		const token = getStoredToken();
-		if (!token) {
-			navigate("/login");
+	const fetchAll = useCallback(
+		async (signal?: AbortSignal) => {
+			const token = getStoredToken();
+			if (!token) {
+				setIsLoading(false);
 				return;
 			}
 			setIsLoading(true);
@@ -155,15 +155,9 @@ const fetchAll = useCallback(
 					}),
 				]);
 
-				if (meRes.status === 401) {
-					clearStoredToken();
-					navigate("/login");
-					return;
-				}
-
-				const [catPayload, payPayload, mePayload] = await Promise.all([
-					catRes.json().catch(() => null),
-					payRes.json().catch(() => null),
+					const [catPayload, payPayload, mePayload] = await Promise.all([
+						catRes.json().catch(() => null),
+						payRes.json().catch(() => null),
 					meRes.json().catch(() => null),
 				]);
 
@@ -203,15 +197,14 @@ const fetchAll = useCallback(
 		[navigate, t]
 	);
 
-	const refreshPayments = useCallback(async () => {
-		const token = getStoredToken();
-		if (!token) {
-			navigate("/login");
-			return;
-		}
-		setListLoading(true);
-		try {
-		const res = await apiFetch(`${API_BASE_URL}/bills/payments`, {
+		const refreshPayments = useCallback(async () => {
+			const token = getStoredToken();
+			if (!token) {
+				return;
+			}
+			setListLoading(true);
+			try {
+			const res = await apiFetch(`${API_BASE_URL}/bills/payments`, {
 		});
 			const payload = await res.json().catch(() => null);
 			if (!res.ok) {
@@ -327,14 +320,8 @@ const handleNext = () => {
 			return;
 		}
 
-		const token = getStoredToken();
-		if (!token) {
-			navigate("/login");
-			return;
-		}
-
-		setIsSubmitting(true);
-		try {
+			setIsSubmitting(true);
+			try {
 			const res = await apiFetch(`${API_BASE_URL}/bills/payments`, {
 				method: "POST",
 				headers: {

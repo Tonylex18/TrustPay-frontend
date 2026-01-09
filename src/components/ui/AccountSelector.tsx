@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { API_BASE_URL, getStoredToken } from "../../utils/api";
 import { apiFetch } from "utils/apiFetch";
 
@@ -19,7 +18,6 @@ interface AccountSelectorProps {
 }
 
 const AccountSelector: React.FC<AccountSelectorProps> = ({ onSelect }) => {
-  const navigate = useNavigate();
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [selected, setSelected] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -34,7 +32,7 @@ const AccountSelector: React.FC<AccountSelectorProps> = ({ onSelect }) => {
     const load = async () => {
       const token = getStoredToken();
       if (!token) {
-        navigate("/login");
+        setLoading(false);
         return;
       }
       setLoading(true);
@@ -60,7 +58,7 @@ const AccountSelector: React.FC<AccountSelectorProps> = ({ onSelect }) => {
       }
     };
     load();
-  }, [navigate]);
+  }, []);
 
   if (loading) {
     return <div className="text-sm text-muted-foreground">Loading accounts...</div>;

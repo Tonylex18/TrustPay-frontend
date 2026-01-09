@@ -111,7 +111,7 @@ const MoneyTransfer = () => {
     const token = getStoredToken();
 
     if (!token) {
-      navigate('/login');
+      setIsLoadingAccount(false);
       return;
     }
 
@@ -371,12 +371,6 @@ const MoneyTransfer = () => {
     setPinEntryLoading(true);
     setTransferError(null);
 
-    const token = getStoredToken();
-    if (!token) {
-      navigate('/login');
-      return;
-    }
-
     try {
       const destinationAccount =
         formData.transferType === 'internal'
@@ -496,11 +490,6 @@ const MoneyTransfer = () => {
   };
 
   const handleSavePin = async () => {
-    const token = getStoredToken();
-    if (!token) {
-      navigate('/login');
-      return;
-    }
     const targetAccountId = fromAccountId || userAccount?.id;
     if (!targetAccountId) {
       setPinSetupError(t('messages.error.fromAccountRequired'));

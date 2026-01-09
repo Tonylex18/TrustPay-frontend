@@ -13,7 +13,7 @@ import Button from '../../components/ui/Button';
 import CardDetailsDisplay from './components/CardDetailsDisplay';
 import { UserProfile, ContactPreferences, PasswordChangeData, ProfileEditData, EditMode } from './types';
 import { toast } from 'react-toastify';
-import { API_BASE_URL, clearStoredToken, getStoredToken } from '../../utils/api';
+import { API_BASE_URL, getStoredToken } from '../../utils/api';
 import { apiFetch } from 'utils/apiFetch';
 
 const UserProfilePage = () => {
@@ -88,11 +88,6 @@ const UserProfilePage = () => {
   useEffect(() => {
     const controller = new AbortController();
 
-    if (!token) {
-      navigate('/login');
-      return;
-    }
-
     const fetchProfile = async () => {
       setIsLoading(true);
       setLoadError(null);
@@ -109,11 +104,6 @@ const UserProfilePage = () => {
         const payload = await profileRes.json().catch(() => null);
         if (!profileRes.ok) {
           const message = payload?.errors || payload?.message || 'Unable to load your profile.';
-          if (profileRes.status === 401) {
-            clearStoredToken();
-            navigate('/login');
-            return;
-          }
           setLoadError(message);
           toast.error(message);
           return;
@@ -286,10 +276,6 @@ const UserProfilePage = () => {
   };
 
   const handleRequestCard = async () => {
-    if (!token) {
-      navigate('/login');
-      return;
-    }
     if (!selectedAccountId) {
       toast.error('Select an account to fund your card.');
       return;

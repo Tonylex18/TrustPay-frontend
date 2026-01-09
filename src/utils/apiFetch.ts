@@ -1,4 +1,5 @@
-import { getStoredToken, clearStoredToken } from "./api";
+import { getStoredToken } from "./api";
+import { authEvents } from "./authEvents";
 
 export async function apiFetch(
   input: RequestInfo | URL,
@@ -16,11 +17,7 @@ export async function apiFetch(
   });
 
   if (response.status === 401 || response.status === 501) {
-    clearStoredToken();
-
-    if (!window.location.pathname.startsWith("/login")) {
-      window.location.replace("/login");
-    }
+    authEvents.emitUnauthorized();
   }
 
   return response;

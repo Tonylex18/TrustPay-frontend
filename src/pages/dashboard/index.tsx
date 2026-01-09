@@ -11,7 +11,7 @@ import AccountSummaryCards from './components/AccountSummaryCards';
 import RecentTransactions from './components/RecentTransactions';
 import CardDetailsDisplay from '../user-profile/components/CardDetailsDisplay';
 import type { DashboardData, QuickActionConfig } from './types';
-import { API_BASE_URL, clearStoredToken, getStoredToken } from '../../utils/api';
+import { API_BASE_URL, getStoredToken } from '../../utils/api';
 import { toast } from 'react-toastify';
 import { apiFetch } from 'utils/apiFetch';
 
@@ -116,9 +116,8 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const controller = new AbortController();
     const token = getStoredToken();
-
     if (!token) {
-      navigate('/login');
+      setIsLoading(false);
       return;
     }
 
@@ -150,11 +149,6 @@ const Dashboard: React.FC = () => {
         const mePayload = await meRes.json().catch(() => null);
         if (!meRes.ok) {
           const message = mePayload?.errors || mePayload?.message || 'Unable to load dashboard data.';
-          if (meRes.status === 401) {
-            clearStoredToken();
-            navigate('/login');
-            return;
-          }
           setLoadError(message);
           toast.error(message);
           return;
@@ -162,22 +156,12 @@ const Dashboard: React.FC = () => {
 
         const meData = mePayload?.user || mePayload?.data || mePayload;
         const kycPayload = await kycRes.json().catch(() => null);
-        if (kycRes.status === 401) {
-          clearStoredToken();
-          navigate('/login');
-          return;
-        }
         const kyc = kycPayload?.kyc;
         setKycRecord(kyc);
         setKycStatus(kyc?.status || meData?.kycStatus || null);
         const accountsPayload = await accountsRes.json().catch(() => null);
         if (!accountsRes.ok) {
           const message = accountsPayload?.errors || accountsPayload?.message || 'Unable to load accounts.';
-          if (accountsRes.status === 401) {
-            clearStoredToken();
-            navigate('/login');
-            return;
-          }
           setLoadError(message);
           toast.error(message);
           return;
@@ -186,11 +170,6 @@ const Dashboard: React.FC = () => {
         const cardsPayload = await cardsRes.json().catch(() => null);
         const cardRequestsPayload = await cardRequestsRes.json().catch(() => null);
         if (!cardsRes.ok) {
-          if (cardsRes.status === 401) {
-            clearStoredToken();
-            navigate('/login');
-            return;
-          }
           const message = cardsPayload?.errors || cardsPayload?.message || 'Unable to load cards.';
           setCardLoadError(message);
         } else if (Array.isArray(cardsPayload)) {
@@ -280,7 +259,6 @@ const Dashboard: React.FC = () => {
     const controller = new AbortController();
     const token = getStoredToken();
     if (!token) {
-      navigate('/login');
       return;
     }
 
@@ -292,11 +270,6 @@ const Dashboard: React.FC = () => {
         });
         const payload = await res.json().catch(() => []);
         if (!res.ok) {
-          if (res.status === 401) {
-            clearStoredToken();
-            navigate('/login');
-            return;
-          }
           const message = payload?.errors || payload?.message || 'Unable to load recent transactions.';
           toast.error(message);
           return;
@@ -431,7 +404,7 @@ const Dashboard: React.FC = () => {
   const handleCreateAccount = async () => {
     const token = getStoredToken();
     if (!token) {
-      navigate('/login');
+      setCreateAccountError('You must be signed in to create an account.');
       return;
     }
     setCreateAccountLoading(true);
@@ -523,7 +496,7 @@ const Dashboard: React.FC = () => {
     try {
       const token = getStoredToken();
       if (!token) {
-        navigate('/login');
+        setPinError('You must be signed in to set a transfer PIN.');
         return;
       }
       const res = await apiFetch(`${API_BASE_URL}/accounts/${targetAccountId}/set-pin`, {

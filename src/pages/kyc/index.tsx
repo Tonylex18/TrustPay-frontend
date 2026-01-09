@@ -7,7 +7,7 @@ import NavigationBar from "../../components/ui/NavigationBar";
 import BreadcrumbTrail from "../../components/ui/BreadcrumbTrail";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
-import { API_BASE_URL, getStoredToken, clearStoredToken } from "../../utils/api";
+import { API_BASE_URL, getStoredToken } from "../../utils/api";
 import { toast } from "react-toastify";
 import { apiFetch } from "utils/apiFetch";
 
@@ -86,8 +86,6 @@ const KycPage: React.FC = () => {
     e.preventDefault();
     const token = getStoredToken();
     if (!token) {
-      clearStoredToken();
-      navigate("/login");
       return;
     }
     if (!form.documentImage) {
