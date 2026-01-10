@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Icon from '../AppIcon';
 import Image from '../AppImage';
-import { clearStoredToken } from '../../utils/api';
+import { authEvents } from '../../utils/authEvents';
 
 interface UserMenuProps {
   user: {
@@ -49,13 +49,12 @@ const UserMenu = ({ user, isMobile = false }: UserMenuProps) => {
   };
 
   const handleLogout = () => {
-    clearStoredToken();
     localStorage.removeItem('userEmail');
     localStorage.removeItem('userName');
     localStorage.removeItem('userRegistered');
     localStorage.removeItem('userRemember');
+    authEvents.emitUnauthorized();
     toast.success('Signed out successfully.');
-    navigate('/login');
     setIsOpen(false);
   };
 

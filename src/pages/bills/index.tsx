@@ -16,8 +16,7 @@ import BillCard, {
 import StatusBadge from "../../components/bills/StatusBadge";
 import AccountSelector, { type Account } from "../../components/ui/AccountSelector";
 import Icon from "../../components/AppIcon";
-import { API_BASE_URL, getStoredToken } from "../../utils/api";
-import { apiFetch } from "utils/apiFetch";
+import { API_BASE_URL, clearStoredToken, getStoredToken } from "../../utils/api";
 
 type BillCategory = {
 	id: string;
@@ -133,31 +132,40 @@ const BillsPage: React.FC = () => {
 			description: p.description,
 		}));
 
-	const fetchAll = useCallback(
-		async (signal?: AbortSignal) => {
-			const token = getStoredToken();
-			if (!token) {
-				setIsLoading(false);
+const fetchAll = useCallback(
+	async (signal?: AbortSignal) => {
+		const token = getStoredToken();
+		if (!token) {
+			navigate("/login");
 				return;
 			}
 			setIsLoading(true);
 			setLoadError(null);
 			try {
 				const [catRes, payRes, meRes] = await Promise.all([
-					apiFetch(`${API_BASE_URL}/bill-categories`, {
+					fetch(`${API_BASE_URL}/bill-categories`, {
+						headers: { Authorization: `Bearer ${token}` },
 						signal,
 					}),
-					apiFetch(`${API_BASE_URL}/bills/payments`, {
+					fetch(`${API_BASE_URL}/bills/payments`, {
+						headers: { Authorization: `Bearer ${token}` },
 						signal,
 					}),
-					apiFetch(`${API_BASE_URL}/me`, {
+					fetch(`${API_BASE_URL}/me`, {
+						headers: { Authorization: `Bearer ${token}` },
 						signal,
 					}),
 				]);
 
-					const [catPayload, payPayload, mePayload] = await Promise.all([
-						catRes.json().catch(() => null),
-						payRes.json().catch(() => null),
+				if (meRes.status === 401) {
+					clearStoredToken();
+					navigate("/login");
+					return;
+				}
+
+				const [catPayload, payPayload, mePayload] = await Promise.all([
+					catRes.json().catch(() => null),
+					payRes.json().catch(() => null),
 					meRes.json().catch(() => null),
 				]);
 
@@ -197,15 +205,17 @@ const BillsPage: React.FC = () => {
 		[navigate, t]
 	);
 
-		const refreshPayments = useCallback(async () => {
-			const token = getStoredToken();
-			if (!token) {
-				return;
-			}
-			setListLoading(true);
-			try {
-			const res = await apiFetch(`${API_BASE_URL}/bills/payments`, {
-		});
+	const refreshPayments = useCallback(async () => {
+		const token = getStoredToken();
+		if (!token) {
+			navigate("/login");
+			return;
+		}
+		setListLoading(true);
+		try {
+			const res = await fetch(`${API_BASE_URL}/bills/payments`, {
+				headers: { Authorization: `Bearer ${token}` },
+			});
 			const payload = await res.json().catch(() => null);
 			if (!res.ok) {
 				const msg = payload?.errors || payload?.message || t("errors.refreshPayments");
@@ -320,12 +330,19 @@ const handleNext = () => {
 			return;
 		}
 
-			setIsSubmitting(true);
-			try {
-			const res = await apiFetch(`${API_BASE_URL}/bills/payments`, {
+		const token = getStoredToken();
+		if (!token) {
+			navigate("/login");
+			return;
+		}
+
+		setIsSubmitting(true);
+		try {
+			const res = await fetch(`${API_BASE_URL}/bills/payments`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
 				},
 				body: JSON.stringify({
 					categoryId: form.categoryId,

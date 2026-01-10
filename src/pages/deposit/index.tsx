@@ -10,7 +10,6 @@ import Button from '../../components/ui/Button';
 import { API_BASE_URL, getStoredToken } from '../../utils/api';
 import AccountSelector, { Account } from '../../components/ui/AccountSelector';
 import Icon from '../../components/AppIcon';
-import { apiFetch } from 'utils/apiFetch';
 
 type DepositReceipt = {
   id?: string;
@@ -303,7 +302,7 @@ const DepositForm = () => {
 
     const token = getStoredToken();
     if (!token) {
-      setConfirmationError(t('messages.error.submitFailed'));
+      navigate('/login');
       return;
     }
 
@@ -317,8 +316,11 @@ const DepositForm = () => {
       fd.append('frontImage', frontImage);
       fd.append('backImage', backImage);
 
-      const response = await apiFetch(`${API_BASE_URL}/mobile-deposits`, {
+      const response = await fetch(`${API_BASE_URL}/mobile-deposits`, {
         method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
         body: fd
       });
 
@@ -510,7 +512,9 @@ const DepositPage: React.FC = () => {
   ];
 
   useEffect(() => {
-    // Auth gating handled by the router guard; no-op here.
+    if (!getStoredToken()) {
+      navigate('/login');
+    }
   }, [navigate]);
 
   return (

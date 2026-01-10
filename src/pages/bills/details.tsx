@@ -9,8 +9,7 @@ import Button from "../../components/ui/Button";
 import StatusBadge from "../../components/bills/StatusBadge";
 import { formatCurrency, formatDate } from "../../components/bills/BillCard";
 import Icon from "../../components/AppIcon";
-import { API_BASE_URL, getStoredToken } from "../../utils/api";
-import { apiFetch } from "utils/apiFetch";
+import { API_BASE_URL, clearStoredToken, getStoredToken } from "../../utils/api";
 
 type BillPaymentDetail = {
 	id: string;
@@ -53,6 +52,7 @@ const BillPaymentDetailsPage: React.FC = () => {
 	const fetchPayment = useCallback(async () => {
 		const token = getStoredToken();
 		if (!token) {
+			navigate("/login");
 			return;
 		}
 		if (!id) {
@@ -62,9 +62,12 @@ const BillPaymentDetailsPage: React.FC = () => {
 		setIsLoading(true);
 		setLoadError(null);
 		try {
-			const res = await apiFetch(`${API_BASE_URL}/bills/payments`, {
+			const res = await fetch(`${API_BASE_URL}/bills/payments`, {
+				headers: { Authorization: `Bearer ${token}` },
 			});
 			if (res.status === 401) {
+				clearStoredToken();
+				navigate("/login");
 				return;
 			}
 			const payload = await res.json().catch(() => null);

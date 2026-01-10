@@ -5,36 +5,40 @@ import { authEvents } from "../utils/authEvents";
 
 type RequireAuthProps = {
   children: ReactElement;
+  redirectTo?: string;
 };
 
-const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
+const RequireAuth: React.FC<RequireAuthProps> = ({ children, redirectTo = "/login" }) => {
   const location = useLocation();
-  const [hasToken, setHasToken] = useState<boolean>(() => Boolean(getStoredToken()));
+  const [hasToken, setHasToken] = useState<boolean | null>(null);
   const redirectingRef = useRef(false);
 
   useEffect(() => {
+    const syncToken = () => setHasToken(Boolean(getStoredToken()));
+    syncToken();
+
     const unsubscribe = authEvents.onUnauthorized(() => {
       clearStoredToken();
-      setHasToken(false);
+      syncToken();
     });
 
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key === "authToken") {
-        setHasToken(Boolean(getStoredToken()));
-      }
-    };
-
-    window.addEventListener("storage", handleStorage);
+    window.addEventListener("storage", syncToken);
+    window.addEventListener("focus", syncToken);
     return () => {
       unsubscribe();
-      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("storage", syncToken);
+      window.removeEventListener("focus", syncToken);
     };
   }, []);
+
+  if (hasToken === null) {
+    return null;
+  }
 
   if (!hasToken) {
     if (redirectingRef.current) return null;
     redirectingRef.current = true;
-    return <Navigate to="/login" replace state={{ from: location }} />;
+    return <Navigate to={redirectTo} replace state={{ from: location }} />;
   }
 
   redirectingRef.current = false;

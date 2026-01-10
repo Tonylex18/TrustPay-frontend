@@ -9,7 +9,7 @@ import TransactionTable from './components/TransactionTable';
 import TransactionCard from './components/TransactionCard';
 import PaginationControls from './components/PaginationControls';
 import { toast } from 'react-toastify';
-import { API_BASE_URL, getStoredToken } from '../../utils/api';
+import { API_BASE_URL, clearStoredToken, getStoredToken } from '../../utils/api';
 import {
   Transaction,
   TransactionFilters,
@@ -17,7 +17,6 @@ import {
   SortConfig,
   SortableTransactionField
 } from './types';
-import { apiFetch } from 'utils/apiFetch';
 
 const normalizeStatus = (value: string | null | undefined): Transaction['status'] => {
   const status = (value || '').toLowerCase();
@@ -82,9 +81,9 @@ const TransactionsPage = () => {
   useEffect(() => {
     const controller = new AbortController();
     const token = getStoredToken();
+
     if (!token) {
-      setIsLoading(false);
-      setIsLoadingAccounts(false);
+      navigate('/login');
       return;
     }
 
@@ -93,10 +92,12 @@ const TransactionsPage = () => {
       setLoadError(null);
       try {
         const [accountsRes, profileRes] = await Promise.all([
-          apiFetch(`${API_BASE_URL}/accounts`, {
+          fetch(`${API_BASE_URL}/accounts`, {
+            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
-          apiFetch(`${API_BASE_URL}/me`, {
+          fetch(`${API_BASE_URL}/me`, {
+            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           })
         ]);
@@ -113,6 +114,11 @@ const TransactionsPage = () => {
         }
 
         if (!accountsRes.ok) {
+          if (accountsRes.status === 401) {
+            clearStoredToken();
+            navigate('/login');
+            return;
+          }
           const payload = await accountsRes.json().catch(() => null);
           const message = payload?.errors || payload?.message || 'Unable to load accounts.';
           setLoadError(message);
@@ -158,7 +164,9 @@ const TransactionsPage = () => {
   useEffect(() => {
     const controller = new AbortController();
     const token = getStoredToken();
+
     if (!token) {
+      navigate('/login');
       return;
     }
 
@@ -167,9 +175,10 @@ const TransactionsPage = () => {
       setIsLoading(true);
       setLoadError(null);
       try {
-        const transactionResponse = await apiFetch(
+        const transactionResponse = await fetch(
           `${API_BASE_URL}/accounts/${selectedAccountId}/transactions?limit=200`,
           {
+            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }
         );
@@ -177,6 +186,11 @@ const TransactionsPage = () => {
         const transactionPayload = await transactionResponse.json().catch(() => null);
         if (!transactionResponse.ok) {
           const message = transactionPayload?.errors || transactionPayload?.message || 'Unable to load transactions.';
+          if (transactionResponse.status === 401) {
+            clearStoredToken();
+            navigate('/login');
+            return;
+          }
           setLoadError(message);
           toast.error(message);
           return;

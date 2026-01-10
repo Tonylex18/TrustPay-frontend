@@ -13,8 +13,7 @@ import Button from '../../components/ui/Button';
 import CardDetailsDisplay from './components/CardDetailsDisplay';
 import { UserProfile, ContactPreferences, PasswordChangeData, ProfileEditData, EditMode } from './types';
 import { toast } from 'react-toastify';
-import { API_BASE_URL, getStoredToken } from '../../utils/api';
-import { apiFetch } from 'utils/apiFetch';
+import { API_BASE_URL, clearStoredToken, getStoredToken } from '../../utils/api';
 
 const UserProfilePage = () => {
   const navigate = useNavigate();
@@ -88,15 +87,26 @@ const UserProfilePage = () => {
   useEffect(() => {
     const controller = new AbortController();
 
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
     const fetchProfile = async () => {
       setIsLoading(true);
       setLoadError(null);
       try {
         const [profileRes, kycRes] = await Promise.all([
-          apiFetch(`${API_BASE_URL}/profile`, {
+          fetch(`${API_BASE_URL}/profile`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
             signal: controller.signal
           }),
-          apiFetch(`${API_BASE_URL}/kyc/me`, {
+          fetch(`${API_BASE_URL}/kyc/me`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
             signal: controller.signal
           })
         ]);
@@ -104,6 +114,11 @@ const UserProfilePage = () => {
         const payload = await profileRes.json().catch(() => null);
         if (!profileRes.ok) {
           const message = payload?.errors || payload?.message || 'Unable to load your profile.';
+          if (profileRes.status === 401) {
+            clearStoredToken();
+            navigate('/login');
+            return;
+          }
           setLoadError(message);
           toast.error(message);
           return;
@@ -152,13 +167,22 @@ const UserProfilePage = () => {
       setCardRequestError(null);
       try {
         const [cardRes, accountRes, requestRes] = await Promise.all([
-          apiFetch(`${API_BASE_URL}/cards`, {
+          fetch(`${API_BASE_URL}/cards`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
             signal: controller.signal
           }),
-          apiFetch(`${API_BASE_URL}/accounts`, {
+          fetch(`${API_BASE_URL}/accounts`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
             signal: controller.signal
           }),
-          apiFetch(`${API_BASE_URL}/card-requests`, {
+          fetch(`${API_BASE_URL}/card-requests`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
             signal: controller.signal
           })
         ]);
@@ -276,6 +300,10 @@ const UserProfilePage = () => {
   };
 
   const handleRequestCard = async () => {
+    if (!token) {
+      navigate('/login');
+      return;
+    }
     if (!selectedAccountId) {
       toast.error('Select an account to fund your card.');
       return;
@@ -283,9 +311,10 @@ const UserProfilePage = () => {
     setCardLoading(true);
     setCardError(null);
     try {
-      const response = await apiFetch(`${API_BASE_URL}/cards`, {
+      const response = await fetch(`${API_BASE_URL}/cards`, {
         method: 'POST',
         headers: {
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({ bankAccountId: selectedAccountId })

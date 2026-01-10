@@ -3,7 +3,6 @@ import { loadStripe, type StripeElements, type StripeIssuingCardCvcDisplayElemen
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/ui/Button';
 import { API_BASE_URL } from '../../../utils/api';
-import { apiFetch } from 'utils/apiFetch';
 import { toast } from 'react-toastify';
 
 type CardSummary = {
@@ -91,7 +90,7 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
     setSendingActivation(true);
     setActivationMessage(null);
     try {
-      const res = await apiFetch(`${API_BASE_URL}/otp/send`, {
+      const res = await fetch(`${API_BASE_URL}/otp/send`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -126,7 +125,7 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
     setActivating(true);
     setActivationMessage(null);
     try {
-      const res = await apiFetch(`${API_BASE_URL}/cards/${card.id}/activate`, {
+      const res = await fetch(`${API_BASE_URL}/cards/${card.id}/activate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -155,6 +154,7 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
   useEffect(() => {
     return () => teardownElements();
     // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
   useEffect(() => {
@@ -190,7 +190,7 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
           throw new Error(message);
         }
 
-        const res = await apiFetch(`${API_BASE_URL}/cards/${card.id}/ephemeral-key`, {
+        const res = await fetch(`${API_BASE_URL}/cards/${card.id}/ephemeral-key`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

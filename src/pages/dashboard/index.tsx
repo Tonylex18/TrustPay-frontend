@@ -11,9 +11,8 @@ import AccountSummaryCards from './components/AccountSummaryCards';
 import RecentTransactions from './components/RecentTransactions';
 import CardDetailsDisplay from '../user-profile/components/CardDetailsDisplay';
 import type { DashboardData, QuickActionConfig } from './types';
-import { API_BASE_URL, getStoredToken } from '../../utils/api';
+import { API_BASE_URL, clearStoredToken, getStoredToken } from '../../utils/api';
 import { toast } from 'react-toastify';
-import { apiFetch } from 'utils/apiFetch';
 
 type DashboardStatus = 'pending' | 'completed' | 'failed';
 
@@ -88,7 +87,8 @@ const Dashboard: React.FC = () => {
         const token = getStoredToken();
         if (!token) return;
         try {
-          const res = await apiFetch(`${API_BASE_URL}/kyc/me`, {
+          const res = await fetch(`${API_BASE_URL}/kyc/me`, {
+            headers: { Authorization: `Bearer ${token}` },
           });
           const payload = await res.json().catch(() => null);
           if (res.ok && payload?.kyc) {
@@ -116,8 +116,9 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     const controller = new AbortController();
     const token = getStoredToken();
+
     if (!token) {
-      setIsLoading(false);
+      navigate('/login');
       return;
     }
 
@@ -129,19 +130,24 @@ const Dashboard: React.FC = () => {
       setCardRequests([]);
       try {
         const [meRes, accountsRes, kycRes, cardsRes, cardRequestsRes] = await Promise.all([
-          apiFetch(`${API_BASE_URL}/me`, {
+          fetch(`${API_BASE_URL}/me`, {
+            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
-          apiFetch(`${API_BASE_URL}/accounts`, {
+          fetch(`${API_BASE_URL}/accounts`, {
+            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
-          apiFetch(`${API_BASE_URL}/kyc/me`, {
+          fetch(`${API_BASE_URL}/kyc/me`, {
+            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
-          apiFetch(`${API_BASE_URL}/cards`, {
+          fetch(`${API_BASE_URL}/cards`, {
+            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
-          apiFetch(`${API_BASE_URL}/card-requests`, {
+          fetch(`${API_BASE_URL}/card-requests`, {
+            headers: { Authorization: `Bearer ${token}` },
             signal: controller.signal
           }),
         ]);
@@ -149,6 +155,11 @@ const Dashboard: React.FC = () => {
         const mePayload = await meRes.json().catch(() => null);
         if (!meRes.ok) {
           const message = mePayload?.errors || mePayload?.message || 'Unable to load dashboard data.';
+          if (meRes.status === 401) {
+            clearStoredToken();
+            navigate('/login');
+            return;
+          }
           setLoadError(message);
           toast.error(message);
           return;
@@ -156,12 +167,22 @@ const Dashboard: React.FC = () => {
 
         const meData = mePayload?.user || mePayload?.data || mePayload;
         const kycPayload = await kycRes.json().catch(() => null);
+        if (kycRes.status === 401) {
+          clearStoredToken();
+          navigate('/login');
+          return;
+        }
         const kyc = kycPayload?.kyc;
         setKycRecord(kyc);
         setKycStatus(kyc?.status || meData?.kycStatus || null);
         const accountsPayload = await accountsRes.json().catch(() => null);
         if (!accountsRes.ok) {
           const message = accountsPayload?.errors || accountsPayload?.message || 'Unable to load accounts.';
+          if (accountsRes.status === 401) {
+            clearStoredToken();
+            navigate('/login');
+            return;
+          }
           setLoadError(message);
           toast.error(message);
           return;
@@ -170,6 +191,11 @@ const Dashboard: React.FC = () => {
         const cardsPayload = await cardsRes.json().catch(() => null);
         const cardRequestsPayload = await cardRequestsRes.json().catch(() => null);
         if (!cardsRes.ok) {
+          if (cardsRes.status === 401) {
+            clearStoredToken();
+            navigate('/login');
+            return;
+          }
           const message = cardsPayload?.errors || cardsPayload?.message || 'Unable to load cards.';
           setCardLoadError(message);
         } else if (Array.isArray(cardsPayload)) {
@@ -259,17 +285,24 @@ const Dashboard: React.FC = () => {
     const controller = new AbortController();
     const token = getStoredToken();
     if (!token) {
+      navigate('/login');
       return;
     }
 
     const fetchRecentTx = async () => {
       setIsLoadingTransactions(true);
       try {
-        const res = await apiFetch(`${API_BASE_URL}/accounts/${primaryId}/transactions?limit=25`, {
+        const res = await fetch(`${API_BASE_URL}/accounts/${primaryId}/transactions?limit=25`, {
+          headers: { Authorization: `Bearer ${token}` },
           signal: controller.signal
         });
         const payload = await res.json().catch(() => []);
         if (!res.ok) {
+          if (res.status === 401) {
+            clearStoredToken();
+            navigate('/login');
+            return;
+          }
           const message = payload?.errors || payload?.message || 'Unable to load recent transactions.';
           toast.error(message);
           return;
@@ -404,16 +437,17 @@ const Dashboard: React.FC = () => {
   const handleCreateAccount = async () => {
     const token = getStoredToken();
     if (!token) {
-      setCreateAccountError('You must be signed in to create an account.');
+      navigate('/login');
       return;
     }
     setCreateAccountLoading(true);
     setCreateAccountError(null);
     try {
-      const res = await apiFetch(`${API_BASE_URL}/accounts`, {
+      const res = await fetch(`${API_BASE_URL}/accounts`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({ type: newAccountType })
       });
@@ -496,12 +530,13 @@ const Dashboard: React.FC = () => {
     try {
       const token = getStoredToken();
       if (!token) {
-        setPinError('You must be signed in to set a transfer PIN.');
+        navigate('/login');
         return;
       }
-      const res = await apiFetch(`${API_BASE_URL}/accounts/${targetAccountId}/set-pin`, {
+      const res = await fetch(`${API_BASE_URL}/accounts/${targetAccountId}/set-pin`, {
         method: 'POST',
         headers: {
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({

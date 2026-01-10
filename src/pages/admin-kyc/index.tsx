@@ -7,7 +7,6 @@ import Button from "../../components/ui/Button";
 import Input from "../../components/ui/Input";
 import Select from "../../components/ui/Select";
 import Icon from "../../components/AppIcon";
-import { apiFetch } from "utils/apiFetch";
 
 type KycRecord = {
 	id: string;
@@ -47,7 +46,8 @@ const AdminKycReview: React.FC = () => {
 		const fetchKyc = async () => {
 			setLoading(true);
 			try {
-				const res = await apiFetch(`${API_BASE_URL}/admin/kyc`, {
+				const res = await fetch(`${API_BASE_URL}/admin/kyc`, {
+					headers: { Authorization: `Bearer ${token}` },
 					signal: controller.signal,
 				});
 				const payload = await res.json().catch(() => []);
@@ -88,9 +88,10 @@ const AdminKycReview: React.FC = () => {
 			return;
 		}
 		try {
-			const res = await apiFetch(`${API_BASE_URL}/admin/kyc/${actionTarget.id}`, {
+			const res = await fetch(`${API_BASE_URL}/admin/kyc/${actionTarget.id}`, {
 				method: "PATCH",
 				headers: {
+					Authorization: `Bearer ${token}`,
 					"Content-Type": "application/json",
 				},
 				body: JSON.stringify({

@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Helmet } from "react-helmet";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import NavigationBar from "../../components/ui/NavigationBar";
 import Button from "../../components/ui/Button";
 import { Account } from "../../components/ui/AccountSelector";
@@ -20,12 +20,6 @@ const DepositConfirmationPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const deposit = (location.state as LocationState | null)?.deposit;
-
-  useEffect(() => {
-    if (!deposit) {
-      navigate("/deposit", { replace: true });
-    }
-  }, [deposit, navigate]);
 
   const amountDisplay = useMemo(() => {
     const currency = (deposit?.currency || "USD").toUpperCase();
@@ -47,7 +41,9 @@ const DepositConfirmationPage: React.FC = () => {
     return `${acct.type || "Account"} ••••${last4} (${(acct.currency || "USD").toUpperCase()})`;
   }, [deposit]);
 
-  if (!deposit) return null;
+  if (!deposit) {
+    return <Navigate to="/deposit" replace />;
+  }
 
   return (
     <>

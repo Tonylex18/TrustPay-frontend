@@ -7,9 +7,8 @@ import NavigationBar from "../../components/ui/NavigationBar";
 import BreadcrumbTrail from "../../components/ui/BreadcrumbTrail";
 import Input from "../../components/ui/Input";
 import Button from "../../components/ui/Button";
-import { API_BASE_URL, getStoredToken } from "../../utils/api";
+import { API_BASE_URL, getStoredToken, clearStoredToken } from "../../utils/api";
 import { toast } from "react-toastify";
-import { apiFetch } from "utils/apiFetch";
 
 const KycPage: React.FC = () => {
   const navigate = useNavigate();
@@ -86,6 +85,8 @@ const KycPage: React.FC = () => {
     e.preventDefault();
     const token = getStoredToken();
     if (!token) {
+      clearStoredToken();
+      navigate("/login");
       return;
     }
     if (!form.documentImage) {
@@ -120,8 +121,9 @@ const KycPage: React.FC = () => {
       if (form.documentBackImage) fd.append("documentBackImage", form.documentBackImage);
       if (form.selfieImage) fd.append("selfieImage", form.selfieImage);
 
-      const res = await apiFetch(`${API_BASE_URL}/kyc`, {
+      const res = await fetch(`${API_BASE_URL}/kyc`, {
         method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
         body: fd,
       });
       const payload = await res.json().catch(() => null);

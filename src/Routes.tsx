@@ -27,7 +27,9 @@ import TawkChat from "./components/TawkChat";
 import RequireAuth from "./components/RequireAuth";
 
 const Routes: React.FC = () => {
-  const withAuth = (element: JSX.Element) => <RequireAuth>{element}</RequireAuth>;
+  const withAuth = (element: JSX.Element, redirectTo: string = "/login") => (
+    <RequireAuth redirectTo={redirectTo}>{element}</RequireAuth>
+  );
 
   return (
     <BrowserRouter>
@@ -52,9 +54,9 @@ const Routes: React.FC = () => {
         <Route path="/about-trustpay" element={<AboutTrustPayPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/admin" element={<AdminApprovalsPage />} />
-        <Route path="/admin/kyc-review" element={<AdminKycReview />} />
-        <Route path="/admin/users" element={<AdminUsersPage />} />
-        <Route path="/admin/mobile-deposits" element={<AdminMobileDepositsPage />} />
+        <Route path="/admin/kyc-review" element={withAuth(<AdminKycReview />, "/admin")} />
+        <Route path="/admin/users" element={withAuth(<AdminUsersPage />, "/admin")} />
+        <Route path="/admin/mobile-deposits" element={withAuth(<AdminMobileDepositsPage />, "/admin")} />
         <Route path="/user-profile" element={withAuth(<UserProfilePage />)} />
         <Route path="/kyc" element={withAuth(<KycPage />)} />
         <Route path="*" element={<NotFound />} />

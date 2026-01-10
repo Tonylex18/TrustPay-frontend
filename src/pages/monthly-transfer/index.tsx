@@ -14,7 +14,6 @@ import SecurityInfo from './components/SecurityInfo';
 import { TransferFormData, TransferSummary, TransferLimits, Account, VerifiedAccount } from './types';
 import { toast } from 'react-toastify';
 import { API_BASE_URL, getStoredToken } from '../../utils/api';
-import { apiFetch } from 'utils/apiFetch';
 
 type RoutingLookupResponse = {
   valid: boolean;
@@ -111,7 +110,7 @@ const MoneyTransfer = () => {
     const token = getStoredToken();
 
     if (!token) {
-      setIsLoadingAccount(false);
+      navigate('/login');
       return;
     }
 
@@ -119,10 +118,16 @@ const MoneyTransfer = () => {
       setIsLoadingAccount(true);
       try {
         const [accountsRes, meRes] = await Promise.all([
-          apiFetch(`${API_BASE_URL}/accounts`, {
+          fetch(`${API_BASE_URL}/accounts`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
             signal: controller.signal
           }),
-          apiFetch(`${API_BASE_URL}/me`, {
+          fetch(`${API_BASE_URL}/me`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
             signal: controller.signal
           })
         ]);
@@ -240,7 +245,7 @@ const MoneyTransfer = () => {
     setVerifyError(null);
 
     try {
-      const response = await apiFetch(
+      const response = await fetch(
         `${API_BASE_URL}/api/v1/routing/lookup?routingNumber=${encodeURIComponent(routingNumber)}`
       );
       const payload: RoutingLookupResponse | null = await response.json().catch(() => null);
@@ -371,6 +376,12 @@ const MoneyTransfer = () => {
     setPinEntryLoading(true);
     setTransferError(null);
 
+    const token = getStoredToken();
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
     try {
       const destinationAccount =
         formData.transferType === 'internal'
@@ -393,10 +404,11 @@ const MoneyTransfer = () => {
         formData.memo ||
         t(formData.transferType === 'internal' ? 'messages.defaultMemoInternal' : 'messages.defaultMemoExternal');
 
-      const response = await apiFetch(`${API_BASE_URL}/transfers`, {
+      const response = await fetch(`${API_BASE_URL}/transfers`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
           from_account_id: fromAccountId ?? userAccount?.id,
@@ -490,6 +502,11 @@ const MoneyTransfer = () => {
   };
 
   const handleSavePin = async () => {
+    const token = getStoredToken();
+    if (!token) {
+      navigate('/login');
+      return;
+    }
     const targetAccountId = fromAccountId || userAccount?.id;
     if (!targetAccountId) {
       setPinSetupError(t('messages.error.fromAccountRequired'));
@@ -502,9 +519,10 @@ const MoneyTransfer = () => {
     setPinSetupLoading(true);
     setPinSetupError(null);
     try {
-      const res = await apiFetch(`${API_BASE_URL}/accounts/${targetAccountId}/set-pin`, {
+      const res = await fetch(`${API_BASE_URL}/accounts/${targetAccountId}/set-pin`, {
         method: 'POST',
         headers: {
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
