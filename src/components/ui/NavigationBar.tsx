@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Icon from '../AppIcon';
 import UserMenu from './UserMenu';
 import LanguageSelector from '../LanguageSelector';
-import { API_BASE_URL, getStoredToken } from '../../utils/api';
+import { API_BASE_URL, clearStoredToken, getStoredToken } from '../../utils/api';
 
 interface NavigationBarProps {
   user?: {
@@ -83,7 +83,7 @@ const NavigationBar = ({ user, onNavigate }: NavigationBarProps) => {
 
   useEffect(() => {
     setResolvedUser(user);
-  }, [user]);
+  }, [navigate, user]);
 
   useEffect(() => {
     if (user) return;
@@ -91,10 +91,22 @@ const NavigationBar = ({ user, onNavigate }: NavigationBarProps) => {
     if (!token) return;
     const controller = new AbortController();
     fetch(`${API_BASE_URL}/me`, {
-      signal: controller.signal
+      signal: controller.signal,
+      headers: { Authorization: `Bearer ${token}` }
     })
-      .then((res) => res.json().then((payload) => ({ ok: res.ok, payload })).catch(() => ({ ok: res.ok, payload: null })))
-      .then(({ ok, payload }) => {
+      .then((res) =>
+        res
+          .json()
+          .then((payload) => ({ ok: res.ok, status: res.status, payload }))
+          .catch(() => ({ ok: res.ok, status: res.status, payload: null }))
+      )
+      .then(({ ok, status, payload }) => {
+        if (status === 401) {
+          clearStoredToken();
+          navigate('/login');
+          return;
+        }
+
         if (ok && payload) {
           const me = payload.user || payload;
           setResolvedUser({
