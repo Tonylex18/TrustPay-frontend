@@ -93,7 +93,8 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
       const res = await fetch(`${API_BASE_URL}/otp/send`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
           purpose: 'CARD_ACTIVATION',
@@ -128,10 +129,11 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
       const res = await fetch(`${API_BASE_URL}/cards/${card.id}/activate`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ otpCode: activationCode.trim() })
-        });
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ otpCode: activationCode.trim() })
+      });
         const payload = await res.json().catch(() => null);
         if (!res.ok) {
           const message = payload?.errors || payload?.message || t('cards:messages.activateFailed');
@@ -193,7 +195,8 @@ const CardDetailsDisplay: React.FC<Props> = ({ card, token, linkedAccountLast4, 
         const res = await fetch(`${API_BASE_URL}/cards/${card.id}/ephemeral-key`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
           },
           body: JSON.stringify({ nonce: nonceResult.nonce })
         });
