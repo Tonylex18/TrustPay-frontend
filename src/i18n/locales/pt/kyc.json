@@ -26,14 +26,14 @@
     "addressLine1": "Endereço linha 1",
     "addressLine2": "Endereço linha 2 (opcional)",
     "state": {
-      "label": "Estado / Província",
-      "placeholder": "Selecione um estado",
+      "label": "Estado / Região",
+      "placeholder": "Selecione um estado / região",
       "placeholderDisabled": "Selecione o país primeiro"
     },
     "city": {
       "label": "Cidade",
       "placeholder": "Selecione uma cidade",
-      "placeholderDisabled": "Selecione o estado primeiro"
+      "placeholderDisabled": "Selecione a região primeiro"
     },
     "postalCode": "CEP",
     "documentType": {
@@ -55,7 +55,7 @@
     "error": {
       "documentImageRequired": "A imagem do documento é obrigatória.",
       "dobIncomplete": "Complete a data de nascimento.",
-      "locationRequired": "País, estado e cidade são obrigatórios.",
+      "locationRequired": "País, estado/região e cidade são obrigatórios.",
       "submitFailed": "Não foi possível enviar o KYC."
     },
     "success": "KYC enviado. Status: pendente."

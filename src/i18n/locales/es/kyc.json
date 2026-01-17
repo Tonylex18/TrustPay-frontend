@@ -26,14 +26,14 @@
     "addressLine1": "Dirección línea 1",
     "addressLine2": "Dirección línea 2 (opcional)",
     "state": {
-      "label": "Estado / Provincia",
-      "placeholder": "Seleccione un estado",
+      "label": "Estado / Región",
+      "placeholder": "Seleccione un estado / región",
       "placeholderDisabled": "Seleccione primero el país"
     },
     "city": {
       "label": "Ciudad",
       "placeholder": "Seleccione una ciudad",
-      "placeholderDisabled": "Seleccione primero el estado"
+      "placeholderDisabled": "Seleccione primero la región"
     },
     "postalCode": "Código postal",
     "documentType": {
@@ -55,7 +55,7 @@
     "error": {
       "documentImageRequired": "La imagen del documento es obligatoria.",
       "dobIncomplete": "Complete la fecha de nacimiento.",
-      "locationRequired": "País, estado y ciudad son obligatorios.",
+      "locationRequired": "País, estado/región y ciudad son obligatorios.",
       "submitFailed": "No se pudo enviar el KYC."
     },
     "success": "KYC enviado. Estado: pendiente."

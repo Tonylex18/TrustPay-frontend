@@ -60,14 +60,14 @@ const KycPage: React.FC = () => {
   }, [form.country]);
 
   useEffect(() => {
-    if (!form.country || !form.state) {
+    if (!form.country || states.length === 0 || !form.state) {
       setCities([]);
       return;
     }
     const nextCities = City.getCitiesOfState(form.country, form.state) || [];
     setCities(nextCities);
     setForm((prev) => ({ ...prev, city: "" }));
-  }, [form.country, form.state]);
+  }, [form.country, form.state, states]);
 
   const handleCountrySelect = (value: string) => {
     handleChange("country", value);
@@ -148,6 +148,9 @@ const KycPage: React.FC = () => {
     { label: t("breadcrumb.dashboard"), path: "/dashboard" },
     { label: t("breadcrumb.kyc") },
   ];
+  const hasRegionOptions = !form.country || states.length > 0;
+  const hasCityOptions = cities.length > 0;
+  const showCitySelect = hasCityOptions || (hasRegionOptions && !form.state);
 
   return (
     <>
@@ -195,43 +198,63 @@ const KycPage: React.FC = () => {
                 <Input label={t("form.addressLine2")} value={form.addressLine2} onChange={(e) => handleChange("addressLine2", e.target.value)} />
                 {/* <Input label="ssn (optional for US citizen only)" type="number" /> */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">{t("form.state.label")}</label>
-                    <select
-                      className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  {hasRegionOptions ? (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground">{t("form.state.label")}</label>
+                      <select
+                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        value={form.state}
+                        onChange={(e) => handleStateSelect(e.target.value)}
+                        disabled={!form.country}
+                        required
+                      >
+                        <option value="">{form.country ? t("form.state.placeholder") : t("form.state.placeholderDisabled")}</option>
+                        {states.map((s) => (
+                          <option key={`${s.isoCode}-${s.name}`} value={s.isoCode}>
+                            {s.name} ({s.isoCode})
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  ) : (
+                    <Input
+                      label={t("form.state.label")}
                       value={form.state}
-                      onChange={(e) => handleStateSelect(e.target.value)}
+                      onChange={(e) => handleChange("state", e.target.value)}
                       disabled={!form.country}
                       required
-                    >
-                      <option value="">{form.country ? t("form.state.placeholder") : t("form.state.placeholderDisabled")}</option>
-                      {states.map((s) => (
-                        <option key={`${s.isoCode}-${s.name}`} value={s.isoCode}>
-                          {s.name} ({s.isoCode})
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground">{t("form.city.label")}</label>
-                    <select
-                      className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    />
+                  )}
+                  {showCitySelect ? (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-foreground">{t("form.city.label")}</label>
+                      <select
+                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                        value={form.city}
+                        onChange={(e) => handleCitySelect(e.target.value)}
+                        disabled={!form.country || (hasRegionOptions && !form.state)}
+                        required
+                      >
+                        <option value="">{form.state ? t("form.city.placeholder") : t("form.city.placeholderDisabled")}</option>
+                        {cities.map((c) => {
+                          const key = `${c.countryCode}-${c.stateCode}-${c.name}`;
+                          return (
+                            <option key={key} value={c.name}>
+                              {c.name}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    </div>
+                  ) : (
+                    <Input
+                      label={t("form.city.label")}
                       value={form.city}
-                      onChange={(e) => handleCitySelect(e.target.value)}
-                      disabled={!form.state}
+                      onChange={(e) => handleChange("city", e.target.value)}
+                      disabled={!form.country || (hasRegionOptions && !form.state)}
                       required
-                    >
-                      <option value="">{form.state ? t("form.city.placeholder") : t("form.city.placeholderDisabled")}</option>
-                      {cities.map((c) => {
-                        const key = `${c.countryCode}-${c.stateCode}-${c.name}`;
-                        return (
-                          <option key={key} value={c.name}>
-                            {c.name}
-                          </option>
-                        );
-                      })}
-                    </select>
-                  </div>
+                    />
+                  )}
                   <Input label={t("form.postalCode")} value={form.postalCode} onChange={(e) => handleChange("postalCode", e.target.value)} required />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -26,14 +26,14 @@
     "addressLine1": "Address Line 1",
     "addressLine2": "Address Line 2 (optional)",
     "state": {
-      "label": "State / Province",
-      "placeholder": "Select a state",
+      "label": "State / Region",
+      "placeholder": "Select a state / region",
       "placeholderDisabled": "Select country first"
     },
     "city": {
       "label": "City",
       "placeholder": "Select a city",
-      "placeholderDisabled": "Select state first"
+      "placeholderDisabled": "Select region first"
     },
     "postalCode": "Postal Code",
     "documentType": {
@@ -55,7 +55,7 @@
     "error": {
       "documentImageRequired": "Document image is required.",
       "dobIncomplete": "Complete date of birth.",
-      "locationRequired": "Country, state, and city are required.",
+      "locationRequired": "Country, state/region, and city are required.",
       "submitFailed": "Unable to submit KYC."
     },
     "success": "KYC submitted. Status: pending."

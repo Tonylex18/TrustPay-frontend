@@ -26,14 +26,14 @@
     "addressLine1": "Διεύθυνση γραμμή 1",
     "addressLine2": "Διεύθυνση γραμμή 2 (προαιρετικό)",
     "state": {
-      "label": "Πολιτεία / Περιφέρεια",
-      "placeholder": "Επιλέξτε πολιτεία",
+      "label": "Περιφέρεια / Περιοχή",
+      "placeholder": "Επιλέξτε περιφέρεια / περιοχή",
       "placeholderDisabled": "Επιλέξτε πρώτα χώρα"
     },
     "city": {
       "label": "Πόλη",
       "placeholder": "Επιλέξτε πόλη",
-      "placeholderDisabled": "Επιλέξτε πρώτα πολιτεία"
+      "placeholderDisabled": "Επιλέξτε πρώτα περιφέρεια"
     },
     "postalCode": "Ταχυδρομικός κώδικας",
     "documentType": {
@@ -55,7 +55,7 @@
     "error": {
       "documentImageRequired": "Απαιτείται εικόνα εγγράφου.",
       "dobIncomplete": "Συμπληρώστε την ημερομηνία γέννησης.",
-      "locationRequired": "Χώρα, πολιτεία και πόλη είναι υποχρεωτικές.",
+      "locationRequired": "Χώρα, περιφέρεια/περιοχή και πόλη είναι υποχρεωτικές.",
       "submitFailed": "Αδυναμία υποβολής KYC."
     },
     "success": "Το KYC υποβλήθηκε. Κατάσταση: σε εκκρεμότητα."

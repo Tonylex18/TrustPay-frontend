@@ -26,14 +26,14 @@
     "addressLine1": "Adresse ligne 1",
     "addressLine2": "Adresse ligne 2 (optionnel)",
     "state": {
-      "label": "État / Province",
-      "placeholder": "Sélectionnez un État",
+      "label": "État / Région",
+      "placeholder": "Sélectionnez un État / une région",
       "placeholderDisabled": "Choisissez d'abord le pays"
     },
     "city": {
       "label": "Ville",
       "placeholder": "Sélectionnez une ville",
-      "placeholderDisabled": "Choisissez d'abord l'État"
+      "placeholderDisabled": "Choisissez d'abord la région"
     },
     "postalCode": "Code postal",
     "documentType": {
@@ -55,7 +55,7 @@
     "error": {
       "documentImageRequired": "L'image du document est requise.",
       "dobIncomplete": "Complétez la date de naissance.",
-      "locationRequired": "Pays, État et ville sont requis.",
+      "locationRequired": "Pays, État/région et ville sont requis.",
       "submitFailed": "Impossible de soumettre le KYC."
     },
     "success": "KYC soumis. Statut : en attente."

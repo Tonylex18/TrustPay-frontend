@@ -26,14 +26,14 @@
     "addressLine1": "Adresszeile 1",
     "addressLine2": "Adresszeile 2 (optional)",
     "state": {
-      "label": "Bundesland / Provinz",
-      "placeholder": "Bundesland auswählen",
+      "label": "Bundesland / Region",
+      "placeholder": "Bundesland / Region auswählen",
       "placeholderDisabled": "Land zuerst auswählen"
     },
     "city": {
       "label": "Stadt",
       "placeholder": "Stadt auswählen",
-      "placeholderDisabled": "Bundesland zuerst auswählen"
+      "placeholderDisabled": "Region zuerst auswählen"
     },
     "postalCode": "Postleitzahl",
     "documentType": {
@@ -55,7 +55,7 @@
     "error": {
       "documentImageRequired": "Das Dokumentbild ist erforderlich.",
       "dobIncomplete": "Geburtsdatum vervollständigen.",
-      "locationRequired": "Land, Bundesland und Stadt sind erforderlich.",
+      "locationRequired": "Land, Bundesland/Region und Stadt sind erforderlich.",
       "submitFailed": "KYC konnte nicht gesendet werden."
     },
     "success": "KYC gesendet. Status: ausstehend."
