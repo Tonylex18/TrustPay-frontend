@@ -34,6 +34,29 @@ const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ children })
   const [isRatesLoading, setIsRatesLoading] = useState(false);
   const [lastUpdatedAt, setLastUpdatedAt] = useState<number | null>(null);
 
+  const loadRates = useCallback(
+    (base: CurrencyCode = DEFAULT_CURRENCY) => {
+      let isActive = true;
+      setIsRatesLoading(true);
+      fetchRates(base)
+        .then((result) => {
+          if (!isActive) return;
+          setRates(result.rates);
+          setRatesBase(result.base);
+          setCachedRates(result.base, result.rates);
+          setLastUpdatedAt(Date.now());
+        })
+        .catch(() => {})
+        .finally(() => {
+          if (isActive) setIsRatesLoading(false);
+        });
+      return () => {
+        isActive = false;
+      };
+    },
+    []
+  );
+
   useEffect(() => {
     const cached = getCachedRates();
     if (cached) {
@@ -42,26 +65,21 @@ const CurrencyProvider: React.FC<{ children: React.ReactNode }> = ({ children })
       setLastUpdatedAt(Date.now());
       return;
     }
+    const cancel = loadRates(DEFAULT_CURRENCY);
+    return () => cancel();
+  }, [loadRates]);
 
-    let isActive = true;
-    setIsRatesLoading(true);
-    fetchRates(DEFAULT_CURRENCY)
-      .then((result) => {
-        if (!isActive) return;
-        setRates(result.rates);
-        setRatesBase(result.base);
-        setCachedRates(result.base, result.rates);
-        setLastUpdatedAt(Date.now());
-      })
-      .catch(() => {})
-      .finally(() => {
-        if (isActive) setIsRatesLoading(false);
-      });
-
-    return () => {
-      isActive = false;
-    };
-  }, []);
+  useEffect(() => {
+    if (isRatesLoading) return;
+    if (!rates) {
+      const cancel = loadRates(DEFAULT_CURRENCY);
+      return () => cancel();
+    }
+    if (currency !== ratesBase && !rates[currency]) {
+      const cancel = loadRates(ratesBase);
+      return () => cancel();
+    }
+  }, [currency, rates, ratesBase, isRatesLoading, loadRates]);
 
   const setCurrency = useCallback((next: CurrencyCode) => {
     setCurrencyState(next);

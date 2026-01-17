@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Icon from "../../../components/AppIcon";
 import Button from "../../../components/ui/Button";
 import { Account } from "../types";
+import { useCurrency } from "../../../context/CurrencyContext";
 
 type Props = {
   account: Account | null;
@@ -12,6 +13,7 @@ type Props = {
 const AccountDetailsCard: React.FC<Props> = ({ account, accountName, bankName = "TrustPay Bank" }) => {
   const [copied, setCopied] = useState<string | null>(null);
   const [showDetails, setShowDetails] = useState(false);
+  const { currency } = useCurrency();
 
   if (!account) {
     return (
@@ -142,7 +144,7 @@ const AccountDetailsCard: React.FC<Props> = ({ account, accountName, bankName = 
                 </div>
                 <div className="text-right">
                   <p className="text-[11px] uppercase tracking-wide text-white/60">Currency</p>
-                  <p className="text-sm font-semibold">{account.currency || "USD"}</p>
+                  <p className="text-sm font-semibold">{currency}</p>
                 </div>
               </div>
             </div>

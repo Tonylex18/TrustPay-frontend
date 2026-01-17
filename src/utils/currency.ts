@@ -63,23 +63,54 @@ const setCachedRates = (base: CurrencyCode, rates: Record<string, number>) => {
   window.localStorage.setItem(FX_CACHE_KEY, JSON.stringify(payload));
 };
 
-const fetchRates = async (base: CurrencyCode = DEFAULT_CURRENCY) => {
-  const apiUrl =
-    import.meta.env.VITE_FX_API_URL || 'https://api.exchangerate.host/latest';
-  const url = new URL(apiUrl);
+const parseRatesPayload = (payload: any, fallbackBase: CurrencyCode) => {
+  if (!payload) return null;
+  if (payload?.rates) {
+    return {
+      base: (payload?.base || payload?.base_code || fallbackBase) as CurrencyCode,
+      rates: payload.rates as Record<string, number>
+    };
+  }
+  return null;
+};
+
+const buildApiUrl = (template: string, base: CurrencyCode) => {
+  if (template.includes('{base}')) {
+    return template.replace('{base}', base);
+  }
+  const url = new URL(template);
   if (!url.searchParams.has('base')) {
     url.searchParams.set('base', base);
   }
-  const response = await fetch(url.toString());
-  const payload = await response.json().catch(() => null);
-  if (!response.ok) {
-    throw new Error(payload?.message || 'Unable to load FX rates.');
+  return url.toString();
+};
+
+const fetchRates = async (base: CurrencyCode = DEFAULT_CURRENCY) => {
+  const endpoints = [
+    import.meta.env.VITE_FX_API_URL || 'https://api.exchangerate.host/latest',
+    `https://open.er-api.com/v6/latest/${base}`
+  ];
+
+  let lastError: Error | null = null;
+  for (const endpoint of endpoints) {
+    try {
+      const url = buildApiUrl(endpoint, base);
+      const response = await fetch(url);
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        throw new Error(payload?.message || 'Unable to load FX rates.');
+      }
+      const parsed = parseRatesPayload(payload, base);
+      if (!parsed?.rates) {
+        throw new Error('FX response missing rates.');
+      }
+      return parsed;
+    } catch (err) {
+      lastError = err as Error;
+    }
   }
-  const rates = payload?.rates || payload?.data?.rates;
-  if (!rates) {
-    throw new Error('FX response missing rates.');
-  }
-  return { base: (payload?.base || base) as CurrencyCode, rates };
+
+  throw lastError || new Error('Unable to load FX rates.');
 };
 
 const convertAmount = (
