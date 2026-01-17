@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 import { Transaction } from '../types';
+import { useCurrency } from '../../../context/CurrencyContext';
 
 interface RecentTransactionsProps {
   transactions: Transaction[];
@@ -10,13 +11,10 @@ interface RecentTransactionsProps {
 
 const RecentTransactions: React.FC<RecentTransactionsProps> = ({ transactions }) => {
   const navigate = useNavigate();
+  const { formatAmount } = useCurrency();
 
-  const formatCurrency = (amount: number): string => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(Math.abs(amount));
-  };
+  const formatCurrency = (amount: number): string =>
+    formatAmount(Math.abs(amount), 'USD');
 
   const formatDate = (date: Date): string => {
     return new Intl.DateTimeFormat('en-US', {

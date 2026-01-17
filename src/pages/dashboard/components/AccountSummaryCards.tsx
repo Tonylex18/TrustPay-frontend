@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from '../../../components/AppIcon';
 import { Account } from '../types';
+import { useCurrency } from '../../../context/CurrencyContext';
 
 interface AccountSummaryCardsProps {
   accounts: Account[];
@@ -8,12 +9,7 @@ interface AccountSummaryCardsProps {
 }
 
 const AccountSummaryCards: React.FC<AccountSummaryCardsProps> = ({ accounts, onSelect }) => {
-  const formatCurrency = (amount: number, currency: string): string => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency
-    }).format(amount);
-  };
+  const { formatAmount, currency } = useCurrency();
 
   const getAccountIcon = (type: string): string => {
     switch (type) {
@@ -61,10 +57,10 @@ const AccountSummaryCards: React.FC<AccountSummaryCardsProps> = ({ accounts, onS
 
           <div className="space-y-2">
             <p className="text-md md:text-2xl font-bold text-foreground">
-              {formatCurrency(account.balance, account.currency)}
+              {formatAmount(account.balance, account.currency)}
             </p>
             <p className="text-xs text-muted-foreground font-data uppercase tracking-wide">
-              {account.currency} ••••{account.accountNumber.slice(-4)}
+              {currency} ••••{account.accountNumber.slice(-4)}
             </p>
           </div>
         </button>

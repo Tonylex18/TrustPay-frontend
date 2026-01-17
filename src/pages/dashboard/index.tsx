@@ -13,6 +13,7 @@ import CardDetailsDisplay from '../user-profile/components/CardDetailsDisplay';
 import type { DashboardData, QuickActionConfig } from './types';
 import { API_BASE_URL, clearStoredToken, getStoredToken } from '../../utils/api';
 import { toast } from 'react-toastify';
+import { useCurrency } from '../../context/CurrencyContext';
 
 type DashboardStatus = 'pending' | 'completed' | 'failed';
 
@@ -78,6 +79,7 @@ const Dashboard: React.FC = () => {
   const [pinForm, setPinForm] = useState({ pin: '', confirmPin: '', currentPin: '' });
   const [pinError, setPinError] = useState<string | null>(null);
   const [pinLoading, setPinLoading] = useState(false);
+  const { setDefaultCurrencyFromCountry } = useCurrency();
 
   // Poll KYC status if pending
   useEffect(() => {
@@ -112,6 +114,12 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    if (kycRecord?.country) {
+      setDefaultCurrencyFromCountry(kycRecord.country);
+    }
+  }, [kycRecord?.country, setDefaultCurrencyFromCountry]);
 
   useEffect(() => {
     const controller = new AbortController();

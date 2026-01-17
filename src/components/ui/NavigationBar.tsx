@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Icon from '../AppIcon';
 import UserMenu from './UserMenu';
 import LanguageSelector from '../LanguageSelector';
+import CurrencySelector from '../CurrencySelector';
 import { API_BASE_URL, clearStoredToken, getStoredToken } from '../../utils/api';
 
 interface NavigationBarProps {
@@ -195,7 +196,10 @@ const NavigationBar = ({ user, onNavigate }: NavigationBarProps) => {
 
           <div className="flex items-center gap-4 ml-auto">
             {!isMobile && (
-              <LanguageSelector variant="neutral" className="hidden md:inline-flex" />
+              <>
+                <CurrencySelector variant="neutral" className="hidden md:inline-flex" />
+                <LanguageSelector variant="neutral" className="hidden md:inline-flex" />
+              </>
             )}
             {!isMobile && resolvedUser && <UserMenu user={resolvedUser} />}
             
@@ -251,7 +255,10 @@ const NavigationBar = ({ user, onNavigate }: NavigationBarProps) => {
               </div>
 
               <div className="px-6 pb-3">
-                <LanguageSelector variant="neutral" className="w-full" />
+                <div className="space-y-3">
+                  <CurrencySelector variant="neutral" className="w-full" />
+                  <LanguageSelector variant="neutral" className="w-full" />
+                </div>
               </div>
 
               {resolvedUser && (

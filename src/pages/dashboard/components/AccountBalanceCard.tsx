@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import Icon from '../../../components/AppIcon';
 import { Account } from '../types';
+import { useCurrency } from '../../../context/CurrencyContext';
 
 interface AccountBalanceCardProps {
   account: Account;
@@ -9,13 +10,7 @@ interface AccountBalanceCardProps {
 
 const AccountBalanceCard: React.FC<AccountBalanceCardProps> = ({ account }) => {
   const [isCopied, setIsCopied] = useState(false);
-
-  const formatCurrency = (amount: number): string => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: account.currency
-    }).format(amount);
-  };
+  const { formatAmount } = useCurrency();
 
   const getAccountIcon = (type: string): string => {
     switch (type) {
@@ -57,7 +52,7 @@ const AccountBalanceCard: React.FC<AccountBalanceCardProps> = ({ account }) => {
         <div>
           <p className="text-sm opacity-90 mb-1">Available Balance</p>
           <h2 className="text-4xl font-bold tracking-tight">
-            {formatCurrency(account.balance)}
+            {formatAmount(account.balance, account.currency)}
           </h2>
         </div>
         <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center">

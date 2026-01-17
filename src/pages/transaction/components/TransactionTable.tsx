@@ -2,6 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from '../../../components/AppIcon';
 import { Transaction, TransactionTableProps, SortableTransactionField } from '../types';
+import { useCurrency } from '../../../context/CurrencyContext';
 
 const TransactionTable = ({
   transactions,
@@ -11,11 +12,9 @@ const TransactionTable = ({
   expandedRow
 }: TransactionTableProps) => {
   const { t, i18n } = useTranslation('transaction');
+  const { formatAmount } = useCurrency();
   const formatCurrency = (amount: number, currency: string = 'USD') =>
-    new Intl.NumberFormat(i18n.language || 'en-US', {
-      style: 'currency',
-      currency: currency.toUpperCase()
-    }).format(Math.abs(amount));
+    formatAmount(Math.abs(amount), currency, i18n.language || 'en-US');
 
   const formatDate = (date: Date) =>
     new Intl.DateTimeFormat(i18n.language || 'en-US', {
