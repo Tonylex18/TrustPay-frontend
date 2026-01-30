@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { PasswordChangeData, ValidationErrors } from '../types';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
@@ -10,6 +11,7 @@ interface PasswordChangeFormProps {
 }
 
 const PasswordChangeForm = ({ onSave, onCancel }: PasswordChangeFormProps) => {
+  const { t } = useTranslation('profile');
   const [formData, setFormData] = useState<PasswordChangeData>({
     currentPassword: '',
     newPassword: '',
@@ -25,19 +27,19 @@ const PasswordChangeForm = ({ onSave, onCancel }: PasswordChangeFormProps) => {
 
   const validatePassword = (password: string): string | undefined => {
     if (password.length < 8) {
-      return 'Password must be at least 8 characters';
+      return t('password.errors.minLength');
     }
     if (!/[A-Z]/.test(password)) {
-      return 'Password must contain at least one uppercase letter';
+      return t('password.errors.uppercase');
     }
     if (!/[a-z]/.test(password)) {
-      return 'Password must contain at least one lowercase letter';
+      return t('password.errors.lowercase');
     }
     if (!/[0-9]/.test(password)) {
-      return 'Password must contain at least one number';
+      return t('password.errors.number');
     }
     if (!/[!@#$%^&*]/.test(password)) {
-      return 'Password must contain at least one special character (!@#$%^&*)';
+      return t('password.errors.special');
     }
     return undefined;
   };
@@ -46,24 +48,24 @@ const PasswordChangeForm = ({ onSave, onCancel }: PasswordChangeFormProps) => {
     const newErrors: ValidationErrors = {};
 
     if (!formData.currentPassword) {
-      newErrors.currentPassword = 'Current password is required';
+      newErrors.currentPassword = t('password.errors.currentRequired');
     } else if (formData.currentPassword !== 'Bank@123') {
-      newErrors.currentPassword = 'Current password is incorrect';
+      newErrors.currentPassword = t('password.errors.currentIncorrect');
     }
 
     const passwordError = validatePassword(formData.newPassword);
     if (!formData.newPassword) {
-      newErrors.newPassword = 'New password is required';
+      newErrors.newPassword = t('password.errors.newRequired');
     } else if (passwordError) {
       newErrors.newPassword = passwordError;
     } else if (formData.newPassword === formData.currentPassword) {
-      newErrors.newPassword = 'New password must be different from current password';
+      newErrors.newPassword = t('password.errors.newDifferent');
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your new password';
+      newErrors.confirmPassword = t('password.errors.confirmRequired');
     } else if (formData.confirmPassword !== formData.newPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = t('password.errors.mismatch');
     }
 
     setErrors(newErrors);
@@ -114,9 +116,9 @@ const PasswordChangeForm = ({ onSave, onCancel }: PasswordChangeFormProps) => {
     if (/[0-9]/.test(password)) score++;
     if (/[!@#$%^&*]/.test(password)) score++;
 
-    if (score <= 2) return { strength: 'Weak', color: 'bg-error', width: '33%' };
-    if (score <= 4) return { strength: 'Medium', color: 'bg-warning', width: '66%' };
-    return { strength: 'Strong', color: 'bg-success', width: '100%' };
+    if (score <= 2) return { strength: t('password.strength.weak'), color: 'bg-error', width: '33%' };
+    if (score <= 4) return { strength: t('password.strength.medium'), color: 'bg-warning', width: '66%' };
+    return { strength: t('password.strength.strong'), color: 'bg-success', width: '100%' };
   };
 
   const passwordStrength = getPasswordStrength(formData.newPassword);
@@ -126,12 +128,12 @@ const PasswordChangeForm = ({ onSave, onCancel }: PasswordChangeFormProps) => {
       <div className="bg-muted/50 rounded-lg p-4 flex items-start gap-3">
         <Icon name="Info" size={20} color="var(--color-primary)" className="flex-shrink-0 mt-0.5" />
         <div className="text-sm text-muted-foreground">
-          <p className="font-medium text-foreground mb-1">Password Requirements:</p>
+          <p className="font-medium text-foreground mb-1">{t('password.requirementsTitle')}</p>
           <ul className="list-disc list-inside space-y-1">
-            <li>At least 8 characters long</li>
-            <li>Contains uppercase and lowercase letters</li>
-            <li>Contains at least one number</li>
-            <li>Contains at least one special character (!@#$%^&*)</li>
+            <li>{t('password.requirements.length')}</li>
+            <li>{t('password.requirements.case')}</li>
+            <li>{t('password.requirements.number')}</li>
+            <li>{t('password.requirements.special')}</li>
           </ul>
         </div>
       </div>
@@ -139,19 +141,19 @@ const PasswordChangeForm = ({ onSave, onCancel }: PasswordChangeFormProps) => {
       <div className="space-y-4">
         <div className="relative">
           <Input
-            label="Current Password"
+            label={t('password.labels.current')}
             type={showPasswords.current ? 'text' : 'password'}
             value={formData.currentPassword}
             onChange={handleChange('currentPassword')}
             error={errors.currentPassword}
             required
-            placeholder="Enter current password"
+            placeholder={t('password.placeholders.current')}
           />
           <button
             type="button"
             onClick={() => togglePasswordVisibility('current')}
             className="absolute right-3 top-9 text-muted-foreground hover:text-foreground transition-colors duration-200"
-            aria-label={showPasswords.current ? 'Hide password' : 'Show password'}
+            aria-label={showPasswords.current ? t('password.visibility.hide') : t('password.visibility.show')}
           >
             <Icon name={showPasswords.current ? 'EyeOff' : 'Eye'} size={20} />
           </button>
@@ -159,26 +161,26 @@ const PasswordChangeForm = ({ onSave, onCancel }: PasswordChangeFormProps) => {
 
         <div className="relative">
           <Input
-            label="New Password"
+            label={t('password.labels.new')}
             type={showPasswords.new ? 'text' : 'password'}
             value={formData.newPassword}
             onChange={handleChange('newPassword')}
             error={errors.newPassword}
             required
-            placeholder="Enter new password"
+            placeholder={t('password.placeholders.new')}
           />
           <button
             type="button"
             onClick={() => togglePasswordVisibility('new')}
             className="absolute right-3 top-9 text-muted-foreground hover:text-foreground transition-colors duration-200"
-            aria-label={showPasswords.new ? 'Hide password' : 'Show password'}
+            aria-label={showPasswords.new ? t('password.visibility.hide') : t('password.visibility.show')}
           >
             <Icon name={showPasswords.new ? 'EyeOff' : 'Eye'} size={20} />
           </button>
           {formData.newPassword && (
             <div className="mt-2">
               <div className="flex items-center justify-between mb-1">
-                <span className="text-xs text-muted-foreground">Password Strength:</span>
+                <span className="text-xs text-muted-foreground">{t('password.strength.label')}</span>
                 <span className={`text-xs font-medium ${passwordStrength.color.replace('bg-', 'text-')}`}>
                   {passwordStrength.strength}
                 </span>
@@ -195,19 +197,19 @@ const PasswordChangeForm = ({ onSave, onCancel }: PasswordChangeFormProps) => {
 
         <div className="relative">
           <Input
-            label="Confirm New Password"
+            label={t('password.labels.confirm')}
             type={showPasswords.confirm ? 'text' : 'password'}
             value={formData.confirmPassword}
             onChange={handleChange('confirmPassword')}
             error={errors.confirmPassword}
             required
-            placeholder="Confirm new password"
+            placeholder={t('password.placeholders.confirm')}
           />
           <button
             type="button"
             onClick={() => togglePasswordVisibility('confirm')}
             className="absolute right-3 top-9 text-muted-foreground hover:text-foreground transition-colors duration-200"
-            aria-label={showPasswords.confirm ? 'Hide password' : 'Show password'}
+            aria-label={showPasswords.confirm ? t('password.visibility.hide') : t('password.visibility.show')}
           >
             <Icon name={showPasswords.confirm ? 'EyeOff' : 'Eye'} size={20} />
           </button>
@@ -223,7 +225,7 @@ const PasswordChangeForm = ({ onSave, onCancel }: PasswordChangeFormProps) => {
           iconPosition="left"
           fullWidth
         >
-          Change Password
+          {t('password.buttons.save')}
         </Button>
         <Button
           type="button"
@@ -232,7 +234,7 @@ const PasswordChangeForm = ({ onSave, onCancel }: PasswordChangeFormProps) => {
           disabled={isSaving}
           fullWidth
         >
-          Cancel
+          {t('password.buttons.cancel')}
         </Button>
       </div>
     </form>

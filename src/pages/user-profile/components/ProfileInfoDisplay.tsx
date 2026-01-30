@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { UserProfile } from '../types';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
@@ -9,8 +10,9 @@ interface ProfileInfoDisplayProps {
 }
 
 const ProfileInfoDisplay = ({ profile, onEdit }: ProfileInfoDisplayProps) => {
+  const { t, i18n } = useTranslation('profile');
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
+    return new Intl.DateTimeFormat(i18n.language || 'en-US', {
       month: 'long',
       day: 'numeric',
       year: 'numeric'
@@ -20,38 +22,38 @@ const ProfileInfoDisplay = ({ profile, onEdit }: ProfileInfoDisplayProps) => {
   const infoItems = [
     {
       icon: 'User',
-      label: 'Full Name',
+      label: t('profile.fields.fullName'),
       value: profile.fullName
     },
     {
       icon: 'Mail',
-      label: 'Email Address',
+      label: t('profile.fields.email'),
       value: profile.email
     },
     ...(profile.phone
       ? [
           {
             icon: 'Phone',
-            label: 'Phone Number',
+            label: t('profile.fields.phone'),
             value: profile.phone
           }
         ]
       : []),
     {
       icon: 'Calendar',
-      label: 'Member Since',
+      label: t('profile.fields.memberSince'),
       value: formatDate(profile.dateJoined)
     },
     {
       icon: 'Clock',
-      label: 'Last Login',
+      label: t('profile.fields.lastLogin'),
       value: formatDate(profile.lastLogin)
     },
     ...(profile.kycStatus
       ? [
           {
             icon: 'ShieldCheck',
-            label: 'KYC Status',
+            label: t('profile.fields.kycStatus'),
             value: profile.kycStatus
           }
         ]
@@ -60,7 +62,7 @@ const ProfileInfoDisplay = ({ profile, onEdit }: ProfileInfoDisplayProps) => {
       ? [
           {
             icon: 'FileCheck',
-            label: 'Document Type',
+            label: t('profile.fields.documentType'),
             value: profile.kycDocumentType
           }
         ]
@@ -69,7 +71,7 @@ const ProfileInfoDisplay = ({ profile, onEdit }: ProfileInfoDisplayProps) => {
       ? [
           {
             icon: 'Globe2',
-            label: 'Country',
+            label: t('profile.fields.country'),
             value: profile.kycCountry
           }
         ]
@@ -78,7 +80,7 @@ const ProfileInfoDisplay = ({ profile, onEdit }: ProfileInfoDisplayProps) => {
       ? [
           {
             icon: 'CalendarClock',
-            label: 'Verified At',
+            label: t('profile.fields.verifiedAt'),
             value: formatDate(profile.kycUpdatedAt)
           }
         ]
@@ -107,7 +109,7 @@ const ProfileInfoDisplay = ({ profile, onEdit }: ProfileInfoDisplayProps) => {
           iconPosition="left"
           fullWidth
         >
-          Edit Profile Information
+          {t('profile.editButton')}
         </Button>
       </div>
     </div>

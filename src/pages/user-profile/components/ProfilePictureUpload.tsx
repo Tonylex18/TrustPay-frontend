@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import Image from '../../../components/AppImage';
 import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
@@ -11,6 +12,7 @@ interface ProfilePictureUploadProps {
 }
 
 const ProfilePictureUpload = ({ currentPicture, currentPictureAlt, onUpload, error }: ProfilePictureUploadProps) => {
+  const { t } = useTranslation('profile');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -21,13 +23,13 @@ const ProfilePictureUpload = ({ currentPicture, currentPictureAlt, onUpload, err
     // Validate file type
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     if (!validTypes.includes(file.type)) {
-      alert('Please upload a valid image file (JPEG, PNG, or WebP)');
+      alert(t('picture.invalidType'));
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      alert('File size must be less than 5MB');
+      alert(t('picture.tooLarge'));
       return;
     }
 
@@ -64,7 +66,7 @@ const ProfilePictureUpload = ({ currentPicture, currentPictureAlt, onUpload, err
         accept="image/jpeg,image/jpg,image/png,image/webp"
         onChange={handleFileSelect}
         className="hidden"
-        aria-label="Upload profile picture"
+        aria-label={t('picture.uploadAria')}
       />
 
       <Button
@@ -74,7 +76,7 @@ const ProfilePictureUpload = ({ currentPicture, currentPictureAlt, onUpload, err
         iconName="Upload"
         iconPosition="left"
       >
-        Change Picture
+        {t('picture.button')}
       </Button>
 
       {error && (
@@ -82,7 +84,7 @@ const ProfilePictureUpload = ({ currentPicture, currentPictureAlt, onUpload, err
       )}
 
       <p className="text-xs text-muted-foreground text-center">
-        Supported formats: JPEG, PNG, WebP (Max 5MB)
+        {t('picture.formats')}
       </p>
     </div>
   );

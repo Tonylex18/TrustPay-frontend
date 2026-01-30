@@ -1,0 +1,209 @@
+{
+  "metaTitle": "Perfil do usuário - TrustPay",
+  "metaDescription": "Gerencie o perfil da sua conta TrustPay, as configurações de segurança e as preferências de comunicação",
+  "breadcrumb": {
+    "dashboard": "Painel",
+    "profile": "Perfil do usuário"
+  },
+  "title": "Perfil do usuário",
+  "subtitle": "Gerencie as informações da sua conta, as configurações de segurança e as preferências de comunicação",
+  "sections": {
+    "profileInfo": {
+      "title": "Informações do perfil",
+      "description": "Veja e atualize suas informações pessoais"
+    },
+    "cards": {
+      "title": "Cartões",
+      "description": "Emita um cartão virtual que utiliza seu saldo TrustPay"
+    },
+    "transferLimit": {
+      "title": "Limite diário de transferências",
+      "description": "Solicite um aumento do seu limite diário de transferências.",
+      "currentLimitTitle": "Limite diário atual",
+      "requestedLimit": "Limite solicitado: {{amount}}",
+      "reasonLabel": "Motivo: {{reason}}",
+      "noReason": "Nenhum motivo informado",
+      "pendingNote": "Sua solicitação está em análise. Avisaremos quando for aprovada.",
+      "approvedNote": "Aprovada. Seu novo limite já está ativo.",
+      "rejectedNote": "Solicitação rejeitada. Você pode enviar um novo pedido.",
+      "requestedInput": "Novo limite solicitado",
+      "reasonInput": "Motivo do aumento",
+      "pendingButton": "Solicitação pendente",
+      "submitButton": "Solicitar aumento",
+      "loading": "Carregando solicitações de limite...",
+      "loadError": "Não foi possível carregar as solicitações de limite de transferência.",
+      "errors": {
+        "requested": "Informe o novo limite desejado.",
+        "increaseRequired": "O limite solicitado deve ser maior que o seu limite atual.",
+        "reason": "Forneça um breve motivo para o aumento.",
+        "submitFailed": "Não foi possível enviar a solicitação.",
+        "submitUnavailable": "Não foi possível enviar a solicitação no momento."
+      },
+      "success": "Solicitação de limite de transferência enviada.",
+      "status": {
+        "pending": "Pendente",
+        "approved": "Aprovada",
+        "rejected": "Rejeitada"
+      }
+    },
+    "security": {
+      "title": "Configurações de segurança",
+      "description": "Gerencie sua senha e a segurança da conta",
+      "password": "Senha",
+      "passwordLastChanged": "Última alteração em {{date}}",
+      "changePassword": "Alterar senha",
+      "twoFactorTitle": "Autenticação em dois fatores ativada",
+      "twoFactorBody": "Sua conta está protegida com uma camada adicional de segurança"
+    },
+    "contact": {
+      "title": "Preferências de contato",
+      "description": "Escolha como deseja receber nossas comunicações"
+    }
+  },
+  "profile": {
+    "loading": "Carregando detalhes do perfil...",
+    "loadError": "Não foi possível carregar seu perfil.",
+    "dataMissing": "Faltavam dados do perfil.",
+    "updated": "Perfil atualizado com sucesso",
+    "editButton": "Editar informações do perfil",
+    "pictureAlt": "Foto do perfil de {{name}}",
+    "fields": {
+      "fullName": "Nome completo",
+      "email": "E-mail",
+      "phone": "Número de telefone",
+      "memberSince": "Membro desde",
+      "lastLogin": "Último acesso",
+      "kycStatus": "Status do KYC",
+      "documentType": "Tipo de documento",
+      "country": "País",
+      "verifiedAt": "Verificado em"
+    }
+  },
+  "editForm": {
+    "placeholders": {
+      "fullName": "Informe seu nome completo",
+      "email": "Informe seu e-mail",
+      "phone": "Informe seu número de telefone"
+    },
+    "buttons": {
+      "save": "Salvar alterações",
+      "cancel": "Cancelar"
+    },
+    "errors": {
+      "fullNameRequired": "O nome completo é obrigatório",
+      "fullNameMin": "O nome completo deve ter pelo menos 2 caracteres",
+      "emailRequired": "O e-mail é obrigatório",
+      "emailInvalid": "Informe um e-mail válido",
+      "phoneRequired": "O número de telefone é obrigatório",
+      "phoneInvalid": "Informe um número de telefone válido"
+    }
+  },
+  "picture": {
+    "uploadAria": "Enviar foto do perfil",
+    "button": "Alterar foto",
+    "formats": "Formatos suportados: JPEG, PNG, WebP (máx. 5MB)",
+    "invalidType": "Envie um arquivo de imagem válido (JPEG, PNG ou WebP)",
+    "tooLarge": "O arquivo deve ter menos de 5MB"
+  },
+  "password": {
+    "changed": "Senha alterada com sucesso! Use sua nova senha nos próximos acessos.",
+    "requirementsTitle": "Requisitos de senha:",
+    "requirements": {
+      "length": "Pelo menos 8 caracteres",
+      "case": "Contém letras maiúsculas e minúsculas",
+      "number": "Contém pelo menos um número",
+      "special": "Contém pelo menos um caractere especial (!@#$%^&*)"
+    },
+    "labels": {
+      "current": "Senha atual",
+      "new": "Nova senha",
+      "confirm": "Confirmar nova senha"
+    },
+    "placeholders": {
+      "current": "Informe a senha atual",
+      "new": "Informe a nova senha",
+      "confirm": "Confirme a nova senha"
+    },
+    "visibility": {
+      "show": "Mostrar senha",
+      "hide": "Ocultar senha"
+    },
+    "strength": {
+      "label": "Força da senha:",
+      "weak": "Fraca",
+      "medium": "Média",
+      "strong": "Forte"
+    },
+    "buttons": {
+      "save": "Alterar senha",
+      "cancel": "Cancelar"
+    },
+    "errors": {
+      "minLength": "A senha deve ter pelo menos 8 caracteres",
+      "uppercase": "A senha deve conter pelo menos uma letra maiúscula",
+      "lowercase": "A senha deve conter pelo menos uma letra minúscula",
+      "number": "A senha deve conter pelo menos um número",
+      "special": "A senha deve conter pelo menos um caractere especial (!@#$%^&*)",
+      "currentRequired": "A senha atual é obrigatória",
+      "currentIncorrect": "A senha atual está incorreta",
+      "newRequired": "A nova senha é obrigatória",
+      "newDifferent": "A nova senha deve ser diferente da senha atual",
+      "confirmRequired": "Confirme sua nova senha",
+      "mismatch": "As senhas não coincidem"
+    }
+  },
+  "preferences": {
+    "updated": "Preferências de contato atualizadas com sucesso!",
+    "info": "Gerencie como deseja receber comunicações da TrustPay. Você pode atualizar essas preferências a qualquer momento.",
+    "button": "Salvar preferências",
+    "items": {
+      "email": {
+        "label": "Notificações por e-mail",
+        "description": "Receba atualizações da conta e notificações importantes por e-mail"
+      },
+      "sms": {
+        "label": "Notificações por SMS",
+        "description": "Receba alertas instantâneos sobre transações e segurança via SMS"
+      },
+      "promotional": {
+        "label": "E-mails promocionais",
+        "description": "Receba informações sobre novos recursos, ofertas e produtos bancários"
+      },
+      "alerts": {
+        "label": "Alertas de transações",
+        "description": "Receba notificações em tempo real de todas as transações"
+      }
+    }
+  },
+  "cards": {
+    "loading": "Verificando o status do cartão...",
+    "loadError": "Não foi possível carregar os cartões.",
+    "requestsLoadError": "Não foi possível carregar as solicitações de cartão.",
+    "selectAccountError": "Selecione uma conta para financiar seu cartão.",
+    "requestFailed": "Não foi possível enviar sua solicitação de cartão no momento.",
+    "noCard": "Você ainda não emitiu um cartão virtual.",
+    "noAccounts": "Crie uma conta corrente para financiar seu cartão.",
+    "feeTitle": "Taxa do cartão virtual",
+    "feeBody": "Uma taxa única de emissão de $5 será descontada do seu saldo ao solicitar.",
+    "processingTitle": "Tempo de processamento",
+    "processingBody": "As solicitações de cartão são analisadas em 2–3 dias úteis.",
+    "selectFunding": "Selecionar conta de financiamento",
+    "requestPending": "Solicitação pendente de análise",
+    "requestButton": "Solicitar cartão virtual",
+    "needBalance": "Você precisa de pelo menos $5 disponíveis para solicitar.",
+    "pendingRequest": "Você já tem uma solicitação aguardando aprovação.",
+    "existingCard": "Um cartão já está vinculado a esta conta.",
+    "kycRequired": "Seu KYC deve estar aprovado antes de solicitar um cartão.",
+    "requestTitle": "Solicitação de cartão virtual",
+    "accountLine": "Conta ••••{{last4}}",
+    "feeStatus": "Status da taxa: {{status}}",
+    "reason": "Motivo: {{reason}}",
+    "reviewNote": "Sua solicitação de cartão está em análise. Isso geralmente leva 2–3 dias úteis.",
+    "status": {
+      "rejected": "Rejeitada",
+      "approved": "Aprovada",
+      "issued": "Emitida",
+      "pending": "Pendente de aprovação"
+    }
+  }
+}

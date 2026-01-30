@@ -1,0 +1,209 @@
+{
+  "metaTitle": "User Profile - TrustPay",
+  "metaDescription": "Manage your TrustPay account profile, security settings, and communication preferences",
+  "breadcrumb": {
+    "dashboard": "Dashboard",
+    "profile": "User Profile"
+  },
+  "title": "User Profile",
+  "subtitle": "Manage your account information, security settings, and communication preferences",
+  "sections": {
+    "profileInfo": {
+      "title": "Profile Information",
+      "description": "View and update your personal information"
+    },
+    "cards": {
+      "title": "Cards",
+      "description": "Issue a virtual card that spends against your TrustPay balance"
+    },
+    "transferLimit": {
+      "title": "Daily Transfer Limit",
+      "description": "Request an increase to your daily transfer limit.",
+      "currentLimitTitle": "Current daily limit",
+      "requestedLimit": "Requested limit: {{amount}}",
+      "reasonLabel": "Reason: {{reason}}",
+      "noReason": "No reason provided",
+      "pendingNote": "Your request is under review. We'll notify you once it's approved.",
+      "approvedNote": "Approved. Your new limit is now active.",
+      "rejectedNote": "Request rejected. You can submit a new request.",
+      "requestedInput": "Requested new limit",
+      "reasonInput": "Reason for increase",
+      "pendingButton": "Request Pending",
+      "submitButton": "Request Increase",
+      "loading": "Loading transfer limit requests...",
+      "loadError": "Unable to load transfer limit requests.",
+      "errors": {
+        "requested": "Enter the new limit you would like.",
+        "increaseRequired": "Requested limit must be higher than your current limit.",
+        "reason": "Provide a short reason for the increase.",
+        "submitFailed": "Unable to submit request.",
+        "submitUnavailable": "Unable to submit request right now."
+      },
+      "success": "Transfer limit request submitted.",
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      }
+    },
+    "security": {
+      "title": "Security Settings",
+      "description": "Manage your password and account security",
+      "password": "Password",
+      "passwordLastChanged": "Last changed on {{date}}",
+      "changePassword": "Change Password",
+      "twoFactorTitle": "Two-Factor Authentication Enabled",
+      "twoFactorBody": "Your account is protected with an additional layer of security"
+    },
+    "contact": {
+      "title": "Contact Preferences",
+      "description": "Choose how you want to hear from us"
+    }
+  },
+  "profile": {
+    "loading": "Loading profile details...",
+    "loadError": "Unable to load your profile.",
+    "dataMissing": "Profile data was missing.",
+    "updated": "Profile updated successfully",
+    "editButton": "Edit Profile Information",
+    "pictureAlt": "Profile photo of {{name}}",
+    "fields": {
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "memberSince": "Member Since",
+      "lastLogin": "Last Login",
+      "kycStatus": "KYC Status",
+      "documentType": "Document Type",
+      "country": "Country",
+      "verifiedAt": "Verified At"
+    }
+  },
+  "editForm": {
+    "placeholders": {
+      "fullName": "Enter your full name",
+      "email": "Enter your email address",
+      "phone": "Enter your phone number"
+    },
+    "buttons": {
+      "save": "Save Changes",
+      "cancel": "Cancel"
+    },
+    "errors": {
+      "fullNameRequired": "Full name is required",
+      "fullNameMin": "Full name must be at least 2 characters",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email address",
+      "phoneRequired": "Phone number is required",
+      "phoneInvalid": "Please enter a valid phone number"
+    }
+  },
+  "picture": {
+    "uploadAria": "Upload profile picture",
+    "button": "Change Picture",
+    "formats": "Supported formats: JPEG, PNG, WebP (Max 5MB)",
+    "invalidType": "Please upload a valid image file (JPEG, PNG, or WebP)",
+    "tooLarge": "File size must be less than 5MB"
+  },
+  "password": {
+    "changed": "Password changed successfully! Please use your new password for future logins.",
+    "requirementsTitle": "Password Requirements:",
+    "requirements": {
+      "length": "At least 8 characters long",
+      "case": "Contains uppercase and lowercase letters",
+      "number": "Contains at least one number",
+      "special": "Contains at least one special character (!@#$%^&*)"
+    },
+    "labels": {
+      "current": "Current Password",
+      "new": "New Password",
+      "confirm": "Confirm New Password"
+    },
+    "placeholders": {
+      "current": "Enter current password",
+      "new": "Enter new password",
+      "confirm": "Confirm new password"
+    },
+    "visibility": {
+      "show": "Show password",
+      "hide": "Hide password"
+    },
+    "strength": {
+      "label": "Password Strength:",
+      "weak": "Weak",
+      "medium": "Medium",
+      "strong": "Strong"
+    },
+    "buttons": {
+      "save": "Change Password",
+      "cancel": "Cancel"
+    },
+    "errors": {
+      "minLength": "Password must be at least 8 characters",
+      "uppercase": "Password must contain at least one uppercase letter",
+      "lowercase": "Password must contain at least one lowercase letter",
+      "number": "Password must contain at least one number",
+      "special": "Password must contain at least one special character (!@#$%^&*)",
+      "currentRequired": "Current password is required",
+      "currentIncorrect": "Current password is incorrect",
+      "newRequired": "New password is required",
+      "newDifferent": "New password must be different from current password",
+      "confirmRequired": "Please confirm your new password",
+      "mismatch": "Passwords do not match"
+    }
+  },
+  "preferences": {
+    "updated": "Contact preferences updated successfully!",
+    "info": "Manage how you want to receive communications from TrustPay. You can update these preferences at any time.",
+    "button": "Save Preferences",
+    "items": {
+      "email": {
+        "label": "Email Notifications",
+        "description": "Receive account updates and important notifications via email"
+      },
+      "sms": {
+        "label": "SMS Notifications",
+        "description": "Get instant alerts for transactions and security updates via SMS"
+      },
+      "promotional": {
+        "label": "Promotional Emails",
+        "description": "Receive information about new features, offers, and banking products"
+      },
+      "alerts": {
+        "label": "Transaction Alerts",
+        "description": "Get real-time notifications for all account transactions"
+      }
+    }
+  },
+  "cards": {
+    "loading": "Checking your card status...",
+    "loadError": "Unable to load cards.",
+    "requestsLoadError": "Unable to load card requests.",
+    "selectAccountError": "Select an account to fund your card.",
+    "requestFailed": "Unable to submit your card request right now.",
+    "noCard": "You have not issued a virtual card yet.",
+    "noAccounts": "Create a checking account to fund your card.",
+    "feeTitle": "Virtual Card Fee",
+    "feeBody": "A one-time $5 issuance fee will be deducted from your balance when you apply.",
+    "processingTitle": "Processing Time",
+    "processingBody": "Card requests are reviewed within 2–3 business days.",
+    "selectFunding": "Select funding account",
+    "requestPending": "Request pending review",
+    "requestButton": "Request virtual card",
+    "needBalance": "You need at least $5 available to apply.",
+    "pendingRequest": "You already have a request awaiting approval.",
+    "existingCard": "A card is already linked to this account.",
+    "kycRequired": "Your KYC must be approved before requesting a card.",
+    "requestTitle": "Virtual Card Request",
+    "accountLine": "Account ••••{{last4}}",
+    "feeStatus": "Fee status: {{status}}",
+    "reason": "Reason: {{reason}}",
+    "reviewNote": "Your card request is under review. This typically takes 2–3 business days.",
+    "status": {
+      "rejected": "Rejected",
+      "approved": "Approved",
+      "issued": "Issued",
+      "pending": "Pending Approval"
+    }
+  }
+}

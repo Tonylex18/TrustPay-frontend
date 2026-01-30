@@ -1,0 +1,209 @@
+{
+  "metaTitle": "Profil utilisateur - TrustPay",
+  "metaDescription": "Gérez le profil de votre compte TrustPay, les paramètres de sécurité et les préférences de communication",
+  "breadcrumb": {
+    "dashboard": "Tableau de bord",
+    "profile": "Profil utilisateur"
+  },
+  "title": "Profil utilisateur",
+  "subtitle": "Gérez les informations de votre compte, les paramètres de sécurité et les préférences de communication",
+  "sections": {
+    "profileInfo": {
+      "title": "Informations du profil",
+      "description": "Consultez et mettez à jour vos informations personnelles"
+    },
+    "cards": {
+      "title": "Cartes",
+      "description": "Émettez une carte virtuelle qui utilise votre solde TrustPay"
+    },
+    "transferLimit": {
+      "title": "Plafond de transfert quotidien",
+      "description": "Demandez une augmentation de votre plafond de transfert quotidien.",
+      "currentLimitTitle": "Plafond quotidien actuel",
+      "requestedLimit": "Plafond demandé : {{amount}}",
+      "reasonLabel": "Motif : {{reason}}",
+      "noReason": "Aucun motif fourni",
+      "pendingNote": "Votre demande est en cours d'examen. Nous vous informerons une fois approuvée.",
+      "approvedNote": "Approuvée. Votre nouveau plafond est actif.",
+      "rejectedNote": "Demande rejetée. Vous pouvez soumettre une nouvelle demande.",
+      "requestedInput": "Nouveau plafond demandé",
+      "reasonInput": "Motif de l'augmentation",
+      "pendingButton": "Demande en attente",
+      "submitButton": "Demander une augmentation",
+      "loading": "Chargement des demandes de plafond...",
+      "loadError": "Impossible de charger les demandes de plafond de transfert.",
+      "errors": {
+        "requested": "Saisissez le nouveau plafond souhaité.",
+        "increaseRequired": "Le plafond demandé doit être supérieur à votre plafond actuel.",
+        "reason": "Fournissez un court motif pour l'augmentation.",
+        "submitFailed": "Impossible de soumettre la demande.",
+        "submitUnavailable": "Impossible de soumettre la demande pour le moment."
+      },
+      "success": "Demande de plafond de transfert envoyée.",
+      "status": {
+        "pending": "En attente",
+        "approved": "Approuvée",
+        "rejected": "Rejetée"
+      }
+    },
+    "security": {
+      "title": "Paramètres de sécurité",
+      "description": "Gérez votre mot de passe et la sécurité du compte",
+      "password": "Mot de passe",
+      "passwordLastChanged": "Dernière modification le {{date}}",
+      "changePassword": "Changer le mot de passe",
+      "twoFactorTitle": "Authentification à deux facteurs activée",
+      "twoFactorBody": "Votre compte est protégé par une couche de sécurité supplémentaire"
+    },
+    "contact": {
+      "title": "Préférences de contact",
+      "description": "Choisissez comment vous souhaitez être contacté"
+    }
+  },
+  "profile": {
+    "loading": "Chargement des informations du profil...",
+    "loadError": "Impossible de charger votre profil.",
+    "dataMissing": "Les données du profil sont manquantes.",
+    "updated": "Profil mis à jour avec succès",
+    "editButton": "Modifier les informations du profil",
+    "pictureAlt": "Photo de profil de {{name}}",
+    "fields": {
+      "fullName": "Nom complet",
+      "email": "Adresse e-mail",
+      "phone": "Numéro de téléphone",
+      "memberSince": "Membre depuis",
+      "lastLogin": "Dernière connexion",
+      "kycStatus": "Statut KYC",
+      "documentType": "Type de document",
+      "country": "Pays",
+      "verifiedAt": "Vérifié le"
+    }
+  },
+  "editForm": {
+    "placeholders": {
+      "fullName": "Entrez votre nom complet",
+      "email": "Entrez votre adresse e-mail",
+      "phone": "Entrez votre numéro de téléphone"
+    },
+    "buttons": {
+      "save": "Enregistrer les modifications",
+      "cancel": "Annuler"
+    },
+    "errors": {
+      "fullNameRequired": "Le nom complet est requis",
+      "fullNameMin": "Le nom complet doit comporter au moins 2 caractères",
+      "emailRequired": "L'e-mail est requis",
+      "emailInvalid": "Veuillez saisir une adresse e-mail valide",
+      "phoneRequired": "Le numéro de téléphone est requis",
+      "phoneInvalid": "Veuillez saisir un numéro de téléphone valide"
+    }
+  },
+  "picture": {
+    "uploadAria": "Téléverser une photo de profil",
+    "button": "Changer la photo",
+    "formats": "Formats pris en charge : JPEG, PNG, WebP (max 5 Mo)",
+    "invalidType": "Veuillez téléverser un fichier image valide (JPEG, PNG ou WebP)",
+    "tooLarge": "La taille du fichier doit être inférieure à 5 Mo"
+  },
+  "password": {
+    "changed": "Mot de passe modifié avec succès ! Veuillez utiliser votre nouveau mot de passe pour vos prochaines connexions.",
+    "requirementsTitle": "Exigences du mot de passe :",
+    "requirements": {
+      "length": "Au moins 8 caractères",
+      "case": "Contient des lettres majuscules et minuscules",
+      "number": "Contient au moins un chiffre",
+      "special": "Contient au moins un caractère spécial (!@#$%^&*)"
+    },
+    "labels": {
+      "current": "Mot de passe actuel",
+      "new": "Nouveau mot de passe",
+      "confirm": "Confirmer le nouveau mot de passe"
+    },
+    "placeholders": {
+      "current": "Entrez le mot de passe actuel",
+      "new": "Entrez le nouveau mot de passe",
+      "confirm": "Confirmez le nouveau mot de passe"
+    },
+    "visibility": {
+      "show": "Afficher le mot de passe",
+      "hide": "Masquer le mot de passe"
+    },
+    "strength": {
+      "label": "Solidité du mot de passe :",
+      "weak": "Faible",
+      "medium": "Moyen",
+      "strong": "Fort"
+    },
+    "buttons": {
+      "save": "Changer le mot de passe",
+      "cancel": "Annuler"
+    },
+    "errors": {
+      "minLength": "Le mot de passe doit comporter au moins 8 caractères",
+      "uppercase": "Le mot de passe doit contenir au moins une majuscule",
+      "lowercase": "Le mot de passe doit contenir au moins une minuscule",
+      "number": "Le mot de passe doit contenir au moins un chiffre",
+      "special": "Le mot de passe doit contenir au moins un caractère spécial (!@#$%^&*)",
+      "currentRequired": "Le mot de passe actuel est requis",
+      "currentIncorrect": "Le mot de passe actuel est incorrect",
+      "newRequired": "Le nouveau mot de passe est requis",
+      "newDifferent": "Le nouveau mot de passe doit être différent du mot de passe actuel",
+      "confirmRequired": "Veuillez confirmer votre nouveau mot de passe",
+      "mismatch": "Les mots de passe ne correspondent pas"
+    }
+  },
+  "preferences": {
+    "updated": "Préférences de contact mises à jour avec succès !",
+    "info": "Gérez la façon dont vous souhaitez recevoir les communications de TrustPay. Vous pouvez mettre à jour ces préférences à tout moment.",
+    "button": "Enregistrer les préférences",
+    "items": {
+      "email": {
+        "label": "Notifications par e-mail",
+        "description": "Recevez des mises à jour de compte et des notifications importantes par e-mail"
+      },
+      "sms": {
+        "label": "Notifications SMS",
+        "description": "Recevez des alertes instantanées pour les transactions et la sécurité par SMS"
+      },
+      "promotional": {
+        "label": "E-mails promotionnels",
+        "description": "Recevez des informations sur les nouvelles fonctionnalités, offres et produits bancaires"
+      },
+      "alerts": {
+        "label": "Alertes de transaction",
+        "description": "Recevez des notifications en temps réel pour toutes les transactions du compte"
+      }
+    }
+  },
+  "cards": {
+    "loading": "Vérification de l'état de votre carte...",
+    "loadError": "Impossible de charger les cartes.",
+    "requestsLoadError": "Impossible de charger les demandes de carte.",
+    "selectAccountError": "Sélectionnez un compte pour financer votre carte.",
+    "requestFailed": "Impossible de soumettre votre demande de carte pour le moment.",
+    "noCard": "Vous n'avez pas encore émis de carte virtuelle.",
+    "noAccounts": "Créez un compte courant pour financer votre carte.",
+    "feeTitle": "Frais de carte virtuelle",
+    "feeBody": "Des frais d'émission uniques de 5 $ seront débités de votre solde lors de la demande.",
+    "processingTitle": "Délai de traitement",
+    "processingBody": "Les demandes de carte sont examinées sous 2–3 jours ouvrés.",
+    "selectFunding": "Sélectionner le compte de financement",
+    "requestPending": "Demande en attente d'examen",
+    "requestButton": "Demander une carte virtuelle",
+    "needBalance": "Vous devez disposer d'au moins 5 $ pour faire la demande.",
+    "pendingRequest": "Vous avez déjà une demande en attente d'approbation.",
+    "existingCard": "Une carte est déjà liée à ce compte.",
+    "kycRequired": "Votre KYC doit être approuvé avant de demander une carte.",
+    "requestTitle": "Demande de carte virtuelle",
+    "accountLine": "Compte ••••{{last4}}",
+    "feeStatus": "Statut des frais : {{status}}",
+    "reason": "Motif : {{reason}}",
+    "reviewNote": "Votre demande de carte est en cours d'examen. Cela prend généralement 2–3 jours ouvrés.",
+    "status": {
+      "rejected": "Rejetée",
+      "approved": "Approuvée",
+      "issued": "Émise",
+      "pending": "En attente d'approbation"
+    }
+  }
+}

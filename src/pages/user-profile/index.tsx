@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import NavigationBar from '../../components/ui/NavigationBar';
 import BreadcrumbTrail from '../../components/ui/BreadcrumbTrail';
 import ProfileSection from './components/ProfileSection';
@@ -10,6 +11,7 @@ import PasswordChangeForm from './components/PasswordChangeForm';
 import ContactPreferencesForm from './components/ContactPreferencesForm';
 import Select from '../../components/ui/Select';
 import Button from '../../components/ui/Button';
+import Input from '../../components/ui/Input';
 import CardDetailsDisplay from './components/CardDetailsDisplay';
 import { UserProfile, ContactPreferences, PasswordChangeData, ProfileEditData, EditMode } from './types';
 import { toast } from 'react-toastify';
@@ -17,6 +19,7 @@ import { API_BASE_URL, clearStoredToken, getStoredToken } from '../../utils/api'
 
 const UserProfilePage = () => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation('profile');
   const token = getStoredToken();
   const [editMode, setEditMode] = useState<EditMode>({
     isEditing: false,
@@ -43,6 +46,15 @@ const UserProfilePage = () => {
     cardId?: string | null;
     createdAt?: string;
   };
+  type TransferLimitRequestSummary = {
+    id: string;
+    status: string;
+    currentLimit: number;
+    requestedLimit: number;
+    reason?: string | null;
+    createdAt?: string;
+    updatedAt?: string;
+  };
   const [cards, setCards] = useState<
     { id: string; brand: string; last4: string; status: string; bankAccountId: string; createdAt: string; stripeCardId?: string; activationStatus?: string; activatedAt?: string }[]
   >([]);
@@ -53,6 +65,13 @@ const UserProfilePage = () => {
   const [cardLoading, setCardLoading] = useState(false);
   const [cardError, setCardError] = useState<string | null>(null);
   const [cardRequestError, setCardRequestError] = useState<string | null>(null);
+  const [dailyTransferLimit, setDailyTransferLimit] = useState<number | null>(null);
+  const [transferLimitRequests, setTransferLimitRequests] = useState<TransferLimitRequestSummary[]>([]);
+  const [transferLimitLoadError, setTransferLimitLoadError] = useState<string | null>(null);
+  const [transferLimitSubmitError, setTransferLimitSubmitError] = useState<string | null>(null);
+  const [transferLimitSubmitting, setTransferLimitSubmitting] = useState(false);
+  const [transferLimitForm, setTransferLimitForm] = useState({ requestedLimit: '', reason: '' });
+  const [isLoadingTransferLimitRequests, setIsLoadingTransferLimitRequests] = useState(false);
   const [selectedAccountId, setSelectedAccountId] = useState<string>('');
   const selectedAccount = useMemo(
     () => accounts.find((acct) => acct.id === selectedAccountId) || null,
@@ -70,6 +89,35 @@ const UserProfilePage = () => {
     const balance = selectedAccount?.availableBalance ?? 0;
     return balance < 5;
   }, [selectedAccount]);
+  const latestTransferLimitRequest = useMemo(
+    () => (transferLimitRequests.length > 0 ? transferLimitRequests[0] : null),
+    [transferLimitRequests]
+  );
+  const isTransferLimitPending = (latestTransferLimitRequest?.status || '').toUpperCase() === 'PENDING';
+  const currentDailyLimit = useMemo(() => {
+    if (typeof dailyTransferLimit === 'number') {
+      return dailyTransferLimit;
+    }
+    if (
+      latestTransferLimitRequest &&
+      (latestTransferLimitRequest.status || '').toUpperCase() === 'APPROVED' &&
+      typeof latestTransferLimitRequest.requestedLimit === 'number'
+    ) {
+      return latestTransferLimitRequest.requestedLimit;
+    }
+    if (typeof latestTransferLimitRequest?.currentLimit === 'number') {
+      return latestTransferLimitRequest.currentLimit;
+    }
+    return 10000;
+  }, [dailyTransferLimit, latestTransferLimitRequest]);
+
+  const formatCurrency = (value: number) => {
+    try {
+      return new Intl.NumberFormat(i18n.language || 'en-US', { style: 'currency', currency: 'USD' }).format(value);
+    } catch {
+      return `$${value.toFixed(2)}`;
+    }
+  };
 
   const handleCardActivated = (cardId: string) => {
     setCards((prev) =>
@@ -80,9 +128,12 @@ const UserProfilePage = () => {
   };
 
   const breadcrumbItems = [
-  { label: 'Dashboard', path: '/dashboard' },
-  { label: 'User Profile' }];
+  { label: t('breadcrumb.dashboard'), path: '/dashboard' },
+  { label: t('breadcrumb.profile') }];
   const kycApproved = userProfile?.kycStatus === 'APPROVED';
+  const profilePictureAltText = userProfile
+    ? t('profile.pictureAlt', { name: userProfile.fullName || userProfile.email })
+    : '';
 
   useEffect(() => {
     const controller = new AbortController();
@@ -96,7 +147,7 @@ const UserProfilePage = () => {
       setIsLoading(true);
       setLoadError(null);
       try {
-        const [profileRes, kycRes] = await Promise.all([
+        const [profileRes, kycRes, meRes] = await Promise.all([
           fetch(`${API_BASE_URL}/profile`, {
             headers: {
               Authorization: `Bearer ${token}`
@@ -108,12 +159,18 @@ const UserProfilePage = () => {
               Authorization: `Bearer ${token}`
             },
             signal: controller.signal
+          }),
+          fetch(`${API_BASE_URL}/me`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            },
+            signal: controller.signal
           })
         ]);
 
         const payload = await profileRes.json().catch(() => null);
         if (!profileRes.ok) {
-          const message = payload?.errors || payload?.message || 'Unable to load your profile.';
+          const message = payload?.errors || payload?.message || t('profile.loadError');
           if (profileRes.status === 401) {
             clearStoredToken();
             navigate('/login');
@@ -125,12 +182,30 @@ const UserProfilePage = () => {
         }
 
         const kycPayload = await kycRes.json().catch(() => null);
+        const mePayload = await meRes.json().catch(() => null);
+
+        if (!meRes.ok) {
+          const message = mePayload?.errors || mePayload?.message || t('profile.loadError');
+          if (meRes.status === 401) {
+            clearStoredToken();
+            navigate('/login');
+            return;
+          }
+          setLoadError(message);
+          toast.error(message);
+          return;
+        }
+
+        const meData = mePayload?.user || mePayload?.data || mePayload;
+        if (typeof meData?.dailyTransferLimit === 'number') {
+          setDailyTransferLimit(meData.dailyTransferLimit);
+        }
 
         const data = payload?.user || payload?.data || payload;
         const kyc = kycPayload?.kyc;
 
         if (!data) {
-          const message = 'Profile data was missing.';
+          const message = t('profile.dataMissing');
           setLoadError(message);
           toast.error(message);
           return;
@@ -142,7 +217,7 @@ const UserProfilePage = () => {
           email: data.email,
           phone: data.phone || '',
           profilePicture: data.avatarUrl || '',
-          profilePictureAlt: `Profile photo of ${data.fullName || data.email}`,
+          profilePictureAlt: t('profile.pictureAlt', { name: data.fullName || data.email }),
           dateJoined: data.createdAt ? new Date(data.createdAt) : new Date(),
           lastLogin: data.lastLoginAt ? new Date(data.lastLoginAt) : new Date(),
           kycStatus: kyc?.status || data.kycStatus || 'UNKNOWN',
@@ -152,7 +227,7 @@ const UserProfilePage = () => {
         });
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {
-          const message = 'Unable to load your profile.';
+          const message = t('profile.loadError');
           setLoadError(message);
           toast.error(message);
         }
@@ -206,7 +281,7 @@ const UserProfilePage = () => {
             }))
           );
         } else if (!cardRes.ok) {
-          const message = cardPayload?.errors || cardPayload?.message || 'Unable to load cards.';
+          const message = cardPayload?.errors || cardPayload?.message || t('cards.loadError');
           setCardError(message);
           toast.error(message);
         }
@@ -240,14 +315,14 @@ const UserProfilePage = () => {
             }))
           );
         } else if (!requestRes.ok) {
-          const message = requestPayload?.errors || requestPayload?.message || 'Unable to load card requests.';
+          const message = requestPayload?.errors || requestPayload?.message || t('cards.requestsLoadError');
           setCardRequestError(message);
           toast.error(message);
         }
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {
-          setCardError('Unable to load cards.');
-          toast.error('Unable to load cards.');
+          setCardError(t('cards.loadError'));
+          toast.error(t('cards.loadError'));
         }
       } finally {
         setCardLoading(false);
@@ -256,6 +331,51 @@ const UserProfilePage = () => {
 
     fetchProfile();
     fetchCardsAndAccounts();
+    const fetchTransferLimitRequests = async () => {
+      setIsLoadingTransferLimitRequests(true);
+      setTransferLimitLoadError(null);
+      try {
+        const response = await fetch(`${API_BASE_URL}/transfer-limit-requests`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          signal: controller.signal
+        });
+        const payload = await response.json().catch(() => null);
+        if (!response.ok) {
+          const message = payload?.errors || payload?.message || t('sections.transferLimit.loadError');
+          if (response.status === 401) {
+            clearStoredToken();
+            navigate('/login');
+            return;
+          }
+          setTransferLimitLoadError(message);
+          toast.error(message);
+          return;
+        }
+        if (Array.isArray(payload)) {
+          setTransferLimitRequests(
+            payload.map((r: any) => ({
+              id: r.id,
+              status: r.status,
+              currentLimit: Number(r.currentLimit ?? r.current_limit ?? 0),
+              requestedLimit: Number(r.requestedLimit ?? r.requested_limit ?? 0),
+              reason: r.reason || null,
+              createdAt: r.createdAt || r.created_at,
+              updatedAt: r.updatedAt || r.updated_at
+            }))
+          );
+        }
+      } catch (error) {
+        if ((error as Error).name !== 'AbortError') {
+          setTransferLimitLoadError(t('sections.transferLimit.loadError'));
+          toast.error(t('sections.transferLimit.loadError'));
+        }
+      } finally {
+        setIsLoadingTransferLimitRequests(false);
+      }
+    };
+    fetchTransferLimitRequests();
 
     return () => controller.abort();
   }, [navigate, token]);
@@ -284,18 +404,18 @@ const UserProfilePage = () => {
         : prev
     );
     setEditMode({ isEditing: false, section: null });
-    toast.success('Profile updated successfully')
+    toast.success(t('profile.updated'))
     // alert('Profile updated successfully!');
   };
 
   const handleSavePassword = (data: PasswordChangeData) => {
     setEditMode({ isEditing: false, section: null });
-    alert('Password changed successfully! Please use your new password for future logins.');
+    alert(t('password.changed'));
   };
 
   const handleSavePreferences = (preferences: ContactPreferences) => {
     setContactPreferences(preferences);
-    toast.success('Contact preferences updated successfully!');
+    toast.success(t('preferences.updated'));
     // alert('Contact preferences updated successfully!');
   };
 
@@ -305,7 +425,7 @@ const UserProfilePage = () => {
       return;
     }
     if (!selectedAccountId) {
-      toast.error('Select an account to fund your card.');
+      toast.error(t('cards.selectAccountError'));
       return;
     }
     setCardLoading(true);
@@ -321,7 +441,7 @@ const UserProfilePage = () => {
       });
       const payload = await response.json().catch(() => null);
       if (!response.ok) {
-        const message = payload?.errors || payload?.message || 'Unable to submit your card request right now.';
+        const message = payload?.errors || payload?.message || t('cards.requestFailed');
         setCardError(message);
         toast.error(message);
         return;
@@ -339,20 +459,113 @@ const UserProfilePage = () => {
       if (newRequest.id) {
         setCardRequests((prev) => [newRequest, ...prev.filter((r) => r.id !== newRequest.id)]);
       }
-      toast.success(payload?.message || 'Your card request is under review. This typically takes 2–3 business days.');
+      toast.success(payload?.message || t('cards.reviewNote'));
     } catch (error) {
-      setCardError('Unable to submit your card request right now.');
-      toast.error('Unable to submit your card request right now.');
+      setCardError(t('cards.requestFailed'));
+      toast.error(t('cards.requestFailed'));
     } finally {
       setCardLoading(false);
     }
   };
 
+  const handleTransferLimitSubmit = async () => {
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    if (isTransferLimitPending) {
+      return;
+    }
+    const requestedValue = Number(transferLimitForm.requestedLimit);
+    const reason = transferLimitForm.reason.trim();
+
+    if (!requestedValue || Number.isNaN(requestedValue)) {
+      setTransferLimitSubmitError(t('sections.transferLimit.errors.requested'));
+      return;
+    }
+    if (requestedValue <= currentDailyLimit) {
+      setTransferLimitSubmitError(t('sections.transferLimit.errors.increaseRequired'));
+      return;
+    }
+    if (!reason) {
+      setTransferLimitSubmitError(t('sections.transferLimit.errors.reason'));
+      return;
+    }
+
+    setTransferLimitSubmitting(true);
+    setTransferLimitSubmitError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/transfer-limit-requests`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          requestedLimit: requestedValue,
+          reason
+        })
+      });
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        const message = payload?.errors || payload?.message || t('sections.transferLimit.errors.submitFailed');
+        setTransferLimitSubmitError(message);
+        toast.error(message);
+        return;
+      }
+      const created = payload as TransferLimitRequestSummary;
+      setTransferLimitRequests((prev) => [
+        {
+          id: created.id,
+          status: created.status,
+          currentLimit: Number(created.currentLimit),
+          requestedLimit: Number(created.requestedLimit),
+          reason: created.reason || null,
+          createdAt: created.createdAt,
+          updatedAt: created.updatedAt
+        },
+        ...prev.filter((r) => r.id !== created.id)
+      ]);
+      setTransferLimitForm({ requestedLimit: '', reason: '' });
+      toast.success(t('sections.transferLimit.success'));
+    } catch (_error) {
+      setTransferLimitSubmitError(t('sections.transferLimit.errors.submitUnavailable'));
+    } finally {
+      setTransferLimitSubmitting(false);
+    }
+  };
+
+  const renderTransferLimitBadge = (status?: string) => {
+    const normalized = (status || '').toUpperCase();
+    if (normalized === 'REJECTED') {
+      return (
+        <span className="px-2 py-1 text-[11px] font-semibold rounded-full border bg-error/10 text-error border-error/30">
+          {t('sections.transferLimit.status.rejected')}
+        </span>
+      );
+    }
+    if (normalized === 'APPROVED') {
+      return (
+        <span className="px-2 py-1 text-[11px] font-semibold rounded-full border bg-success/10 text-success border-success/30">
+          {t('sections.transferLimit.status.approved')}
+        </span>
+      );
+    }
+    if (normalized === 'PENDING') {
+      return (
+        <span className="px-2 py-1 text-[11px] font-semibold rounded-full border bg-amber-50 text-amber-700 border-amber-200">
+          {t('sections.transferLimit.status.pending')}
+        </span>
+      );
+    }
+    return null;
+  };
+
   return (
     <>
       <Helmet>
-        <title>User Profile - TrustPay</title>
-        <meta name="description" content="Manage your TrustPay account profile, security settings, and communication preferences" />
+        <title>{t('metaTitle')}</title>
+        <meta name="description" content={t('metaDescription')} />
       </Helmet>
 
       <div className="min-h-screen bg-background">
@@ -375,21 +588,21 @@ const UserProfilePage = () => {
               <BreadcrumbTrail items={breadcrumbItems} className="mb-6" />
 
               <div className="mb-8">
-                <h1 className="text-3xl font-bold text-foreground mb-2">User Profile</h1>
+                <h1 className="text-3xl font-bold text-foreground mb-2">{t('title')}</h1>
                 <p className="text-muted-foreground">
-                  Manage your account information, security settings, and communication preferences
+                  {t('subtitle')}
                 </p>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 space-y-6">
                   <ProfileSection
-                    title="Profile Information"
-                    description="View and update your personal information">
+                    title={t('sections.profileInfo.title')}
+                    description={t('sections.profileInfo.description')}>
 
                     {isLoading && (
                       <div className="rounded-lg border border-border bg-muted/30 p-6 text-sm text-muted-foreground">
-                        Loading profile details...
+                        {t('profile.loading')}
                       </div>
                     )}
 
@@ -409,7 +622,7 @@ const UserProfilePage = () => {
                               phone: userProfile.phone
                             }}
                             currentPicture={userProfile.profilePicture}
-                            currentPictureAlt={userProfile.profilePictureAlt}
+                            currentPictureAlt={profilePictureAltText}
                             onSave={handleSaveProfile}
                             onCancel={handleCancelEdit}
                           />
@@ -423,13 +636,14 @@ const UserProfilePage = () => {
                     )}
                   </ProfileSection>
 
+
                   <ProfileSection
-                    title="Cards"
-                    description="Issue a virtual card that spends against your TrustPay balance"
+                    title={t('sections.cards.title')}
+                    description={t('sections.cards.description')}
                   >
                     {cardLoading && (
                       <div className="rounded-lg border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
-                        Checking your card status...
+                        {t('cards.loading')}
                       </div>
                     )}
                     {cardError && (
@@ -457,25 +671,27 @@ const UserProfilePage = () => {
                           })();
                           const label = (() => {
                             const normalized = (request.status || '').toUpperCase();
-                            if (normalized === 'REJECTED') return 'Rejected';
-                            if (normalized === 'APPROVED') return 'Approved';
-                            if (normalized === 'ISSUED') return 'Issued';
-                            return 'Pending Approval';
+                            if (normalized === 'REJECTED') return t('cards.status.rejected');
+                            if (normalized === 'APPROVED') return t('cards.status.approved');
+                            if (normalized === 'ISSUED') return t('cards.status.issued');
+                            return t('cards.status.pending');
                           })();
                           return (
                             <div key={request.id} className="border border-border rounded-lg p-4 bg-muted/20">
                               <div className="flex items-start justify-between gap-3">
                                 <div>
-                                  <p className="text-sm font-semibold text-foreground">Virtual Card Request</p>
+                                  <p className="text-sm font-semibold text-foreground">{t('cards.requestTitle')}</p>
                                   <p className="text-xs text-muted-foreground">
-                                    Account ••••{request.accountLast4 || '----'}
+                                    {t('cards.accountLine', { last4: request.accountLast4 || '----' })}
                                   </p>
                                   <p className="text-xs text-muted-foreground mt-1">
-                                    Fee status: {(request.feeStatus || 'PENDING').toString().replace(/_/g, ' ')}
+                                    {t('cards.feeStatus', {
+                                      status: (request.feeStatus || 'PENDING').toString().replace(/_/g, ' ')
+                                    })}
                                   </p>
                                   {request.rejectionReason && (
                                     <p className="text-xs text-error mt-1">
-                                      Reason: {request.rejectionReason}
+                                      {t('cards.reason', { reason: request.rejectionReason })}
                                     </p>
                                   )}
                                 </div>
@@ -483,9 +699,9 @@ const UserProfilePage = () => {
                                   {label}
                                 </span>
                               </div>
-                              {label === 'Pending Approval' && (
+                              {(request.status || '').toUpperCase() === 'PENDING_APPROVAL' && (
                                 <p className="text-xs text-muted-foreground mt-2">
-                                  Your card request is under review. This typically takes 2–3 business days.
+                                  {t('cards.reviewNote')}
                                 </p>
                               )}
                             </div>
@@ -514,25 +730,25 @@ const UserProfilePage = () => {
                       </div>
                     )}
                     {!cardLoading && cards.length === 0 && (
-                      <p className="text-sm text-muted-foreground mb-3">You have not issued a virtual card yet.</p>
+                      <p className="text-sm text-muted-foreground mb-3">{t('cards.noCard')}</p>
                     )}
                     {kycApproved ? (
                       accounts.length === 0 ? (
-                        <p className="text-sm text-muted-foreground">Create a checking account to fund your card.</p>
+                        <p className="text-sm text-muted-foreground">{t('cards.noAccounts')}</p>
                       ) : (
                         <div className="space-y-3">
                           <div className="border border-border rounded-lg p-3 bg-card/40">
-                            <p className="text-sm font-semibold text-foreground">Virtual Card Fee</p>
+                            <p className="text-sm font-semibold text-foreground">{t('cards.feeTitle')}</p>
                             <p className="text-sm text-muted-foreground">
-                              A one-time $5 issuance fee will be deducted from your balance when you apply.
+                              {t('cards.feeBody')}
                             </p>
-                            <p className="text-sm font-semibold text-foreground mt-2">Processing Time</p>
+                            <p className="text-sm font-semibold text-foreground mt-2">{t('cards.processingTitle')}</p>
                             <p className="text-sm text-muted-foreground">
-                              Card requests are reviewed within 2–3 business days.
+                              {t('cards.processingBody')}
                             </p>
                           </div>
                           <Select
-                            label="Select funding account"
+                            label={t('cards.selectFunding')}
                             value={selectedAccountId}
                             onChange={(value) => setSelectedAccountId(String(value))}
                             options={accounts.map((acct) => ({
@@ -545,29 +761,33 @@ const UserProfilePage = () => {
                             loading={cardLoading}
                             disabled={cardLoading || hasPendingRequest || insufficientBalance || hasIssuedCard}
                           >
-                            {hasPendingRequest ? 'Request pending review' : 'Request virtual card'}
+                            {hasPendingRequest ? t('cards.requestPending') : t('cards.requestButton')}
                           </Button>
                           {(hasPendingRequest || insufficientBalance || hasIssuedCard) && (
                             <p className="text-xs text-muted-foreground">
                               {insufficientBalance
-                                ? 'You need at least $5 available to apply.'
+                                ? t('cards.needBalance')
                                 : hasPendingRequest
-                                  ? 'You already have a request awaiting approval.'
-                                  : 'A card is already linked to this account.'}
+                                  ? t('cards.pendingRequest')
+                                  : t('cards.existingCard')}
                             </p>
                           )}
                         </div>
                       )
                     ) : (
                       <p className="text-sm text-muted-foreground">
-                        Your KYC must be approved before requesting a card.
+                        {t('cards.kycRequired')}
                       </p>
                     )}
                   </ProfileSection>
+                  
+                  
+
+
 
                   <ProfileSection
-                    title="Security Settings"
-                    description="Manage your password and account security">
+                    title={t('sections.security.title')}
+                    description={t('sections.security.description')}>
 
                     {editMode.isEditing && editMode.section === 'password' ?
                     <PasswordChangeForm
@@ -578,20 +798,22 @@ const UserProfilePage = () => {
                     <div className="space-y-4">
                         <div className="flex items-center justify-between p-4 rounded-lg bg-muted/50">
                           <div>
-                            <p className="font-medium text-foreground">Password</p>
+                            <p className="font-medium text-foreground">{t('sections.security.password')}</p>
                             <p className="text-sm text-muted-foreground mt-1">
-                              Last changed on {new Intl.DateTimeFormat('en-US', {
+                              {t('sections.security.passwordLastChanged', {
+                              date: new Intl.DateTimeFormat(i18n.language || 'en-US', {
                               month: 'long',
                               day: 'numeric',
                               year: 'numeric'
-                            }).format(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))}
+                            }).format(new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+                            })}
                             </p>
                           </div>
                           <button
                           onClick={handleEditPassword}
                           className="px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10 rounded-md transition-colors duration-200">
 
-                            Change Password
+                            {t('sections.security.changePassword')}
                           </button>
                         </div>
 
@@ -603,9 +825,9 @@ const UserProfilePage = () => {
                               </svg>
                             </div>
                             <div>
-                              <p className="font-medium text-success">Two-Factor Authentication Enabled</p>
+                              <p className="font-medium text-success">{t('sections.security.twoFactorTitle')}</p>
                               <p className="text-sm text-success/80 mt-1">
-                                Your account is protected with an additional layer of security
+                                {t('sections.security.twoFactorBody')}
                               </p>
                             </div>
                           </div>
@@ -615,15 +837,91 @@ const UserProfilePage = () => {
                   </ProfileSection>
                 </div>
 
-                <div className="lg:col-span-1">
+                <div className="lg:col-span-1 space-y-6">
                   <ProfileSection
-                    title="Contact Preferences"
-                    description="Choose how you want to hear from us">
+                    title={t('sections.contact.title')}
+                    description={t('sections.contact.description')}>
 
                     <ContactPreferencesForm
                       initialPreferences={contactPreferences}
                       onSave={handleSavePreferences} />
 
+                  </ProfileSection>
+                  <ProfileSection
+                    title={t('sections.transferLimit.title')}
+                    description={t('sections.transferLimit.description')}
+                  >
+                    {isLoadingTransferLimitRequests && (
+                      <div className="rounded-lg border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
+                        {t('sections.transferLimit.loading')}
+                      </div>
+                    )}
+                    {transferLimitLoadError && (
+                      <div className="rounded-lg border border-error/30 bg-error/5 p-4 text-sm text-error">
+                        {transferLimitLoadError}
+                      </div>
+                    )}
+                    <div className="space-y-3">
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <p className="text-sm font-semibold text-foreground">{t('sections.transferLimit.currentLimitTitle')}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {formatCurrency(currentDailyLimit)}
+                          </p>
+                        </div>
+                        {latestTransferLimitRequest ? renderTransferLimitBadge(latestTransferLimitRequest.status) : null}
+                      </div>
+
+                      {latestTransferLimitRequest && (
+                        <div className="text-xs text-muted-foreground space-y-1">
+                          <p>{t('sections.transferLimit.requestedLimit', { amount: formatCurrency(latestTransferLimitRequest.requestedLimit) })}</p>
+                          <p>{t('sections.transferLimit.reasonLabel', { reason: latestTransferLimitRequest.reason || t('sections.transferLimit.noReason') })}</p>
+                          {(latestTransferLimitRequest.status || '').toUpperCase() === 'PENDING' && (
+                            <p>{t('sections.transferLimit.pendingNote')}</p>
+                          )}
+                          {(latestTransferLimitRequest.status || '').toUpperCase() === 'APPROVED' && (
+                            <p className="text-success">{t('sections.transferLimit.approvedNote')}</p>
+                          )}
+                          {(latestTransferLimitRequest.status || '').toUpperCase() === 'REJECTED' && (
+                            <p className="text-error">{t('sections.transferLimit.rejectedNote')}</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-4 space-y-3">
+                      <Input
+                        label={t('sections.transferLimit.requestedInput')}
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={transferLimitForm.requestedLimit}
+                        onChange={(e) =>
+                          setTransferLimitForm((prev) => ({ ...prev, requestedLimit: e.target.value }))
+                        }
+                        disabled={isTransferLimitPending || transferLimitSubmitting}
+                      />
+                      <Input
+                        label={t('sections.transferLimit.reasonInput')}
+                        value={transferLimitForm.reason}
+                        onChange={(e) =>
+                          setTransferLimitForm((prev) => ({ ...prev, reason: e.target.value }))
+                        }
+                        disabled={isTransferLimitPending || transferLimitSubmitting}
+                      />
+                      {transferLimitSubmitError && (
+                        <p className="text-xs text-error">{transferLimitSubmitError}</p>
+                      )}
+                      <Button
+                        variant="default"
+                        fullWidth
+                        loading={transferLimitSubmitting}
+                        disabled={isTransferLimitPending || transferLimitSubmitting}
+                        onClick={handleTransferLimitSubmit}
+                      >
+                        {isTransferLimitPending ? t('sections.transferLimit.pendingButton') : t('sections.transferLimit.submitButton')}
+                      </Button>
+                    </div>
                   </ProfileSection>
                 </div>
               </div>

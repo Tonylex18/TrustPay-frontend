@@ -135,11 +135,19 @@ const MoneyTransfer = () => {
         const payload = await accountsRes.json().catch(() => null);
         const mePayload = await meRes.json().catch(() => null);
         if (meRes.ok && mePayload) {
+          const meData = mePayload?.user || mePayload?.data || mePayload;
           setCurrentUser({
-            name: mePayload.fullName || mePayload.email,
-            email: mePayload.email,
-            avatar: mePayload.avatarUrl
+            name: meData?.fullName || meData?.email,
+            email: meData?.email,
+            avatar: meData?.avatarUrl
           });
+          if (typeof meData?.dailyTransferLimit === 'number') {
+            setTransferLimits((prev) => ({
+              ...prev,
+              dailyLimit: meData.dailyTransferLimit,
+              remainingToday: meData.dailyTransferLimit
+            }));
+          }
         }
 
         if (!accountsRes.ok) {

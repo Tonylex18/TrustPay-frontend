@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ContactPreferences } from '../types';
 import { Checkbox } from '../../../components/ui/Checkbox';
 import Button from '../../../components/ui/Button';
@@ -10,6 +11,7 @@ interface ContactPreferencesFormProps {
 }
 
 const ContactPreferencesForm = ({ initialPreferences, onSave }: ContactPreferencesFormProps) => {
+  const { t } = useTranslation('profile');
   const [preferences, setPreferences] = useState<ContactPreferences>(initialPreferences);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -31,26 +33,26 @@ const ContactPreferencesForm = ({ initialPreferences, onSave }: ContactPreferenc
   const preferenceItems = [
     {
       key: 'emailNotifications' as keyof ContactPreferences,
-      label: 'Email Notifications',
-      description: 'Receive account updates and important notifications via email',
+      label: t('preferences.items.email.label'),
+      description: t('preferences.items.email.description'),
       icon: 'Mail'
     },
     {
       key: 'smsNotifications' as keyof ContactPreferences,
-      label: 'SMS Notifications',
-      description: 'Get instant alerts for transactions and security updates via SMS',
+      label: t('preferences.items.sms.label'),
+      description: t('preferences.items.sms.description'),
       icon: 'MessageSquare'
     },
     {
       key: 'promotionalEmails' as keyof ContactPreferences,
-      label: 'Promotional Emails',
-      description: 'Receive information about new features, offers, and banking products',
+      label: t('preferences.items.promotional.label'),
+      description: t('preferences.items.promotional.description'),
       icon: 'Tag'
     },
     {
       key: 'transactionAlerts' as keyof ContactPreferences,
-      label: 'Transaction Alerts',
-      description: 'Get real-time notifications for all account transactions',
+      label: t('preferences.items.alerts.label'),
+      description: t('preferences.items.alerts.description'),
       icon: 'Bell'
     }
   ];
@@ -60,7 +62,7 @@ const ContactPreferencesForm = ({ initialPreferences, onSave }: ContactPreferenc
       <div className="bg-muted/50 rounded-lg p-4 flex items-start gap-3">
         <Icon name="Info" size={20} color="var(--color-primary)" className="flex-shrink-0 mt-0.5" />
         <p className="text-sm text-muted-foreground">
-          Manage how you want to receive communications from TrustPay. You can update these preferences at any time.
+          {t('preferences.info')}
         </p>
       </div>
 
@@ -94,7 +96,7 @@ const ContactPreferencesForm = ({ initialPreferences, onSave }: ContactPreferenc
           iconPosition="left"
           fullWidth
         >
-          Save Preferences
+          {t('preferences.button')}
         </Button>
       </div>
     </div>

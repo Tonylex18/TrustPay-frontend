@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ProfileEditData, ValidationErrors } from '../types';
 import Input from '../../../components/ui/Input';
 import Button from '../../../components/ui/Button';
@@ -13,6 +14,7 @@ interface ProfileEditFormProps {
 }
 
 const ProfileEditForm = ({ initialData, currentPicture, currentPictureAlt, onSave, onCancel }: ProfileEditFormProps) => {
+  const { t } = useTranslation('profile');
   const [formData, setFormData] = useState<ProfileEditData>(initialData);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [isSaving, setIsSaving] = useState(false);
@@ -21,23 +23,23 @@ const ProfileEditForm = ({ initialData, currentPicture, currentPictureAlt, onSav
     const newErrors: ValidationErrors = {};
 
     if (!formData.fullName.trim()) {
-      newErrors.fullName = 'Full name is required';
+      newErrors.fullName = t('editForm.errors.fullNameRequired');
     } else if (formData.fullName.trim().length < 2) {
-      newErrors.fullName = 'Full name must be at least 2 characters';
+      newErrors.fullName = t('editForm.errors.fullNameMin');
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = t('editForm.errors.emailRequired');
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = t('editForm.errors.emailInvalid');
     }
 
     const phoneRegex = /^\+?[\d\s\-()]+$/;
     if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
+      newErrors.phone = t('editForm.errors.phoneRequired');
     } else if (!phoneRegex.test(formData.phone)) {
-      newErrors.phone = 'Please enter a valid phone number';
+      newErrors.phone = t('editForm.errors.phoneInvalid');
     }
 
     setErrors(newErrors);
@@ -89,33 +91,33 @@ const ProfileEditForm = ({ initialData, currentPicture, currentPictureAlt, onSav
 
       <div className="space-y-4">
         <Input
-          label="Full Name"
+          label={t('profile.fields.fullName')}
           type="text"
           value={formData.fullName}
           onChange={handleChange('fullName')}
           error={errors.fullName}
           required
-          placeholder="Enter your full name"
+          placeholder={t('editForm.placeholders.fullName')}
         />
 
         <Input
-          label="Email Address"
+          label={t('profile.fields.email')}
           type="email"
           value={formData.email}
           onChange={handleChange('email')}
           error={errors.email}
           required
-          placeholder="Enter your email address"
+          placeholder={t('editForm.placeholders.email')}
         />
 
         <Input
-          label="Phone Number"
+          label={t('profile.fields.phone')}
           type="tel"
           value={formData.phone}
           onChange={handleChange('phone')}
           error={errors.phone}
           required
-          placeholder="Enter your phone number"
+          placeholder={t('editForm.placeholders.phone')}
         />
       </div>
 
@@ -128,7 +130,7 @@ const ProfileEditForm = ({ initialData, currentPicture, currentPictureAlt, onSav
           iconPosition="left"
           fullWidth
         >
-          Save Changes
+          {t('editForm.buttons.save')}
         </Button>
         <Button
           type="button"
@@ -137,7 +139,7 @@ const ProfileEditForm = ({ initialData, currentPicture, currentPictureAlt, onSav
           disabled={isSaving}
           fullWidth
         >
-          Cancel
+          {t('editForm.buttons.cancel')}
         </Button>
       </div>
     </form>

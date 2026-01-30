@@ -1,0 +1,209 @@
+{
+  "metaTitle": "Perfil de usuario - TrustPay",
+  "metaDescription": "Administra el perfil de tu cuenta TrustPay, la seguridad y las preferencias de comunicación",
+  "breadcrumb": {
+    "dashboard": "Panel",
+    "profile": "Perfil de usuario"
+  },
+  "title": "Perfil de usuario",
+  "subtitle": "Administra la información de tu cuenta, la seguridad y las preferencias de comunicación",
+  "sections": {
+    "profileInfo": {
+      "title": "Información del perfil",
+      "description": "Consulta y actualiza tu información personal"
+    },
+    "cards": {
+      "title": "Tarjetas",
+      "description": "Emite una tarjeta virtual que usa tu saldo de TrustPay"
+    },
+    "transferLimit": {
+      "title": "Límite diario de transferencias",
+      "description": "Solicita un aumento de tu límite diario de transferencias.",
+      "currentLimitTitle": "Límite diario actual",
+      "requestedLimit": "Límite solicitado: {{amount}}",
+      "reasonLabel": "Motivo: {{reason}}",
+      "noReason": "Sin motivo proporcionado",
+      "pendingNote": "Tu solicitud está en revisión. Te avisaremos cuando se apruebe.",
+      "approvedNote": "Aprobada. Tu nuevo límite ya está activo.",
+      "rejectedNote": "Solicitud rechazada. Puedes enviar una nueva solicitud.",
+      "requestedInput": "Nuevo límite solicitado",
+      "reasonInput": "Motivo del aumento",
+      "pendingButton": "Solicitud pendiente",
+      "submitButton": "Solicitar aumento",
+      "loading": "Cargando solicitudes de límite...",
+      "loadError": "No se pudieron cargar las solicitudes de límite de transferencias.",
+      "errors": {
+        "requested": "Ingresa el nuevo límite que deseas.",
+        "increaseRequired": "El límite solicitado debe ser mayor que tu límite actual.",
+        "reason": "Proporciona un motivo breve para el aumento.",
+        "submitFailed": "No se pudo enviar la solicitud.",
+        "submitUnavailable": "No se pudo enviar la solicitud en este momento."
+      },
+      "success": "Solicitud de límite de transferencias enviada.",
+      "status": {
+        "pending": "Pendiente",
+        "approved": "Aprobado",
+        "rejected": "Rechazado"
+      }
+    },
+    "security": {
+      "title": "Configuración de seguridad",
+      "description": "Administra tu contraseña y la seguridad de la cuenta",
+      "password": "Contraseña",
+      "passwordLastChanged": "Último cambio el {{date}}",
+      "changePassword": "Cambiar contraseña",
+      "twoFactorTitle": "Autenticación de dos factores activada",
+      "twoFactorBody": "Tu cuenta está protegida con una capa adicional de seguridad"
+    },
+    "contact": {
+      "title": "Preferencias de contacto",
+      "description": "Elige cómo quieres que nos comuniquemos contigo"
+    }
+  },
+  "profile": {
+    "loading": "Cargando detalles del perfil...",
+    "loadError": "No se pudo cargar tu perfil.",
+    "dataMissing": "Faltaban los datos del perfil.",
+    "updated": "Perfil actualizado correctamente",
+    "editButton": "Editar información del perfil",
+    "pictureAlt": "Foto de perfil de {{name}}",
+    "fields": {
+      "fullName": "Nombre completo",
+      "email": "Correo electrónico",
+      "phone": "Número de teléfono",
+      "memberSince": "Miembro desde",
+      "lastLogin": "Último acceso",
+      "kycStatus": "Estado KYC",
+      "documentType": "Tipo de documento",
+      "country": "País",
+      "verifiedAt": "Verificado el"
+    }
+  },
+  "editForm": {
+    "placeholders": {
+      "fullName": "Ingresa tu nombre completo",
+      "email": "Ingresa tu correo electrónico",
+      "phone": "Ingresa tu número de teléfono"
+    },
+    "buttons": {
+      "save": "Guardar cambios",
+      "cancel": "Cancelar"
+    },
+    "errors": {
+      "fullNameRequired": "El nombre completo es obligatorio",
+      "fullNameMin": "El nombre completo debe tener al menos 2 caracteres",
+      "emailRequired": "El correo es obligatorio",
+      "emailInvalid": "Ingresa un correo válido",
+      "phoneRequired": "El número de teléfono es obligatorio",
+      "phoneInvalid": "Ingresa un número de teléfono válido"
+    }
+  },
+  "picture": {
+    "uploadAria": "Subir foto de perfil",
+    "button": "Cambiar foto",
+    "formats": "Formatos compatibles: JPEG, PNG, WebP (máx. 5 MB)",
+    "invalidType": "Sube un archivo de imagen válido (JPEG, PNG o WebP)",
+    "tooLarge": "El tamaño del archivo debe ser menor a 5 MB"
+  },
+  "password": {
+    "changed": "¡Contraseña cambiada con éxito! Usa tu nueva contraseña para futuros inicios de sesión.",
+    "requirementsTitle": "Requisitos de contraseña:",
+    "requirements": {
+      "length": "Al menos 8 caracteres",
+      "case": "Contiene letras mayúsculas y minúsculas",
+      "number": "Contiene al menos un número",
+      "special": "Contiene al menos un carácter especial (!@#$%^&*)"
+    },
+    "labels": {
+      "current": "Contraseña actual",
+      "new": "Nueva contraseña",
+      "confirm": "Confirmar nueva contraseña"
+    },
+    "placeholders": {
+      "current": "Ingresa la contraseña actual",
+      "new": "Ingresa la nueva contraseña",
+      "confirm": "Confirma la nueva contraseña"
+    },
+    "visibility": {
+      "show": "Mostrar contraseña",
+      "hide": "Ocultar contraseña"
+    },
+    "strength": {
+      "label": "Fortaleza de la contraseña:",
+      "weak": "Débil",
+      "medium": "Media",
+      "strong": "Fuerte"
+    },
+    "buttons": {
+      "save": "Cambiar contraseña",
+      "cancel": "Cancelar"
+    },
+    "errors": {
+      "minLength": "La contraseña debe tener al menos 8 caracteres",
+      "uppercase": "La contraseña debe contener al menos una mayúscula",
+      "lowercase": "La contraseña debe contener al menos una minúscula",
+      "number": "La contraseña debe contener al menos un número",
+      "special": "La contraseña debe contener al menos un carácter especial (!@#$%^&*)",
+      "currentRequired": "La contraseña actual es obligatoria",
+      "currentIncorrect": "La contraseña actual es incorrecta",
+      "newRequired": "La nueva contraseña es obligatoria",
+      "newDifferent": "La nueva contraseña debe ser distinta de la actual",
+      "confirmRequired": "Confirma tu nueva contraseña",
+      "mismatch": "Las contraseñas no coinciden"
+    }
+  },
+  "preferences": {
+    "updated": "¡Preferencias de contacto actualizadas correctamente!",
+    "info": "Administra cómo quieres recibir comunicaciones de TrustPay. Puedes actualizar estas preferencias en cualquier momento.",
+    "button": "Guardar preferencias",
+    "items": {
+      "email": {
+        "label": "Notificaciones por correo",
+        "description": "Recibe actualizaciones de cuenta y notificaciones importantes por correo"
+      },
+      "sms": {
+        "label": "Notificaciones SMS",
+        "description": "Recibe alertas instantáneas de transacciones y seguridad por SMS"
+      },
+      "promotional": {
+        "label": "Correos promocionales",
+        "description": "Recibe información sobre nuevas funciones, ofertas y productos bancarios"
+      },
+      "alerts": {
+        "label": "Alertas de transacciones",
+        "description": "Recibe notificaciones en tiempo real de todas las transacciones"
+      }
+    }
+  },
+  "cards": {
+    "loading": "Comprobando el estado de tu tarjeta...",
+    "loadError": "No se pudieron cargar las tarjetas.",
+    "requestsLoadError": "No se pudieron cargar las solicitudes de tarjeta.",
+    "selectAccountError": "Selecciona una cuenta para financiar tu tarjeta.",
+    "requestFailed": "No se pudo enviar tu solicitud de tarjeta en este momento.",
+    "noCard": "Aún no has emitido una tarjeta virtual.",
+    "noAccounts": "Crea una cuenta corriente para financiar tu tarjeta.",
+    "feeTitle": "Tarifa de tarjeta virtual",
+    "feeBody": "Se descontará una tarifa única de emisión de $5 de tu saldo al solicitarla.",
+    "processingTitle": "Tiempo de procesamiento",
+    "processingBody": "Las solicitudes de tarjeta se revisan en 2–3 días hábiles.",
+    "selectFunding": "Seleccionar cuenta de financiación",
+    "requestPending": "Solicitud pendiente de revisión",
+    "requestButton": "Solicitar tarjeta virtual",
+    "needBalance": "Necesitas al menos $5 disponibles para solicitarla.",
+    "pendingRequest": "Ya tienes una solicitud en espera de aprobación.",
+    "existingCard": "Ya hay una tarjeta vinculada a esta cuenta.",
+    "kycRequired": "Tu KYC debe estar aprobado antes de solicitar una tarjeta.",
+    "requestTitle": "Solicitud de tarjeta virtual",
+    "accountLine": "Cuenta ••••{{last4}}",
+    "feeStatus": "Estado de la tarifa: {{status}}",
+    "reason": "Motivo: {{reason}}",
+    "reviewNote": "Tu solicitud de tarjeta está en revisión. Esto suele tardar 2–3 días hábiles.",
+    "status": {
+      "rejected": "Rechazada",
+      "approved": "Aprobada",
+      "issued": "Emitida",
+      "pending": "Pendiente de aprobación"
+    }
+  }
+}

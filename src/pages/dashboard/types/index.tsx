@@ -30,6 +30,7 @@ export interface User {
 	name?: string;
 	email: string;
 	avatar?: string;
+	dailyTransferLimit?: number;
 }
 
 export interface DashboardData {

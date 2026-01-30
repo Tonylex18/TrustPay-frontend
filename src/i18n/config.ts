@@ -16,6 +16,7 @@ import enTransfer from './locales/en/transfer.json';
 import enRegistration from './locales/en/registration.json';
 import enTransaction from './locales/en/transaction.json';
 import enBills from './locales/en/bills.json';
+import enProfile from './locales/en/profile.json';
 // import enTransfer from './locales/en/transfer.json';
 
 import frCommon from './locales/fr/common.json';
@@ -33,6 +34,7 @@ import frTransfer from './locales/fr/transfer.json';
 import frRegistration from './locales/fr/registration.json';
 import frTransaction from './locales/fr/transaction.json';
 import frBills from './locales/fr/bills.json';
+import frProfile from './locales/fr/profile.json';
 // import frTransfer from './locales/fr/transfer.json';
 
 import esCommon from './locales/es/common.json';
@@ -50,6 +52,7 @@ import esTransfer from './locales/es/transfer.json';
 import esRegistration from './locales/es/registration.json';
 import esTransaction from './locales/es/transaction.json';
 import esBills from './locales/es/bills.json';
+import esProfile from './locales/es/profile.json';
 // import esTransfer from './locales/es/transfer.json';
 
 import deCommon from './locales/de/common.json';
@@ -67,6 +70,7 @@ import deTransfer from './locales/de/transfer.json';
 import deRegistration from './locales/de/registration.json';
 import deTransaction from './locales/de/transaction.json';
 import deBills from './locales/de/bills.json';
+import deProfile from './locales/de/profile.json';
 // import deTransfer from './locales/de/transfer.json';
 
 import elCommon from './locales/el/common.json';
@@ -84,6 +88,7 @@ import elTransfer from './locales/el/transfer.json';
 import elRegistration from './locales/el/registration.json';
 import elTransaction from './locales/el/transaction.json';
 import elBills from './locales/el/bills.json';
+import elProfile from './locales/el/profile.json';
 // import elTransfer from './locales/el/transfer.json';
 
 import ptCommon from './locales/pt/common.json';
@@ -101,6 +106,7 @@ import ptTransfer from './locales/pt/transfer.json';
 import ptRegistration from './locales/pt/registration.json';
 import ptTransaction from './locales/pt/transaction.json';
 import ptBills from './locales/pt/bills.json';
+import ptProfile from './locales/pt/profile.json';
 // import ptTransfer from './locales/pt/transfer.json';
 
 export const LANGUAGE_STORAGE_KEY = 'trustpay.language';
@@ -132,7 +138,8 @@ const resources = {
     transfer: enTransfer,
     registration: enRegistration,
     transaction: enTransaction,
-    bills: enBills
+    bills: enBills,
+    profile: enProfile
   },
   fr: {
     common: frCommon,
@@ -149,7 +156,8 @@ const resources = {
     transfer: frTransfer,
     registration: frRegistration,
     transaction: frTransaction,
-    bills: frBills
+    bills: frBills,
+    profile: frProfile
   },
   es: {
     common: esCommon,
@@ -166,7 +174,8 @@ const resources = {
     transfer: esTransfer,
     registration: esRegistration,
     transaction: esTransaction,
-    bills: esBills
+    bills: esBills,
+    profile: esProfile
   },
   de: {
     common: deCommon,
@@ -183,7 +192,8 @@ const resources = {
     transfer: deTransfer,
     registration: deRegistration,
     transaction: deTransaction,
-    bills: deBills
+    bills: deBills,
+    profile: deProfile
   },
   el: {
     common: elCommon,
@@ -200,7 +210,8 @@ const resources = {
     transfer: elTransfer,
     registration: elRegistration,
     transaction: elTransaction,
-    bills: elBills
+    bills: elBills,
+    profile: elProfile
   },
   pt: {
     common: ptCommon,
@@ -217,7 +228,8 @@ const resources = {
     transfer: ptTransfer,
     registration: ptRegistration,
     transaction: ptTransaction,
-    bills: ptBills
+    bills: ptBills,
+    profile: ptProfile
   }
 } as const;
 
@@ -251,7 +263,7 @@ i18n
     lng: initialLanguage(),
     fallbackLng,
     supportedLngs: supportedLanguages.map((lang) => lang.code),
-    ns: ['common', 'auth', 'dashboard', 'cards', 'landing', 'business', 'commercial', 'invest', 'about', 'kyc', 'deposit', 'transfer', 'registration', 'transaction', 'bills'],
+    ns: ['common', 'auth', 'dashboard', 'cards', 'landing', 'business', 'commercial', 'invest', 'about', 'kyc', 'deposit', 'transfer', 'registration', 'transaction', 'bills', 'profile'],
     defaultNS: 'common',
     interpolation: {
       escapeValue: false

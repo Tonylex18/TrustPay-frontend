@@ -28,6 +28,33 @@
     "fee": "Virtual Card Fee: A one-time $5 issuance fee will be deducted from your balance when you apply.",
     "processing": "Processing Time: Card requests are reviewed within 2–3 business days."
   },
+  "transferLimit": {
+    "title": "Daily Transfer Limit",
+    "currentLimit": "Current daily limit: {{amount}}",
+    "requested": "Requested limit: {{amount}}",
+    "reasonLabel": "Reason: {{reason}}",
+    "noReason": "No reason provided",
+    "pendingNote": "Your request is under review. We'll notify you once it's approved.",
+    "approvedNote": "Approved. Your new limit is now active.",
+    "rejectedNote": "Request rejected. You can submit a new request.",
+    "requestedLabel": "Requested new limit",
+    "reasonInputLabel": "Reason for increase",
+    "submitButton": "Request Increase",
+    "pendingButton": "Request Pending",
+    "success": "Transfer limit request submitted.",
+    "status": {
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    },
+    "errors": {
+      "requestedLimit": "Enter the new limit you'd like.",
+      "increaseRequired": "Requested limit must be higher than your current limit.",
+      "reason": "Provide a short reason for the increase.",
+      "submitFailed": "Unable to submit request.",
+      "submitUnavailable": "Unable to submit request right now."
+    }
+  },
   "payments": {
     "title": "Payments & Bills"
   },
