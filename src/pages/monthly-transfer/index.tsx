@@ -28,6 +28,7 @@ const MoneyTransfer = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { t, i18n } = useTranslation('transfer');
+  const transferFeeRate = { internal: 0.0001, external: 0.0001 } as const;
   const navState = (location.state as any) || {};
   const navHasPin = typeof navState.hasTransferPin === 'boolean' ? navState.hasTransferPin : undefined;
   const verifyTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -71,7 +72,6 @@ const MoneyTransfer = () => {
   const [verifyError, setVerifyError] = useState<string | null>(null);
   const [transferLimits, setTransferLimits] = useState<TransferLimits>({
     dailyLimit: 10000,
-    perTransactionLimit: 5000,
     remainingToday: 10000,
     spentToday: 0,
     availableBalance: 0,
@@ -92,12 +92,14 @@ const MoneyTransfer = () => {
   const [isBankLookupLoading, setIsBankLookupLoading] = useState(false);
   const [bankLookupSuccess, setBankLookupSuccess] = useState(false);
   const [bankLookupError, setBankLookupError] = useState<string | null>(null);
+  const [showRoutingNumber, setShowRoutingNumber] = useState(false);
 
   const getLocale = () => i18n.language || 'en-US';
   const formatCurrencyValue = (value: number, currency: string = 'USD') =>
     new Intl.NumberFormat(getLocale(), { style: 'currency', currency: currency.toUpperCase() }).format(value);
   const formatNumberValue = (value: number) =>
     new Intl.NumberFormat(getLocale(), { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+  const maskRoutingNumber = (value: string) => value.replace(/\d(?=\d{4})/g, '*');
 
   useEffect(() => {
     if (formData.amount) {
@@ -145,7 +147,14 @@ const MoneyTransfer = () => {
             setTransferLimits((prev) => ({
               ...prev,
               dailyLimit: meData.dailyTransferLimit,
-              remainingToday: meData.dailyTransferLimit
+              remainingToday:
+                typeof meData?.dailyTransferRemaining === 'number'
+                  ? meData.dailyTransferRemaining
+                  : meData.dailyTransferLimit,
+              spentToday:
+                typeof meData?.dailyTransferSpent === 'number'
+                  ? meData.dailyTransferSpent
+                  : prev.spentToday
             }));
           }
         }
@@ -232,7 +241,7 @@ const MoneyTransfer = () => {
 
   const calculateSummary = () => {
     const amount = parseFloat(formData.amount) || 0;
-    const fee = formData.transferType === 'external' ? amount * 0.01 : 0;
+    const fee = Math.round(amount * transferFeeRate[formData.transferType] * 100) / 100;
     const total = amount + fee;
     const processingTime =
       formData.transferType === 'internal' ? t('processing.instant') : t('processing.external');
@@ -319,12 +328,11 @@ const MoneyTransfer = () => {
       const amount = parseFloat(formData.amount);
       if (amount <= 0) {
         newErrors.amount = t('messages.error.amountPositive');
-      } else if (userAccount && amount > userAccount.balance) {
+      } else if (
+        userAccount &&
+        amount * (1 + transferFeeRate[formData.transferType]) > userAccount.balance
+      ) {
         newErrors.amount = t('messages.error.insufficientBalance');
-      } else if (amount > transferLimits.perTransactionLimit) {
-        newErrors.amount = t('messages.error.perTransactionLimit', {
-          limit: formatCurrencyValue(transferLimits.perTransactionLimit, transferLimits.currency)
-        });
       } else if (amount > transferLimits.remainingToday) {
         newErrors.amount = t('messages.error.dailyLimit', {
           limit: formatCurrencyValue(transferLimits.remainingToday, transferLimits.currency)
@@ -450,6 +458,34 @@ const MoneyTransfer = () => {
       } else {
         toast.success(t('messages.success.transferSubmitted'));
       }
+      setTransferLimits((prev) => {
+        const newSpent = prev.spentToday + transferSummary.amount;
+        return {
+          ...prev,
+          spentToday: newSpent,
+          remainingToday: Math.max(prev.dailyLimit - newSpent, 0),
+          availableBalance: Math.max(prev.availableBalance - transferSummary.total, 0)
+        };
+      });
+      if (userAccount) {
+        setUserAccount({
+          ...userAccount,
+          balance: Math.max(userAccount.balance - transferSummary.total, 0)
+        });
+      }
+      if (fromAccountId) {
+        setAccounts((prev) =>
+          prev.map((acct) => {
+            if (acct.id === fromAccountId) {
+              return { ...acct, balance: Math.max(acct.balance - transferSummary.total, 0) };
+            }
+            if (formData.transferType === 'internal' && destinationAccount && acct.id === destinationAccount.id) {
+              return { ...acct, balance: acct.balance + transferSummary.amount };
+            }
+            return acct;
+          })
+        );
+      }
       setIsConfirmationOpen(false);
       setShowPinEntry(false);
       setPinEntry('');
@@ -469,9 +505,9 @@ const MoneyTransfer = () => {
   };
 
   const maxTransferable = Math.min(
-    transferLimits.perTransactionLimit,
     transferLimits.remainingToday,
-    userAccount?.balance ?? transferLimits.availableBalance
+    (userAccount?.balance ?? transferLimits.availableBalance) /
+      (1 + transferFeeRate[formData.transferType])
   );
   const canEditExternalFields = bankLookupSuccess || Boolean(formData.bankName.trim());
 
@@ -585,6 +621,7 @@ const MoneyTransfer = () => {
     { label: t('breadcrumb.transfer') }
   ];
   const infoItems = t('info.items', { returnObjects: true }) as string[];
+  const routingNumber = userAccount?.routingNumber || '';
 
   useEffect(() => {
     if (formData.transferType === 'internal') {
@@ -869,6 +906,27 @@ const MoneyTransfer = () => {
                   <div className="flex items-start gap-3">
                     <Icon name="Info" size={20} color="var(--color-primary)" className="mt-0.5 flex-shrink-0" />
                     <div>
+                      {routingNumber && (
+                        <div className="mb-1 flex items-center justify-between gap-3">
+                          <div>
+                            <p className="text-xs text-muted-foreground">
+                              {t('info.routingLabel', { defaultValue: 'Routing number' })}
+                            </p>
+                            <p className="text-xs font-semibold text-foreground">
+                              {showRoutingNumber ? routingNumber : maskRoutingNumber(routingNumber)}
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setShowRoutingNumber((prev) => !prev)}
+                            className="text-xs font-medium text-primary hover:text-primary/80"
+                          >
+                            {showRoutingNumber
+                              ? t('info.routingHide', { defaultValue: 'Hide' })
+                              : t('info.routingShow', { defaultValue: 'Show' })}
+                          </button>
+                        </div>
+                      )}
                       <p className="text-sm font-medium text-foreground mb-1">{t('info.title')}</p>
                       <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
                         {infoItems.map((item) => (

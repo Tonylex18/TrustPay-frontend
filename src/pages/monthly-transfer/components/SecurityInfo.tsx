@@ -46,15 +46,6 @@ const SecurityInfo = ({ limits, locale = 'en-US' }: SecurityInfoProps) => {
           </p>
         </div>
 
-        <div className="pt-4 border-t border-border">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-muted-foreground">{t('security.perTransaction')}</span>
-            <span className="text-sm font-semibold text-foreground">
-              {formatCurrency(limits.perTransactionLimit)}
-            </span>
-          </div>
-        </div>
-
         <div className="pt-4 border-t border-border space-y-3">
           <div className="flex items-start gap-2">
             <Icon name="Lock" size={16} color="var(--color-success)" className="mt-0.5 flex-shrink-0" />

@@ -89,6 +89,9 @@
   },
   "info": {
     "title": "Informations importantes",
+    "routingLabel": "Numéro de routage",
+    "routingShow": "Afficher",
+    "routingHide": "Masquer",
     "items": [
       "Les virements internes sont traités immédiatement",
       "Les virements externes peuvent prendre 1 à 2 jours ouvrés",
@@ -117,7 +120,6 @@
   "security": {
     "title": "Sécurité & plafonds",
     "dailyLimit": "Plafond quotidien",
-    "perTransaction": "Plafond par transaction",
     "remainingToday": "{{amount}} restant aujourd’hui",
     "items": {
       "secureTitle": "Virement sécurisé",
@@ -148,7 +150,6 @@
       "amountRequired": "Saisissez un montant de virement",
       "amountPositive": "Le montant doit être supérieur à zéro",
       "insufficientBalance": "Solde insuffisant",
-      "perTransactionLimit": "Le montant dépasse le plafond par transaction de {{limit}}",
       "dailyLimit": "Le montant dépasse le plafond quotidien restant de {{limit}}",
       "pinRequired": "Définissez votre code PIN avant d’envoyer de l’argent.",
       "destinationRequired": "Sélectionnez un compte destinataire.",

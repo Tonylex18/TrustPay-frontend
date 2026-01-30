@@ -89,6 +89,9 @@
   },
   "info": {
     "title": "Important Information",
+    "routingLabel": "Routing number",
+    "routingShow": "Show",
+    "routingHide": "Hide",
     "items": [
       "Internal transfers are processed instantly",
       "External transfers may take 1-2 business days",
@@ -117,7 +120,6 @@
   "security": {
     "title": "Security & Limits",
     "dailyLimit": "Daily Transfer Limit",
-    "perTransaction": "Per Transaction Limit",
     "remainingToday": "{{amount}} remaining today",
     "items": {
       "secureTitle": "Secure Transfer",
@@ -148,7 +150,6 @@
       "amountRequired": "Please enter transfer amount",
       "amountPositive": "Amount must be greater than zero",
       "insufficientBalance": "Insufficient balance",
-      "perTransactionLimit": "Amount exceeds per transaction limit of {{limit}}",
       "dailyLimit": "Amount exceeds daily remaining limit of {{limit}}",
       "pinRequired": "Set your transfer PIN before sending money.",
       "destinationRequired": "Select a destination account.",

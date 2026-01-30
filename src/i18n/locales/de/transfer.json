@@ -89,6 +89,9 @@
   },
   "info": {
     "title": "Wichtige Hinweise",
+    "routingLabel": "Routing-Nummer",
+    "routingShow": "Anzeigen",
+    "routingHide": "Ausblenden",
     "items": [
       "Interne Überweisungen werden sofort verarbeitet",
       "Externe Überweisungen können 1-2 Werktage dauern",
@@ -117,7 +120,6 @@
   "security": {
     "title": "Sicherheit & Limits",
     "dailyLimit": "Tägliches Überweisungslimit",
-    "perTransaction": "Limit pro Transaktion",
     "remainingToday": "{{amount}} verbleiben heute",
     "items": {
       "secureTitle": "Sichere Überweisung",
@@ -148,7 +150,6 @@
       "amountRequired": "Bitte einen Überweisungsbetrag eingeben",
       "amountPositive": "Der Betrag muss größer als Null sein",
       "insufficientBalance": "Unzureichendes Guthaben",
-      "perTransactionLimit": "Betrag überschreitet das Limit pro Transaktion von {{limit}}",
       "dailyLimit": "Betrag überschreitet das tägliche Restlimit von {{limit}}",
       "pinRequired": "Legen Sie vor dem Senden Ihre Überweisungs-PIN fest.",
       "destinationRequired": "Wählen Sie ein Zielkonto.",

@@ -27,7 +27,6 @@ export interface TransferSummary {
 
 export interface TransferLimits {
   dailyLimit: number;
-  perTransactionLimit: number;
   remainingToday: number;
   spentToday: number;
   availableBalance: number;

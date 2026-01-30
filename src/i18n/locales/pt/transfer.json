@@ -89,6 +89,9 @@
   },
   "info": {
     "title": "Informações importantes",
+    "routingLabel": "Número de roteamento",
+    "routingShow": "Mostrar",
+    "routingHide": "Ocultar",
     "items": [
       "Transferências internas são processadas na hora",
       "Transferências externas podem levar 1-2 dias úteis",
@@ -117,7 +120,6 @@
   "security": {
     "title": "Segurança e limites",
     "dailyLimit": "Limite diário de transferência",
-    "perTransaction": "Limite por transação",
     "remainingToday": "{{amount}} restante hoje",
     "items": {
       "secureTitle": "Transferência segura",
@@ -148,7 +150,6 @@
       "amountRequired": "Informe o valor da transferência",
       "amountPositive": "O valor deve ser maior que zero",
       "insufficientBalance": "Saldo insuficiente",
-      "perTransactionLimit": "O valor excede o limite por transação de {{limit}}",
       "dailyLimit": "O valor excede o limite diário restante de {{limit}}",
       "pinRequired": "Defina o PIN de transferência antes de enviar dinheiro.",
       "destinationRequired": "Selecione uma conta de destino.",
